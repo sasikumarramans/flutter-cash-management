@@ -1,0 +1,69 @@
+import 'package:ev_flutter_app/app/helpers/extensions/string_extensions.dart';
+import 'package:ev_flutter_app/app/router/animation/vertical_page_transition.dart';
+import 'package:ev_flutter_app/app/router/router_scope.dart';
+import 'package:ev_flutter_app/data/local/hive_manager.dart';
+import 'package:ev_flutter_app/presentation/auth/di/auth_module.dart';
+import 'package:ev_flutter_app/presentation/auth/login/bloc/login_bloc.dart';
+import 'package:ev_flutter_app/presentation/auth/login/di/login_module.dart';
+import 'package:ev_flutter_app/presentation/auth/login/login_screen.dart';
+import 'package:ev_flutter_app/presentation/auth/login_router.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
+
+class MainRouter {
+  static const String mainScreenRoute = '/';
+  static const String homeRoute = '/home';
+  static const String loginScreenRoute = '/login';
+
+  static bool isDashboardInitialized = false;
+
+  static List<RouteBase> routes() {
+    const Key authScreenKey = Key('authScreen');
+    return [
+      GoRoute(
+        path: mainScreenRoute,
+        redirect: (context, state) async {
+          final isUserLoggedIn = !GetIt.I<HiveManager>()
+              .getFromHive<String>(HiveManager.userSessionTokenKey)
+              .isNullOrEmpty;
+          if (!isUserLoggedIn) {
+            return loginScreenRoute;
+          }
+
+          return homeRoute;
+        },
+      ),
+      GoRoute(
+        path: loginScreenRoute,
+        name: loginScreenRoute,
+        pageBuilder: (context, state) {
+          final authModule = AuthModule();
+          final loginModule = LoginModule();
+
+          loginModule.injectBloc();
+          return VerticalSlideTransitionScreen<void>(
+            isGoingDown: true,
+            child: RouterScope(
+              key: authScreenKey,
+              inject: () {
+                authModule.inject();
+                loginModule.inject();
+              },
+              dispose: () {
+                authModule.dispose();
+                loginModule.dispose();
+              },
+              child: BlocProvider<LoginBloc>.value(
+                value: GetIt.I<LoginBloc>(),
+                child: const LoginScreen(),
+              ),
+            ),
+          );
+        },
+        routes: LoginRouter.routes(),
+      ),
+    ];
+  }
+}

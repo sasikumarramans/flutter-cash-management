@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "845450877981",
+    "project_id": "quilt-staging",
+    "storage_bucket": "quilt-staging.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:845450877981:android:92978107d59b7135fabaf4",
+        "android_client_info": {
+          "package_name": "staging.QWLT.Quilt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "845450877981-8drqbi0pcp52funcd16pfj5u9pddh2ru.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0n9FgCMu_2g3Vjaq3P12V3_nmXDKzJLw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "845450877981-8drqbi0pcp52funcd16pfj5u9pddh2ru.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "845450877981-5ro2v3udou0k91i5evunbq9a7ovdgvbd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "staging.q-u-i-l-t.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

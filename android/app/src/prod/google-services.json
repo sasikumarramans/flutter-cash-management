@@ -1,0 +1,174 @@
+{
+  "project_info": {
+    "project_number": "930588986366",
+    "project_id": "quilt-8c01a",
+    "storage_bucket": "quilt-8c01a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930588986366:android:c10ee5a45dbf1bf33e4eaf",
+        "android_client_info": {
+          "package_name": "com.QWLT.Quilt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930588986366-4g4qh4ddqpgkdi71scdmkc3qd8lj00pl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.QWLT.Quilt",
+            "certificate_hash": "2ae5740bf083e47986f6bee47e9563def9775286"
+          }
+        },
+        {
+          "client_id": "930588986366-7i0bu5qfe5i3usgdmi0k5b0sdis9hd3j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.QWLT.Quilt",
+            "certificate_hash": "3aea40f0dff98d903f3df47a36ac0092c916ad32"
+          }
+        },
+        {
+          "client_id": "930588986366-ci1secq1918e8vh1lmbkb3b0sge2sds0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.QWLT.Quilt",
+            "certificate_hash": "a98e3487a813a2e6268a53640f2a7389bb51d160"
+          }
+        },
+        {
+          "client_id": "930588986366-igfe6krt727lb478k3f4e43d8o8b9qh2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.QWLT.Quilt",
+            "certificate_hash": "84273322196afbbb5087aad1abf330cedbe97ca5"
+          }
+        },
+        {
+          "client_id": "930588986366-kjeqhbgm389c6p91dud8cstcpfj5u6rt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe42WZfTrOAdi85qKvr-bZilM20RDZ30k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930588986366-kjeqhbgm389c6p91dud8cstcpfj5u6rt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "930588986366-0adio0ec0gma2n63rtfj1b25lsfat5je.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.q-u-i-l-t.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930588986366:android:98363cdf7fd40cca3e4eaf",
+        "android_client_info": {
+          "package_name": "com.quilt.quilt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930588986366-kjeqhbgm389c6p91dud8cstcpfj5u6rt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe42WZfTrOAdi85qKvr-bZilM20RDZ30k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930588986366-kjeqhbgm389c6p91dud8cstcpfj5u6rt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "930588986366-0adio0ec0gma2n63rtfj1b25lsfat5je.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.q-u-i-l-t.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930588986366:android:ff6a18a1ff2d99783e4eaf",
+        "android_client_info": {
+          "package_name": "demo.QWLT.Quilt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930588986366-9k34smf7mm8745amumv166kcoa9u2g83.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "demo.QWLT.Quilt",
+            "certificate_hash": "a98e3487a813a2e6268a53640f2a7389bb51d160"
+          }
+        },
+        {
+          "client_id": "930588986366-h35114j1m9ja0qgaa7nsc3s2h82j29p0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "demo.QWLT.Quilt",
+            "certificate_hash": "84273322196afbbb5087aad1abf330cedbe97ca5"
+          }
+        },
+        {
+          "client_id": "930588986366-m3brura473ma32u1g411trn5asfonkko.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "demo.QWLT.Quilt",
+            "certificate_hash": "2ae5740bf083e47986f6bee47e9563def9775286"
+          }
+        },
+        {
+          "client_id": "930588986366-kjeqhbgm389c6p91dud8cstcpfj5u6rt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe42WZfTrOAdi85qKvr-bZilM20RDZ30k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930588986366-kjeqhbgm389c6p91dud8cstcpfj5u6rt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "930588986366-0adio0ec0gma2n63rtfj1b25lsfat5je.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.q-u-i-l-t.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

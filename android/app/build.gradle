@@ -1,0 +1,123 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withReader('UTF-8') { reader ->
+        keystoreProperties.load(reader)
+    }
+}
+android {
+    compileSdk = 35
+    ndkVersion = "27.0.12077973"
+
+    namespace 'com.ev'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+
+        coreLibraryDesugaringEnabled true
+    }
+
+
+    signingConfigs {
+        debug {
+             storeFile file("${System.getProperty('user.home')}/.android/debug.keystore") // Default debug keystore
+             keyAlias 'androiddebugkey'
+             keyPassword 'android'
+             storePassword 'android'
+        }
+
+        release {
+              keyAlias = keystoreProperties['keyAlias']
+              keyPassword = keystoreProperties['keyPassword']
+              storeFile = file(keystoreProperties['storeFile'])
+              storePassword = keystoreProperties['storePassword']
+        }
+    }
+
+    flavorDimensions "flavor-type"
+
+    productFlavors {
+        staging {
+            dimension "flavor-type"
+            applicationId "staging.ev"
+            resValue "string", "app_name", "Quilt Staging"
+            signingConfig signingConfigs.release // Use the shared release keystore
+        }
+        demo {
+            dimension "flavor-type"
+            applicationId "demo.ev"
+            resValue "string", "app_name", "Quilt Demo"
+            signingConfig signingConfigs.release // Use the shared release keystore
+        }
+        prod {
+            dimension "flavor-type"
+            applicationId "com.ev"
+            resValue "string", "app_name", "Quilt"
+            signingConfig signingConfigs.release // Use the shared release keystore
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.ev"
+        minSdkVersion 28
+        targetSdkVersion flutter.targetSdkVersion
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release // Shared signing config for all flavors
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug // Use debug keys for debug builds
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ['-Xlint:-options']
+}
