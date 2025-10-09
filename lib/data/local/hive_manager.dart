@@ -5,7 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class HiveManager {
   static const String _hiveStorageKey = 'hiveStorageKey';
-  static const String _vaultBoxName = 'quiltVaultBox';
+  static const String _vaultBoxName = 'appVaultBox';
 
   static const String userSessionTokenKey = 'user_token';
   static const String appSessionId = 'app_session_id';

@@ -3,7 +3,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 class CustomImageCacheManager extends CacheManager with ImageCacheManager {
-  static const key = 'quiltImageCaches';
+  static const key = 'appImageCaches';
 
   static CustomImageCacheManager? _instance;
 

@@ -7,21 +7,21 @@ class EnvironmentConfig {
   static const String flavor =
       String.fromEnvironment('FLAVOR', defaultValue: 'prod');
 
-  static String get quiltApiUrl {
+  static String get apiUrl {
     if (flavor == 'demo') return EnvDemo.apiUrl;
     if (flavor == 'staging') return EnvStaging.apiUrl;
     if (flavor == 'prod') return EnvProd.apiUrl;
     return '';
   }
 
-  static String get quiltNotificationApiUrl {
+  static String get notificationApiUrl {
     if (flavor == 'demo') return EnvDemo.notificationApiUrl;
     if (flavor == 'staging') return EnvStaging.notificationApiUrl;
     if (flavor == 'prod') return EnvProd.notificationApiUrl;
     return '';
   }
 
-  static String get quiltApiKey {
+  static String get apiKey {
     if (flavor == 'demo') return EnvDemo.apiKey;
     if (flavor == 'staging') return EnvStaging.apiKey;
     if (flavor == 'prod') return EnvProd.apiKey;

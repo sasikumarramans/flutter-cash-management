@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:ev_flutter_app/app/theme/app_theme.dart';
 
-/// Represents one menu entry for [QuiltDropdownButton].
+/// Represents one menu entry for [AppDropdownButton].
 /// You can pass any widget as [child] and an associated [onTap] callback.
-class QuiltDropdownItem {
+class AppDropdownItem {
   final Widget child;
   final VoidCallback onTap;
   final bool enabled;
 
-  const QuiltDropdownItem({
+  const AppDropdownItem({
     required this.child,
     required this.onTap,
     this.enabled = true,
@@ -20,7 +20,7 @@ class AppDropDown extends StatefulWidget {
   final Widget anchor;
 
   /// List of custom menu entries.
-  final List<QuiltDropdownItem> items;
+  final List<AppDropdownItem> items;
 
   /// Whether to animate the anchor when menu opens/closes.
   final bool enableAnimation;

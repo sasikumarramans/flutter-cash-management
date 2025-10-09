@@ -10,14 +10,14 @@ class NetworkModule extends InjectableModule {
   @override
   Future<void> inject() async {
     safeRegisterSingleton<Dio>(
-        () => _provideDio(EnvironmentConfig.quiltApiUrl));
+        () => _provideDio(EnvironmentConfig.apiUrl));
     safeRegisterSingleton<Dio>(
-        () => _provideDio(EnvironmentConfig.quiltApiUrl,
+        () => _provideDio(EnvironmentConfig.apiUrl,
             contentType: 'multipart/form-data'),
         'multipart_dio');
 
     safeRegisterSingleton<Dio>(
-        () => _provideDio(EnvironmentConfig.quiltNotificationApiUrl),
+        () => _provideDio(EnvironmentConfig.notificationApiUrl),
         'notification_dio');
 
     safeRegisterSingleton<DioClient>(() => DioClient());

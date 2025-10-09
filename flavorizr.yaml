@@ -1,23 +1,23 @@
   flavors:
     staging:
       app:
-        name: "Quilt Test Staging"
+        name: "SplitKash Test Staging"
 
       android:
-        applicationId: "staging.QWLT.Quilt" 
+        applicationId: "staging.splitkash"
         icon: "assets/images/launcher_logo.png"  
     demo:
       app:
-        name: "Quilt Test Demo"
+        name: "SplitKash Test Demo"
 
       android:
-        applicationId: "demo.QWLT.Quilt"
+        applicationId: "demo.splitkash"
         icon: "assets/images/launcher_logo.png"  
     prod:
       app:
-        name: "Quilt Test Prod"
+        name: "SplitKash Test Prod"
 
       android:
-        applicationId: "com.quilt.quilt"
+        applicationId: "com.splitkash"
         icon: "assets/images/launcher_logo.png"  
   ide: vscode

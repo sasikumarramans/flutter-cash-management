@@ -3,7 +3,7 @@ import 'package:ev_flutter_app/generated/l10n.dart';
 import 'package:ev_flutter_app/presentation/component/app_button.dart';
 import 'package:flutter/material.dart';
 
-enum QuiltDialogType {
+enum AppDialogType {
   logout,
   openFeedback,
   custom,
@@ -11,59 +11,59 @@ enum QuiltDialogType {
 
   String getTitle(S l10n) {
     switch (this) {
-      case QuiltDialogType.logout:
+      case AppDialogType.logout:
         return l10n.s_logout_title;
-      case QuiltDialogType.openFeedback:
+      case AppDialogType.openFeedback:
         return l10n.thanks_for_feedback;
-      case QuiltDialogType.custom:
+      case AppDialogType.custom:
         return "";
-      case QuiltDialogType.deleteAccount:
+      case AppDialogType.deleteAccount:
         return l10n.delete_account;
     }
   }
 
   String getMessage(S l10n) {
     switch (this) {
-      case QuiltDialogType.logout:
+      case AppDialogType.logout:
         return "";
-      case QuiltDialogType.openFeedback:
+      case AppDialogType.openFeedback:
         return l10n.thanks_for_feedback_desc;
-      case QuiltDialogType.custom:
+      case AppDialogType.custom:
         return "";
-      case QuiltDialogType.deleteAccount:
+      case AppDialogType.deleteAccount:
         return l10n.delete_account_hint;
     }
   }
 
   String getConfirmText(S l10n) {
     switch (this) {
-      case QuiltDialogType.logout:
+      case AppDialogType.logout:
         return l10n.s_yes;
-      case QuiltDialogType.openFeedback:
+      case AppDialogType.openFeedback:
         return l10n.s_okay;
-      case QuiltDialogType.custom:
+      case AppDialogType.custom:
         return l10n.s_yes;
-      case QuiltDialogType.deleteAccount:
+      case AppDialogType.deleteAccount:
         return "Continue";
     }
   }
 
   String getNegativeText(S l10n) {
     switch (this) {
-      case QuiltDialogType.logout:
+      case AppDialogType.logout:
         return l10n.s_no;
-      case QuiltDialogType.openFeedback:
+      case AppDialogType.openFeedback:
         return "";
-      case QuiltDialogType.custom:
+      case AppDialogType.custom:
         return l10n.s_no;
-      case QuiltDialogType.deleteAccount:
+      case AppDialogType.deleteAccount:
         return "Cancel";
     }
   }
 }
 
 class AppDialog extends StatelessWidget {
-  final QuiltDialogType type;
+  final AppDialogType type;
   final String? customTitle;
   final BoxDecoration? confirmButtonDecoration;
   final BoxDecoration? negativeButtonDecoration;
@@ -112,7 +112,7 @@ class AppDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (type == QuiltDialogType.openFeedback)
+            if (type == AppDialogType.openFeedback)
               const SizedBox(
                 height: 20,
               ),
@@ -135,7 +135,7 @@ class AppDialog extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            if (type != QuiltDialogType.logout)
+            if (type != AppDialogType.logout)
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 15),
                 child: Text(
@@ -164,7 +164,7 @@ class AppDialog extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
-            if (type != QuiltDialogType.openFeedback)
+            if (type != AppDialogType.openFeedback)
               AppButton(
                   buttonType: ButtonType.filled,
                   enabledButtonFilledStyle: negativeButtonDecoration ??

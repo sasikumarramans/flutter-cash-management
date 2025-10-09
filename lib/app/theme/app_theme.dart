@@ -3,7 +3,7 @@ import 'package:ev_flutter_app/presentation/component/app_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
-/// A class that defines the theme and styles for the Quilt application.
+/// A class that defines the theme and styles for the application.
 class AppTheme {
   //* -------------------- Color Palette -------------------- */
   static const Color primaryColor = Color(0xFF1A1A1A);

@@ -35,10 +35,10 @@ if (keystorePropertiesFile.exists()) {
     }
 }
 android {
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = "27.0.12077973"
 
-    namespace 'com.ev'
+    namespace 'com.splitkash'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_21
@@ -57,10 +57,14 @@ android {
         }
 
         release {
-              keyAlias = keystoreProperties['keyAlias']
+             /* keyAlias = keystoreProperties['keyAlias']
               keyPassword = keystoreProperties['keyPassword']
               storeFile = file(keystoreProperties['storeFile'])
-              storePassword = keystoreProperties['storePassword']
+              storePassword = keystoreProperties['storePassword']*/
+            storeFile file("${System.getProperty('user.home')}/.android/debug.keystore") // Default debug keystore
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
         }
     }
 
@@ -69,26 +73,26 @@ android {
     productFlavors {
         staging {
             dimension "flavor-type"
-            applicationId "staging.ev"
-            resValue "string", "app_name", "Quilt Staging"
+            applicationId "staging.splitkash"
+            resValue "string", "app_name", "SplitKash Staging"
             signingConfig signingConfigs.release // Use the shared release keystore
         }
         demo {
             dimension "flavor-type"
-            applicationId "demo.ev"
-            resValue "string", "app_name", "Quilt Demo"
+            applicationId "demo.splitkash"
+            resValue "string", "app_name", "SplitKash Demo"
             signingConfig signingConfigs.release // Use the shared release keystore
         }
         prod {
             dimension "flavor-type"
-            applicationId "com.ev"
-            resValue "string", "app_name", "Quilt"
+            applicationId "com.splitkash"
+            resValue "string", "app_name", "SplitKash"
             signingConfig signingConfigs.release // Use the shared release keystore
         }
     }
 
     defaultConfig {
-        applicationId "com.ev"
+        applicationId "com.splitkash"
         minSdkVersion 28
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()

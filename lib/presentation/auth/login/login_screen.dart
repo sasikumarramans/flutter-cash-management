@@ -108,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       textStyle: AppTheme.loginEmailValue,
                       onTouchOutside: (event) {
-                        QuiltUtils.hideKeyboard();
+                        AppUtils.hideKeyboard();
                       },
                     ),
                     const SizedBox(height: 16),
@@ -118,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           buttonType: ButtonType.filled,
                           textString: S.of(context).continue_with_email,
                           onPressed: (value) {
-                            QuiltUtils.hideKeyboard();
+                            AppUtils.hideKeyboard();
                             if (state.isValidEmailId) {
                               context
                                   .read<LoginBloc>()

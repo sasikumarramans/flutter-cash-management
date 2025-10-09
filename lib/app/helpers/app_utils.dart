@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class QuiltUtils {
+class AppUtils {
   static void hideKeyboard() {
     FocusManager.instance.primaryFocus?.unfocus();
   }
