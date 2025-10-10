@@ -21,6 +21,7 @@ class AppTheme {
   static const Color primaryLabelColor = Color(0xFFFFFFFF);
   static const Color secondaryLabelColor = Color(0x99EBEBF5);
   static const Color tertiaryLabelColor = Color(0x4DEBEBF5);
+  static const Color loginBgColor = Color(0xffECFFED);
 
   //* -------------------- Background Colors -------------------- */
 
@@ -341,10 +342,11 @@ class AppTheme {
         FontWeight.w500,
       );
 
-  static TextStyle get simpleBlackTextStyle => _baseTextStyle(
-        primaryColor,
-        14,
-        FontWeight.normal,
+  static TextStyle get loginText => _baseTextStyle(
+        Colors.white,
+        24,
+        FontWeight.w500,
+
       );
 
   static TextStyle get simpleWhiteTextStyle => _baseTextStyle(

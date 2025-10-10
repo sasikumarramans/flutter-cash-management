@@ -4,19 +4,19 @@ sealed class LoginEvent extends Equatable {
   const LoginEvent();
 }
 
-class EmailIdChanged extends LoginEvent {
+class MobileNumberChanged extends LoginEvent {
   final String emailId;
-  const EmailIdChanged(this.emailId);
+  const MobileNumberChanged(this.emailId);
 
   @override
   List<Object> get props => [emailId];
 }
 
-class EmailIdCompleted extends LoginEvent {
+class MobileNumberCompleted extends LoginEvent {
   final String? emailId;
   final bool isValidEmailId;
 
-  const EmailIdCompleted({
+  const MobileNumberCompleted({
     this.emailId,
     required this.isValidEmailId,
   });
@@ -25,9 +25,9 @@ class EmailIdCompleted extends LoginEvent {
   List<Object?> get props => [emailId, isValidEmailId];
 }
 
-class LoginWithEmailRequested extends LoginEvent {
+class LoginWithMobileNumberRequested extends LoginEvent {
   final bool resendRequest;
-  const LoginWithEmailRequested({
+  const LoginWithMobileNumberRequested({
     required this.resendRequest,
   });
 
@@ -35,9 +35,9 @@ class LoginWithEmailRequested extends LoginEvent {
   List<Object?> get props => [resendRequest];
 }
 
-class ValidateLoginEmailOtpRequested extends LoginEvent {
+class ValidateLoginMobileNumberOtpRequested extends LoginEvent {
   final int otpCode;
-  const ValidateLoginEmailOtpRequested(this.otpCode);
+  const ValidateLoginMobileNumberOtpRequested(this.otpCode);
 
   @override
   List<Object?> get props => [otpCode];

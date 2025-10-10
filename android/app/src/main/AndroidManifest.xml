@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ev">
+    package="com.splitkash">
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />

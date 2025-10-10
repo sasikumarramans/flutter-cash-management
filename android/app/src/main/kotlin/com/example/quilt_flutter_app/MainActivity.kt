@@ -1,4 +1,4 @@
-package com.ev
+package com.splitkash
 
 import io.flutter.embedding.android.FlutterActivity
 

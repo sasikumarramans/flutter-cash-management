@@ -55,6 +55,10 @@ class $AssetsImagesGen {
   AssetGenImage get launcherLogo =>
       const AssetGenImage('assets/images/launcher_logo.png');
 
+  /// File path: assets/images/login_bg.png
+  AssetGenImage get loginBg =>
+      const AssetGenImage('assets/images/login_bg.png');
+
   /// File path: assets/images/splash_logo.png
   AssetGenImage get splashLogoPng =>
       const AssetGenImage('assets/images/splash_logo.png');
@@ -64,7 +68,8 @@ class $AssetsImagesGen {
       const SvgGenImage('assets/images/splash_logo.svg');
 
   /// List of all assets
-  List<dynamic> get values => [launcherLogo, splashLogoPng, splashLogoSvg];
+  List<dynamic> get values =>
+      [launcherLogo, loginBg, splashLogoPng, splashLogoSvg];
 }
 
 class Assets {

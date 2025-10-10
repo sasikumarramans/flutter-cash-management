@@ -25,30 +25,29 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
   StreamSubscription<OtpState>? _otpStateStreamSubscription;
 
   LoginBloc() : super(const LoginState()) {
-    on<EmailIdChanged>(_onEmailIdChanged);
-    on<EmailIdCompleted>(_onEmailIdCompleted);
-    on<LoginWithEmailRequested>(_onLoginWithEmailRequested);
-    on<ValidateLoginEmailOtpRequested>(_onValidateLoginEmailOtpRequested);
-
+    on<MobileNumberChanged>(_onMobileNumberChanged);
+    on<MobileNumberCompleted>(_onMobileNumberCompleted);
+    on<LoginWithMobileNumberRequested>(_onLoginWithMobileNumberRequested);
+    on<ValidateLoginMobileNumberOtpRequested>(_onValidateLoginMobileNumberOtpRequested);
     _listenToOtpBloc();
   }
 
-  FutureOr<void> _onEmailIdChanged(
-      EmailIdChanged event, Emitter<LoginState> emit) {
+  FutureOr<void> _onMobileNumberChanged(
+      MobileNumberChanged event, Emitter<LoginState> emit) {
     emit(state.copyWith(
-      emailId: event.emailId.normalizedEmail,
+      mobileNumber: event.emailId.normalizedEmail,
     ));
   }
 
-  FutureOr<void> _onEmailIdCompleted(
-      EmailIdCompleted event, Emitter<LoginState> emit) {
+  FutureOr<void> _onMobileNumberCompleted(
+      MobileNumberCompleted event, Emitter<LoginState> emit) {
     emit(state.copyWith(
-      isValidEmailId: event.isValidEmailId,
+      isValidMobileNumber: event.isValidEmailId,
     ));
   }
 
-  FutureOr<void> _onLoginWithEmailRequested(
-      LoginWithEmailRequested event, Emitter<LoginState> emit) async {
+  FutureOr<void> _onLoginWithMobileNumberRequested(
+      LoginWithMobileNumberRequested event, Emitter<LoginState> emit) async {
     await _requestOtpForEmail(emit, event.resendRequest);
   }
 
@@ -61,7 +60,7 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
     await safeExecute<LoginEmailOtpResponse>(
       function: () async {
         return await _loginUserUseCase.execute(
-          request: LoginEmailOtpRequest(email: state.emailId ?? ''),
+          request: LoginEmailOtpRequest(email: state.mobileNumber ?? ''),
         );
       },
       showLoading: true,
@@ -73,7 +72,7 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
     }
 
     _otpBloc.add(OtpRequested(
-      emailId: state.emailId ?? '',
+      emailId: state.mobileNumber ?? '',
       otpExpireDuration: 60,
     ));
     emit(state.copyWith(
@@ -81,14 +80,14 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
     ));
   }
 
-  FutureOr<void> _onValidateLoginEmailOtpRequested(
-      ValidateLoginEmailOtpRequested event, Emitter<LoginState> emit) async {
+  FutureOr<void> _onValidateLoginMobileNumberOtpRequested(
+      ValidateLoginMobileNumberOtpRequested event, Emitter<LoginState> emit) async {
     try {
       final response = await safeExecute<LoginEmailOtpVerifyResponse>(
         function: () async {
           return await _verifyLoginOtpUseCase.execute(
             request: VerifyLoginOtpRequest(
-              email: state.emailId ?? '',
+              email: state.mobileNumber ?? '',
               otpCode: event.otpCode,
             ),
           );
@@ -131,10 +130,10 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
     _otpStateStreamSubscription = _otpBloc.stream.listen((state) {
       switch (state.status) {
         case OtpStatus.resendOtp:
-          add(const LoginWithEmailRequested(resendRequest: true));
+          add(const LoginWithMobileNumberRequested(resendRequest: true));
           break;
         case OtpStatus.verifyOtp:
-          add(ValidateLoginEmailOtpRequested(state.otpCode));
+          add(ValidateLoginMobileNumberOtpRequested(state.otpCode));
           break;
         default:
           break;

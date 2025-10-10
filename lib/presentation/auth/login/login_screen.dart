@@ -1,3 +1,4 @@
+import 'package:ev_flutter_app/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -25,7 +26,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isContinue = false;
-  late TextEditingController emailTextEditingController;
+  final TextEditingController _phoneController = TextEditingController();
+  final String _selectedCountryCode = '+91';
 
   @override
   void initState() {
@@ -35,152 +37,213 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    emailTextEditingController = TextEditingController();
-
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppTheme.loginBgColor,
       resizeToAvoidBottomInset: true,
-      body: Column(
-        children: [
-          Flexible(
-            fit: FlexFit.loose,
-            child: Stack(
-              children: [
-                Container(
-                  color: Colors.black.withValues(alpha: 0.5),
-                ),
-              ],
+      body: BlocConsumer<LoginBloc, LoginState>(builder: (context, state) {
+        return Column(
+          children: [
+            const SizedBox(
+              height: 30,
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: SingleChildScrollView(
+            Expanded(
+              flex: 3,
               child: Container(
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30))),
-                padding: const EdgeInsets.all(16.0),
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Weave together worlds and ideas",
-                        textAlign: TextAlign.left,
-                        style: AppTheme.loginSignInOrCreateAnAccountText
-                            .copyWith(fontSize: 20),
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.black87,
                       ),
                     ),
-                    Container(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        S.of(context).s_login_hint,
-                        textAlign: TextAlign.left,
-                        style: AppTheme.loginSignInOrCreateAnAccountText
-                            .copyWith(
-                                color: AppTheme.loginHintTextColor,
-                                fontSize: 16),
+                    Expanded(
+                      child: Center(
+                        child: Assets.images.loginBg.image(),
                       ),
                     ),
-                    const SizedBox(height: 32),
-                    AppTextField(
-                      textFieldStyle: TextFieldStyle.filled,
-                      textFieldState: TextFieldState.enabled,
-                      textFieldType: TextFieldType.email,
-                      controller: emailTextEditingController,
-                      hint: S.of(context).email_hint,
-                      onChanged: (value) {
-                        context.read<LoginBloc>().add(EmailIdChanged(value));
-                      },
-                      onValidation: (isValid) {
-                        if (isValid) {
-                          context.read<LoginBloc>().add(EmailIdCompleted(
-                                isValidEmailId: isValid,
-                              ));
-                        } else {
-                          context.read<LoginBloc>().add(EmailIdCompleted(
-                                isValidEmailId: isValid,
-                              ));
-                        }
-                      },
-                      textStyle: AppTheme.loginEmailValue,
-                      onTouchOutside: (event) {
-                        AppUtils.hideKeyboard();
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    BlocConsumer<LoginBloc, LoginState>(
-                      builder: (context, state) {
-                        return AppButton(
-                          buttonType: ButtonType.filled,
-                          textString: S.of(context).continue_with_email,
-                          onPressed: (value) {
-                            AppUtils.hideKeyboard();
-                            if (state.isValidEmailId) {
-                              context
-                                  .read<LoginBloc>()
-                                  .add(const LoginWithEmailRequested(
-                                    resendRequest: false,
-                                  ));
-                            }
-                          },
-                          buttonState: state.isValidEmailId
-                              ? ButtonState.completed
-                              : ButtonState.enabled,
-                          completedButtonFilledStyle:
-                              AppTheme.buttonCompletedFilledFabric,
-                          enabledButtonFilledStyle:
-                              AppTheme.buttonEnabledFilled.copyWith(
-                            color: Colors.black,
-                          ),
-                          enabledTextStyle: AppTheme.textEnabledTheme.copyWith(
-                            color: AppTheme.buttonDisabledColor,
-                          ),
-                          completedTextStyle:
-                              AppTheme.textEnabledTheme.copyWith(
-                            color: Colors.white,
-                          ),
-                          expandButton: true,
-                        );
-                      },
-                      listenWhen: (previous, current) {
-                        return previous.status != current.status &&
-                                current.status == LoginStatus.otpSent ||
-                            current.status == LoginStatus.userAuthenticated;
-                      },
-                      listener: (BuildContext context, LoginState state) {
-                        switch (state.status) {
-                          case LoginStatus.otpSent:
-                            if (GetIt.I<RouterManager>()
-                                .currentRoute
-                                .notContains(LoginRouter.otpScreenRoute)) {
-                              context.pushNamed(LoginRouter.otpScreenRoute);
-                            }
-                            break;
-                          case LoginStatus.userAuthenticated:
-                            context.go(MainRouter.mainScreenRoute);
-                            break;
-                          default:
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 24),
                   ],
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+            Expanded(
+              flex: 2,
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF1A1A1A),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Verify phone number',
+                            textAlign: TextAlign.center,
+                            style: AppTheme.loginText,
+                          ),
+                        ),
+
+                        const SizedBox(height: 8),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "We'll send you a code, it helps keep your\naccount secure",
+                            style: AppTheme.loginText.copyWith(
+                                color: AppTheme.genderInfoTextColor,
+                                fontSize: 13),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        // Phone input row
+                        Row(
+                          children: [
+                            // Country code dropdown
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF2A2A2A),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: const Color(0xff777474),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Text(
+                                    '🇮🇳',
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    _selectedCountryCode,
+                                    style: AppTheme.loginText.copyWith(
+                                        fontSize: 13, color: Colors.white),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: Colors.white54,
+                                    size: 20,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: AppTextField(
+                                controller: _phoneController,
+                                onChanged: (value){
+                                  context.read<LoginBloc>().add(MobileNumberChanged(value));
+                                },
+                                onValidation: (isValid) {
+                                  if (isValid) {
+                                    context.read<LoginBloc>().add(MobileNumberCompleted(
+                                      isValidEmailId: isValid,
+                                    ));
+                                  } else {
+                                    context.read<LoginBloc>().add(MobileNumberCompleted(
+                                      isValidEmailId: isValid,
+                                    ));
+                                  }
+                                },
+                                textFieldStyle: TextFieldStyle.filled,
+                                textFieldState: TextFieldState.enabled,
+                                textFieldType: TextFieldType.mobile,
+                                hint: 'eg. 9876543210',
+                                textStyle: AppTheme.loginText.copyWith(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                            height: MediaQuery.of(context).viewInsets.bottom > 0
+                                ? 20
+                                : 40),
+                        AppButton(
+                            buttonType: ButtonType.filled,
+                            textString: 'Continue',
+                            onPressed: (value) {
+                              AppUtils.hideKeyboard();
+                              if (state.isValidMobileNumber) {
+                                context
+                                    .read<LoginBloc>()
+                                    .add(const LoginWithMobileNumberRequested(
+                                  resendRequest: false,
+                                ));
+                              }
+                            },
+                            buttonState:state.isValidMobileNumber
+                                ? ButtonState.completed
+                                : ButtonState.enabled,
+                            expandButton: true,
+                            enabledButtonFilledStyle: BoxDecoration(
+                              color: const Color(0xFF2E7D32),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            enabledTextStyle: AppTheme.loginText.copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            )),
+                        const SizedBox(height: 8),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },  listenWhen: (previous, current) {
+        return previous.status != current.status &&
+            current.status == LoginStatus.otpSent ||
+            current.status == LoginStatus.userAuthenticated;
+      }, listener: (BuildContext context, LoginState state) {
+        switch (state.status) {
+          case LoginStatus.otpSent:
+            if (GetIt.I<RouterManager>()
+                .currentRoute
+                .notContains(LoginRouter.otpScreenRoute)) {
+              context.pushNamed(LoginRouter.otpScreenRoute);
+            }
+            break;
+          case LoginStatus.userAuthenticated:
+            context.go(MainRouter.mainScreenRoute);
+            break;
+          default:
+        }
+      },),
     );
   }
 
   @override
   void dispose() {
-    emailTextEditingController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 }

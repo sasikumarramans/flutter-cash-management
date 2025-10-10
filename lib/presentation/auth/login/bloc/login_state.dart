@@ -11,30 +11,31 @@ enum LoginStatus {
 
 class LoginState extends Equatable {
   final LoginStatus status;
-  final String? emailId;
-  final bool isValidEmailId;
+  final String? mobileNumber;
+  final bool isValidMobileNumber;
+
   const LoginState({
     this.status = LoginStatus.unknown,
-    this.emailId,
-    this.isValidEmailId = false,
+    this.mobileNumber,
+    this.isValidMobileNumber = false,
   });
 
   LoginState copyWith({
     LoginStatus? status,
-    String? emailId,
-    bool? isValidEmailId,
+    String? mobileNumber,
+    bool? isValidMobileNumber,
   }) {
     return LoginState(
       status: status ?? this.status,
-      emailId: emailId ?? this.emailId,
-      isValidEmailId: isValidEmailId ?? this.isValidEmailId,
+      mobileNumber: mobileNumber ?? this.mobileNumber,
+      isValidMobileNumber: isValidMobileNumber ?? this.isValidMobileNumber,
     );
   }
 
   @override
   List<Object?> get props => [
         status,
-        emailId,
-        isValidEmailId,
+        mobileNumber,
+        isValidMobileNumber,
       ];
 }
