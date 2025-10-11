@@ -9,16 +9,14 @@ import 'package:flutter/foundation.dart';
 class NetworkModule extends InjectableModule {
   @override
   Future<void> inject() async {
-    safeRegisterSingleton<Dio>(
-        () => _provideDio(EnvironmentConfig.apiUrl));
+    safeRegisterSingleton<Dio>(() => _provideDio(EnvironmentConfig.apiUrl));
     safeRegisterSingleton<Dio>(
         () => _provideDio(EnvironmentConfig.apiUrl,
             contentType: 'multipart/form-data'),
         'multipart_dio');
 
     safeRegisterSingleton<Dio>(
-        () => _provideDio(EnvironmentConfig.notificationApiUrl),
-        'notification_dio');
+        () => _provideDio(EnvironmentConfig.apiUrl), 'notification_dio');
 
     safeRegisterSingleton<DioClient>(() => DioClient());
     safeRegisterSingleton<DioClient>(

@@ -7,14 +7,17 @@ extension SnackBarExtension on BuildContext {
   Future<void> showErrorSnackBar(String message) async {
     await _showCustomSnackBar(
       message: message,
-      icon: Icon(Icons.error),
+      icon: const Icon(
+        Icons.error,
+        color: Colors.red,
+      ),
     );
   }
 
   Future<void> showSuccessSnackBar(String message) async {
     await _showCustomSnackBar(
       message: message,
-      icon: Icon(Icons.check),
+      icon: const Icon(Icons.check),
     );
   }
 

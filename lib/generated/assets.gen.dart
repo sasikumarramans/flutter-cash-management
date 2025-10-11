@@ -59,6 +59,9 @@ class $AssetsImagesGen {
   AssetGenImage get loginBg =>
       const AssetGenImage('assets/images/login_bg.png');
 
+  /// File path: assets/images/otp_bg.png
+  AssetGenImage get otpBg => const AssetGenImage('assets/images/otp_bg.png');
+
   /// File path: assets/images/splash_logo.png
   AssetGenImage get splashLogoPng =>
       const AssetGenImage('assets/images/splash_logo.png');
@@ -69,7 +72,7 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<dynamic> get values =>
-      [launcherLogo, loginBg, splashLogoPng, splashLogoSvg];
+      [launcherLogo, loginBg, otpBg, splashLogoPng, splashLogoSvg];
 }
 
 class Assets {

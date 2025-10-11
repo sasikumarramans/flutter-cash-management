@@ -150,19 +150,19 @@ class MessageLookup extends MessageLookupByLibrary {
       " to learn how we collect, use, and share your data",
     ),
     "medical_disclaimer_1": MessageLookupByLibrary.simpleMessage(
-      "Please read Medical Disclaimer and Appropriate Use of the Quilt App",
+      "Please read Medical Disclaimer and Appropriate Use of the App",
     ),
     "medical_disclaimer_2": MessageLookupByLibrary.simpleMessage(
       "1. Age Restriction and User Agreement Notice",
     ),
     "medical_disclaimer_3": MessageLookupByLibrary.simpleMessage(
-      "The Quilt app is intended for users over the age of 13. By using this app, you represent you are at least 13 years of age. If you are not 13 years of age or otherwise do not agree to use the app according to the below information, you must not access the app.",
+      "This app is intended for users over the age of 13. By using this app, you represent you are at least 13 years of age. If you are not 13 years of age or otherwise do not agree to use the app according to the below information, you must not access the app.",
     ),
     "medical_disclaimer_4": MessageLookupByLibrary.simpleMessage(
       "2. Disclaimer of Medical Advice",
     ),
     "medical_disclaimer_5": MessageLookupByLibrary.simpleMessage(
-      "The Quilt app does not provide any medical advice, psychiatric diagnosis, or treatment, either on this app or elsewhere. The app and the data it generates are intended for informational purposes only.",
+      "This app does not provide any medical advice, psychiatric diagnosis, or treatment, either on this app or elsewhere. The app and the data it generates are intended for informational purposes only.",
     ),
     "medical_disclaimer_6": MessageLookupByLibrary.simpleMessage(
       "3. Consultation Recommendation and Emergency Protocol",
@@ -309,7 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "s_give_feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
     "s_help_center": MessageLookupByLibrary.simpleMessage("Help Center"),
     "s_help_info": MessageLookupByLibrary.simpleMessage(
-      "Learn how to use Quilt or Contact us",
+      "Learn how to use the app or Contact us",
     ),
     "s_help_support": MessageLookupByLibrary.simpleMessage("HELP & SUPPORT"),
     "s_high_importance_channel": MessageLookupByLibrary.simpleMessage(

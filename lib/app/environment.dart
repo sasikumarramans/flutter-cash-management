@@ -14,38 +14,10 @@ class EnvironmentConfig {
     return '';
   }
 
-  static String get notificationApiUrl {
-    if (flavor == 'demo') return EnvDemo.notificationApiUrl;
-    if (flavor == 'staging') return EnvStaging.notificationApiUrl;
-    if (flavor == 'prod') return EnvProd.notificationApiUrl;
-    return '';
-  }
-
   static String get apiKey {
     if (flavor == 'demo') return EnvDemo.apiKey;
     if (flavor == 'staging') return EnvStaging.apiKey;
     if (flavor == 'prod') return EnvProd.apiKey;
-    return '';
-  }
-
-  static String get mqttBrokerUrl {
-    if (flavor == 'demo') return EnvDemo.mqttBrokerUrl;
-    if (flavor == 'staging') return EnvStaging.mqttBrokerUrl;
-    if (flavor == 'prod') return EnvProd.mqttBrokerUrl;
-    return '';
-  }
-
-  static String get mqttUsername {
-    if (flavor == 'demo') return EnvDemo.mqttUsername;
-    if (flavor == 'staging') return EnvStaging.mqttUsername;
-    if (flavor == 'prod') return EnvProd.mqttUsername;
-    return '';
-  }
-
-  static String get mqttPassword {
-    if (flavor == 'demo') return EnvDemo.mqttPassword;
-    if (flavor == 'staging') return EnvStaging.mqttPassword;
-    if (flavor == 'prod') return EnvProd.mqttPassword;
     return '';
   }
 }

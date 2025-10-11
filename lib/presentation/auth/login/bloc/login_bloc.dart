@@ -4,9 +4,9 @@ import 'package:ev_flutter_app/app/bloc/base/base_bloc.dart';
 import 'package:ev_flutter_app/app/helpers/extensions/string_extensions.dart';
 import 'package:ev_flutter_app/data/local/hive_manager.dart';
 import 'package:ev_flutter_app/data/network/core/api_exception.dart';
-import 'package:ev_flutter_app/domain/auth/login/model/login_email_otp_response.dart';
-import 'package:ev_flutter_app/domain/auth/login/model/login_email_otp_verify_response.dart';
-import 'package:ev_flutter_app/domain/auth/login/use_cases/login_send_email_otp_use_case.dart';
+import 'package:ev_flutter_app/domain/auth/login/model/login_otp_response.dart';
+import 'package:ev_flutter_app/domain/auth/login/model/login_otp_verify_response.dart';
+import 'package:ev_flutter_app/domain/auth/login/use_cases/login_otp_use_case.dart';
 import 'package:ev_flutter_app/domain/auth/login/use_cases/verify_login_otp_use_case.dart';
 import 'package:ev_flutter_app/generated/l10n.dart';
 import 'package:ev_flutter_app/presentation/auth/login/bloc/login_event.dart';
@@ -17,7 +17,7 @@ import 'package:ev_flutter_app/presentation/auth/otp/bloc/otp_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
-  late final _loginUserUseCase = getIt.get<LoginSendEmailOtpUseCase>();
+  late final _loginUserUseCase = getIt.get<LoginOtpUseCase>();
   late final _verifyLoginOtpUseCase = getIt.get<VerifyLoginOtpUseCase>();
   late final _otpBloc = getIt.get<OtpBloc>();
   late final _hiveManager = getIt<HiveManager>();
@@ -28,7 +28,8 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
     on<MobileNumberChanged>(_onMobileNumberChanged);
     on<MobileNumberCompleted>(_onMobileNumberCompleted);
     on<LoginWithMobileNumberRequested>(_onLoginWithMobileNumberRequested);
-    on<ValidateLoginMobileNumberOtpRequested>(_onValidateLoginMobileNumberOtpRequested);
+    on<ValidateLoginMobileNumberOtpRequested>(
+        _onValidateLoginMobileNumberOtpRequested);
     _listenToOtpBloc();
   }
 
@@ -42,30 +43,34 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
   FutureOr<void> _onMobileNumberCompleted(
       MobileNumberCompleted event, Emitter<LoginState> emit) {
     emit(state.copyWith(
-      isValidMobileNumber: event.isValidEmailId,
+      isValidMobileNumber: event.isValidMobileNumber,
     ));
   }
 
   FutureOr<void> _onLoginWithMobileNumberRequested(
       LoginWithMobileNumberRequested event, Emitter<LoginState> emit) async {
-    await _requestOtpForEmail(emit, event.resendRequest);
+    await _requestOtp(emit, event.resendRequest);
   }
 
-  FutureOr<void> _requestOtpForEmail(
+  FutureOr<void> _requestOtp(
       Emitter<LoginState> emit, bool resendRequest) async {
     emit(state.copyWith(
       status: LoginStatus.sendingOtp,
     ));
 
-    await safeExecute<LoginEmailOtpResponse>(
+    final response = await safeExecute<LoginOtpResponse>(
       function: () async {
         return await _loginUserUseCase.execute(
-          request: LoginEmailOtpRequest(email: state.mobileNumber ?? ''),
+          request: LoginOtpRequest(mobileNumber: state.mobileNumber ?? ''),
         );
       },
       showLoading: true,
-      showError: false,
+      showError: true,
     );
+    if (response == null) {
+      emit(state.copyWith(status: LoginStatus.sendOtpFailed));
+      return;
+    }
 
     if (resendRequest) {
       await showSuccessMsg(S.current.otp_verification_code_resent);
@@ -81,13 +86,14 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
   }
 
   FutureOr<void> _onValidateLoginMobileNumberOtpRequested(
-      ValidateLoginMobileNumberOtpRequested event, Emitter<LoginState> emit) async {
+      ValidateLoginMobileNumberOtpRequested event,
+      Emitter<LoginState> emit) async {
     try {
-      final response = await safeExecute<LoginEmailOtpVerifyResponse>(
+      final response = await safeExecute<LoginOtpVerifyResponse>(
         function: () async {
           return await _verifyLoginOtpUseCase.execute(
             request: VerifyLoginOtpRequest(
-              email: state.mobileNumber ?? '',
+              mobileNumber: state.mobileNumber ?? '',
               otpCode: event.otpCode,
             ),
           );

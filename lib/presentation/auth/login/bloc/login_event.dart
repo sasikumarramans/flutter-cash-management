@@ -13,16 +13,16 @@ class MobileNumberChanged extends LoginEvent {
 }
 
 class MobileNumberCompleted extends LoginEvent {
-  final String? emailId;
-  final bool isValidEmailId;
+  final String? mobileNumber;
+  final bool isValidMobileNumber;
 
   const MobileNumberCompleted({
-    this.emailId,
-    required this.isValidEmailId,
+    this.mobileNumber,
+    required this.isValidMobileNumber,
   });
 
   @override
-  List<Object?> get props => [emailId, isValidEmailId];
+  List<Object?> get props => [mobileNumber, isValidMobileNumber];
 }
 
 class LoginWithMobileNumberRequested extends LoginEvent {

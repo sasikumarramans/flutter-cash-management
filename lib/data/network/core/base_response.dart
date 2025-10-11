@@ -19,8 +19,11 @@ class BaseResponse<Q> {
     Q Function(List<dynamic>)? parseDataJsonList,
     bool? sendCompleteResponse,
   }) {
+    print("object12345");
     if (json is Map) {
       bool sendCompleteData = sendCompleteResponse ?? false;
+      bool isSuccessful = json['success'] ?? true;
+
       final parsedData = sendCompleteData
           ? parseDataJson?.call(json as Map<String, dynamic>)
           : (json['data'] is Map<String, dynamic>)
@@ -30,10 +33,12 @@ class BaseResponse<Q> {
                   : parseDataJson?.call(json as Map<String, dynamic>);
 
       return BaseResponse(
-        isSuccessful: true,
+        isSuccessful: isSuccessful,
         errorCode: json['errorCode'],
         message: json['message'],
-        errorMsg: json['errorMsg'],
+        errorMsg: isSuccessful
+            ? json['errorMsg']
+            : (json['error'] ?? json['errorMsg']),
         data: parsedData,
       );
     } else {

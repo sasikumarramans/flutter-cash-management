@@ -18,18 +18,18 @@ class DioClient {
       {required dynamic data,
       Map<String, dynamic>? queryParameters,
       T Function(Map<String, dynamic>)? parseDataJson,
-      T Function(List<dynamic>)? parseListDataJson}) {
-    return _handleRequest(
-      () async {
-        return _dio.post(
-          path,
-          data: data,
-          queryParameters: queryParameters,
-        );
-      },
-      parseDataJson: parseDataJson,
-      parseListDataJson: parseListDataJson,
-    );
+      T Function(List<dynamic>)? parseListDataJson,
+      bool? sendCompleteResponse}) {
+    return _handleRequest(() async {
+      return _dio.post(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+      );
+    },
+        parseDataJson: parseDataJson,
+        parseListDataJson: parseListDataJson,
+        sendCompleteResponse: sendCompleteResponse);
   }
 
   Future<Uint8List> downloadImage(String imageUrl) async {
@@ -109,7 +109,6 @@ class DioClient {
   }) async {
     try {
       final Response response = await request();
-
       final responseBody = BaseResponse<T>.fromJson(response.data,
           parseDataJson: parseDataJson,
           parseDataJsonList: parseListDataJson,
@@ -118,10 +117,8 @@ class DioClient {
         debugPrint(responseBody.isSuccessful.toString());
         debugPrint(responseBody.data.toString());
       }
-
-      if (responseBody.isSuccessful &&
-          responseBody.data != null &&
-          responseBody.errorCode != 0) {
+      print("object1234");
+      if (responseBody.isSuccessful && responseBody.data != null) {
         return responseBody.data!;
       } else {
         throw ApiException(
@@ -165,6 +162,14 @@ class DioClient {
 
   void _handleBadResponse(Response<dynamic>? response) {
     if (response != null) {
+      // Check if response body contains error message
+      if (response.data is Map && response.data['error'] != null) {
+        throw ApiException(
+          message: response.data['error'],
+          errorCode: response.statusCode,
+        );
+      }
+
       switch (response.statusCode) {
         case 401:
         case 402:

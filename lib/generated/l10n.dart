@@ -434,10 +434,10 @@ class S {
     );
   }
 
-  /// `Please read Medical Disclaimer and Appropriate Use of the Quilt App`
+  /// `Please read Medical Disclaimer and Appropriate Use of the App`
   String get medical_disclaimer_1 {
     return Intl.message(
-      'Please read Medical Disclaimer and Appropriate Use of the Quilt App',
+      'Please read Medical Disclaimer and Appropriate Use of the App',
       name: 'medical_disclaimer_1',
       desc: '',
       args: [],
@@ -454,10 +454,10 @@ class S {
     );
   }
 
-  /// `The Quilt app is intended for users over the age of 13. By using this app, you represent you are at least 13 years of age. If you are not 13 years of age or otherwise do not agree to use the app according to the below information, you must not access the app.`
+  /// `This app is intended for users over the age of 13. By using this app, you represent you are at least 13 years of age. If you are not 13 years of age or otherwise do not agree to use the app according to the below information, you must not access the app.`
   String get medical_disclaimer_3 {
     return Intl.message(
-      'The Quilt app is intended for users over the age of 13. By using this app, you represent you are at least 13 years of age. If you are not 13 years of age or otherwise do not agree to use the app according to the below information, you must not access the app.',
+      'This app is intended for users over the age of 13. By using this app, you represent you are at least 13 years of age. If you are not 13 years of age or otherwise do not agree to use the app according to the below information, you must not access the app.',
       name: 'medical_disclaimer_3',
       desc: '',
       args: [],
@@ -474,10 +474,10 @@ class S {
     );
   }
 
-  /// `The Quilt app does not provide any medical advice, psychiatric diagnosis, or treatment, either on this app or elsewhere. The app and the data it generates are intended for informational purposes only.`
+  /// `This app does not provide any medical advice, psychiatric diagnosis, or treatment, either on this app or elsewhere. The app and the data it generates are intended for informational purposes only.`
   String get medical_disclaimer_5 {
     return Intl.message(
-      'The Quilt app does not provide any medical advice, psychiatric diagnosis, or treatment, either on this app or elsewhere. The app and the data it generates are intended for informational purposes only.',
+      'This app does not provide any medical advice, psychiatric diagnosis, or treatment, either on this app or elsewhere. The app and the data it generates are intended for informational purposes only.',
       name: 'medical_disclaimer_5',
       desc: '',
       args: [],
@@ -739,10 +739,10 @@ class S {
     );
   }
 
-  /// `Learn how to use Quilt or Contact us`
+  /// `Learn how to use the app or Contact us`
   String get s_help_info {
     return Intl.message(
-      'Learn how to use Quilt or Contact us',
+      'Learn how to use the app or Contact us',
       name: 's_help_info',
       desc: '',
       args: [],

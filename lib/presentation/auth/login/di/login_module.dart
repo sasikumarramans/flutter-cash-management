@@ -1,5 +1,5 @@
 import 'package:ev_flutter_app/app/di/base/injectable_module.dart';
-import 'package:ev_flutter_app/domain/auth/login/use_cases/login_send_email_otp_use_case.dart';
+import 'package:ev_flutter_app/domain/auth/login/use_cases/login_otp_use_case.dart';
 import 'package:ev_flutter_app/domain/auth/login/use_cases/verify_login_otp_use_case.dart';
 import 'package:ev_flutter_app/presentation/auth/login/bloc/login_bloc.dart';
 import 'package:ev_flutter_app/presentation/auth/otp/bloc/otp_bloc.dart';
@@ -13,8 +13,7 @@ class LoginModule extends InjectableModule {
 
   @override
   Future<void> inject() async {
-    safeRegisterSingleton<LoginSendEmailOtpUseCase>(
-        () => LoginSendEmailOtpUseCase());
+    safeRegisterSingleton<LoginOtpUseCase>(() => LoginOtpUseCase());
     safeRegisterSingleton<VerifyLoginOtpUseCase>(() => VerifyLoginOtpUseCase());
   }
 
@@ -22,7 +21,7 @@ class LoginModule extends InjectableModule {
   void dispose() {
     safeUnregister<LoginBloc>();
     safeUnregister<OtpBloc>();
-    safeUnregister<LoginSendEmailOtpUseCase>();
+    safeUnregister<LoginOtpUseCase>();
     safeUnregister<VerifyLoginOtpUseCase>();
   }
 }

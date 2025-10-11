@@ -346,7 +346,6 @@ class AppTheme {
         Colors.white,
         24,
         FontWeight.w500,
-
       );
 
   static TextStyle get simpleWhiteTextStyle => _baseTextStyle(
@@ -649,7 +648,7 @@ class AppTheme {
     borderWidth: 0.8,
     contentPadding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
     borderRadius: const BorderRadius.all(
-      Radius.circular(30),
+      Radius.circular(12),
     ),
     hintStyle: loginEmailHint,
   );
@@ -661,7 +660,7 @@ class AppTheme {
     borderColor: const Color(0xFF6D6D6D),
     contentPadding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
     borderRadius: const BorderRadius.all(
-      Radius.circular(30),
+      Radius.circular(12),
     ),
     hintStyle: loginEmailHint,
   );
@@ -675,7 +674,7 @@ class AppTheme {
   static InputDecoration outlinedEnabled = getInputDecoration(
     style: TextFieldStyle.outlined,
     state: TextFieldState.enabled,
-    borderRadius: BorderRadius.circular(30),
+    borderRadius: BorderRadius.circular(12),
     borderWidth: 1,
   );
 

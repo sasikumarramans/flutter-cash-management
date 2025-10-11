@@ -39,17 +39,13 @@ abstract class BaseBloc<Event, State> extends Bloc<Event, State> {
 
       logger.e('$function', error: e, stackTrace: st);
 
-      String message = e.toString();
-
-      switch (e.runtimeType) {
-        case BadResponseException _:
-          rethrow;
-        case ApiException _:
-          final apiException = e as ApiException;
-          message = apiException.message ?? '';
-
-          break;
-        default:
+      String message = '';
+      if (e is BadResponseException) {
+        rethrow;
+      } else if (e is ApiException) {
+        message = e.message ?? '';
+      } else {
+        message = e.toString();
       }
 
       if (showError) {
