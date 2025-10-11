@@ -118,10 +118,6 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
         response.userId,
       );
 
-      await _hiveManager.saveToHive(
-        HiveManager.appSessionId,
-        response.appSessionId,
-      );
       emit(state.copyWith(status: LoginStatus.userAuthenticated));
     } catch (e) {
       if (e is ApiException) {
