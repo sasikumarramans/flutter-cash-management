@@ -3,7 +3,6 @@ import 'package:ev_flutter_app/app/router/router_manager.dart';
 import 'package:ev_flutter_app/app/router/router_scope.dart';
 import 'package:ev_flutter_app/presentation/auth/home/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class DashboardRouter {
@@ -23,10 +22,7 @@ class DashboardRouter {
                   key: homeScreenKey,
                   inject: () {},
                   dispose: () {},
-                  child: MultiBlocProvider(
-                    providers: const [],
-                    child: HomeScreen(),
-                  ),
+                  child: const HomeScreen(),
                 ),
               );
             },

@@ -9,6 +9,7 @@ import 'package:ev_flutter_app/presentation/component/locale/bloc/locale_bloc.da
 import 'package:ev_flutter_app/presentation/component/locale/bloc/locale_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_portal/flutter_portal.dart';

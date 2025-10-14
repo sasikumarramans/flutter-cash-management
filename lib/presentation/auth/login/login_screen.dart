@@ -232,6 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
               }
               break;
             case LoginStatus.userAuthenticated:
+              print("userAuthenticated");
               context.go(MainRouter.mainScreenRoute);
               break;
             default:

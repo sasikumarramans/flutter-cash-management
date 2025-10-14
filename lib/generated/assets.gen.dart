@@ -48,6 +48,25 @@ class $AssetsFontsGen {
       ];
 }
 
+class $AssetsIconsGen {
+  const $AssetsIconsGen();
+
+  /// File path: assets/icons/history.svg
+  SvgGenImage get history => const SvgGenImage('assets/icons/history.svg');
+
+  /// File path: assets/icons/home.svg
+  SvgGenImage get home => const SvgGenImage('assets/icons/home.svg');
+
+  /// File path: assets/icons/ledger.svg
+  SvgGenImage get ledger => const SvgGenImage('assets/icons/ledger.svg');
+
+  /// File path: assets/icons/profile.svg
+  SvgGenImage get profile => const SvgGenImage('assets/icons/profile.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [history, home, ledger, profile];
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -79,6 +98,7 @@ class Assets {
   Assets._();
 
   static const $AssetsFontsGen fonts = $AssetsFontsGen();
+  static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 

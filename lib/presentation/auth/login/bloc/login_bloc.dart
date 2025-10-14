@@ -102,9 +102,12 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
         showError: false,
       );
 
+      print(response);
+      print("otpResponse");
       if (response == null) {
         return;
       }
+      print(response.sessionToken);
 
       await showSuccessMsg("Logged in successfully");
 

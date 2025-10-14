@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:ev_flutter_app/app/theme/app_theme.dart';
+import 'package:ev_flutter_app/generated/assets.gen.dart';
 import 'package:ev_flutter_app/presentation/component/cache_manager/base_cached_image_shimmer.dart';
 import 'package:ev_flutter_app/presentation/component/cache_manager/profile_cache_manager.dart';
+import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class ProfileCachedImageShimmer extends StatelessWidget {
   final String? imageUrl;
@@ -52,38 +52,7 @@ class ProfileCachedImageShimmer extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       alignment: Alignment.center,
-      child: Text(
-        _getInitials(name ?? ''),
-        textAlign: TextAlign.center,
-        style: AppTheme.simpleWhiteTextStyle.copyWith(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          height: 1,
-        ),
-      ),
+      child: Assets.icons.profile.svg(),
     );
-  }
-
-  // Future<bool> isImageAccessible(String url) async {
-  //   try {
-  //     final dio = GetIt.I<Dio>();
-  //     final response = await dio.head(url,
-  //         options: Options(
-  //             followRedirects: false, validateStatus: (status) => true));
-  //     return response.statusCode == 200;
-  //   } catch (_) {
-  //     return false;
-  //   }
-  // }
-
-  String _getInitials(String name) {
-    if (name.trim().isEmpty) return "";
-    final parts = name.trim().split(" ");
-    if (parts.length == 1) {
-      return parts.first.substring(0, 1).toUpperCase();
-    } else {
-      return (parts[0].substring(0, 1) + parts[1].substring(0, 1))
-          .toUpperCase();
-    }
   }
 }

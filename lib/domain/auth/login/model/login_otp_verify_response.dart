@@ -29,7 +29,7 @@ class LoginOtpVerifyResponse {
         lastName: json["lastName"] ?? "",
         phoneNumber: json["phoneNumber"] ?? "",
         countryCode: json["countryCode"] ?? "",
-        email: json["email"],
+        email: json["email"] ?? "",
         profileImageUrl: json["profileImageUrl"] ?? "",
         username: json["username"] ?? "",
       );

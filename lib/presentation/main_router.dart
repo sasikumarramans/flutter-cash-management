@@ -7,8 +7,10 @@ import 'package:ev_flutter_app/presentation/auth/login/bloc/login_bloc.dart';
 import 'package:ev_flutter_app/presentation/auth/login/di/login_module.dart';
 import 'package:ev_flutter_app/presentation/auth/login/login_screen.dart';
 import 'package:ev_flutter_app/presentation/auth/login_router.dart';
+import 'package:ev_flutter_app/presentation/dashboard/bloc/dashboard_bloc.dart';
 import 'package:ev_flutter_app/presentation/dashboard/dash_board_router.dart';
 import 'package:ev_flutter_app/presentation/dashboard/dash_board_screen.dart';
+import 'package:ev_flutter_app/presentation/dashboard/di/dashboard_module.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -28,12 +30,22 @@ class MainRouter {
     return [
       StatefulShellRoute.indexedStack(
         builder: (BuildContext context, GoRouterState state, Widget child) {
+          final dashboardModule = DashboardModule();
+          dashboardModule.injectBloc();
           return RouterScope(
             key: dashboardRouteScreenKey,
-            inject: () {},
-            dispose: () {},
+            inject: () {
+              dashboardModule.inject();
+            },
+            dispose: () {
+              dashboardModule.dispose();
+            },
             child: MultiBlocProvider(
-              providers: [],
+              providers: [
+                BlocProvider<DashboardBloc>.value(
+                  value: GetIt.I<DashboardBloc>(),
+                ),
+              ],
               child: DashboardScreen(child: child),
             ),
           );
