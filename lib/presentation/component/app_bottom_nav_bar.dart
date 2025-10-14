@@ -57,11 +57,11 @@ class AppBottomNavBar extends StatelessWidget {
           Widget iconWidget;
           if (isSelected) {
             iconWidget = Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              /*  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                 color: AppTheme.tertiaryBackgroundColor,
                 borderRadius: BorderRadius.circular(50),
-              ),
+              ),*/
               child: item.icon,
             );
           } else {
@@ -73,9 +73,22 @@ class AppBottomNavBar extends StatelessWidget {
               behavior: HitTestBehavior.opaque,
               onTap: item.onPressed,
               child: SizedBox(
-                height: 50,
+                height: 60,
                 child: Center(
-                  child: iconWidget,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      iconWidget,
+                      Text(
+                        item.item.label,
+                        style: AppTheme.bottomBarText.copyWith(
+                            color: isSelected
+                                ? AppTheme.tertiaryColor
+                                : const Color(0xff9CA6BB)),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

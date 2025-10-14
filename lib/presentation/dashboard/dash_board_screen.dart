@@ -1,3 +1,4 @@
+import 'package:ev_flutter_app/app/theme/app_theme.dart';
 import 'package:ev_flutter_app/generated/assets.gen.dart';
 import 'package:ev_flutter_app/presentation/component/app_bottom_nav_bar.dart';
 import 'package:ev_flutter_app/presentation/component/cache_manager/profile_cached_image_shimmer.dart';
@@ -67,7 +68,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                     status: state.selectedItem == BottomNavItem.home
                         ? BottomNavIconStatus.selected
                         : BottomNavIconStatus.disabled,
-                    icon: Assets.icons.home.svg(),
+                    icon: Assets.icons.home.svg(
+                        color: state.selectedItem == BottomNavItem.home
+                            ? AppTheme.tertiaryColor
+                            : AppTheme.bottomBarImgColor),
                     onPressed: () {
                       if (BottomNavItem.home == state.selectedItem) {
                         context
@@ -85,7 +89,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                     status: state.selectedItem == BottomNavItem.ledger
                         ? BottomNavIconStatus.selected
                         : BottomNavIconStatus.disabled,
-                    icon: Assets.icons.ledger.svg(),
+                    icon: Assets.icons.ledger.svg(
+                        color: state.selectedItem == BottomNavItem.ledger
+                            ? AppTheme.tertiaryColor
+                            : AppTheme.bottomBarImgColor),
                     onPressed: () {
                       if (BottomNavItem.ledger == state.selectedItem) {
                         context
@@ -102,7 +109,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                     status: state.selectedItem == BottomNavItem.history
                         ? BottomNavIconStatus.selected
                         : BottomNavIconStatus.disabled,
-                    icon: Assets.icons.history.svg(),
+                    icon: Assets.icons.history.svg(
+                        color: state.selectedItem == BottomNavItem.history
+                            ? AppTheme.tertiaryColor
+                            : AppTheme.bottomBarImgColor),
                     onPressed: () {
                       if (BottomNavItem.history == state.selectedItem) {
                         context
@@ -123,8 +133,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                         : BottomNavIconStatus.disabled,
                     icon: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: const ProfileCachedImageShimmer(
+                      child: ProfileCachedImageShimmer(
                         imageUrl: "",
+                        isSelected: state.selectedItem == BottomNavItem.profile,
                         height: 24,
                         width: 24,
                         boxFit: BoxFit.cover,
@@ -151,5 +162,28 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   void _handleNavigation(
-      BuildContext context, BottomNavItem selectedItem, DashboardState state) {}
+      BuildContext context, BottomNavItem selectedItem, DashboardState state) {
+    switch (selectedItem) {
+      case BottomNavItem.home:
+        context
+            .read<DashboardBloc>()
+            .add(const DashboardTabChanged(BottomNavItem.home));
+        break;
+      case BottomNavItem.ledger:
+        context
+            .read<DashboardBloc>()
+            .add(const DashboardTabChanged(BottomNavItem.ledger));
+        break;
+      case BottomNavItem.history:
+        context
+            .read<DashboardBloc>()
+            .add(const DashboardTabChanged(BottomNavItem.history));
+        break;
+      case BottomNavItem.profile:
+        context
+            .read<DashboardBloc>()
+            .add(const DashboardTabChanged(BottomNavItem.profile));
+        break;
+    }
+  }
 }

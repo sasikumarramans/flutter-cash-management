@@ -1,3 +1,4 @@
+import 'package:ev_flutter_app/app/theme/app_theme.dart';
 import 'package:ev_flutter_app/generated/assets.gen.dart';
 import 'package:ev_flutter_app/presentation/component/cache_manager/base_cached_image_shimmer.dart';
 import 'package:ev_flutter_app/presentation/component/cache_manager/profile_cache_manager.dart';
@@ -12,6 +13,7 @@ class ProfileCachedImageShimmer extends StatelessWidget {
   final double? width;
   final double? height;
   final bool isShowLoader;
+  final bool isSelected;
   final Alignment alignment;
 
   const ProfileCachedImageShimmer({
@@ -19,6 +21,7 @@ class ProfileCachedImageShimmer extends StatelessWidget {
     required this.imageUrl,
     this.name,
     this.isLoading = false,
+    this.isSelected = false,
     this.isShowLoader = false,
     this.boxFit = BoxFit.contain,
     this.width,
@@ -52,7 +55,9 @@ class ProfileCachedImageShimmer extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       alignment: Alignment.center,
-      child: Assets.icons.profile.svg(),
+      child: Assets.icons.profile.svg(
+          color:
+              isSelected ? AppTheme.tertiaryColor : AppTheme.bottomBarImgColor),
     );
   }
 }

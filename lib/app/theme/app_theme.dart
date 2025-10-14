@@ -8,12 +8,12 @@ class AppTheme {
   //* -------------------- Color Palette -------------------- */
   static const Color primaryColor = Color(0xFF1A1A1A);
   static const Color secondaryColor = Colors.white;
-  static const Color tertiaryColor = Color(0xFF40A1FB);
+  static const Color tertiaryColor = Color(0xFF55B685);
   static const Color buttonCompleted = Color(0xFF40A1FB);
   static const Color labelTextColor = Color(0xFFB0B0B0);
   static const Color createProfileSaveTextColor = Color(0xFF454545);
   static const Color loginButtonTextColor = primaryColor;
-  static const Color loginButtonBackgroundColor = buttonCompleted;
+  static const Color bottomBarImgColor = Color(0xff9CA6BB);
 
   static const Color fabricTextColor = Color(0xFFFF9F0A);
 
@@ -347,7 +347,11 @@ class AppTheme {
         24,
         FontWeight.w500,
       );
-
+  static TextStyle get bottomBarText => _baseTextStyle(
+        Colors.white,
+        10,
+        FontWeight.w500,
+      );
   static TextStyle get simpleWhiteTextStyle => _baseTextStyle(
         Colors.white,
         14,
