@@ -7,6 +7,8 @@ import 'package:ev_flutter_app/presentation/auth/login/bloc/login_bloc.dart';
 import 'package:ev_flutter_app/presentation/auth/login/di/login_module.dart';
 import 'package:ev_flutter_app/presentation/auth/login/login_screen.dart';
 import 'package:ev_flutter_app/presentation/auth/login_router.dart';
+import 'package:ev_flutter_app/presentation/dashboard/dash_board_router.dart';
+import 'package:ev_flutter_app/presentation/dashboard/dash_board_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -21,7 +23,23 @@ class MainRouter {
 
   static List<RouteBase> routes() {
     const Key authScreenKey = Key('authScreen');
+    const Key dashboardRouteScreenKey = Key('dashboard');
+
     return [
+      StatefulShellRoute.indexedStack(
+        builder: (BuildContext context, GoRouterState state, Widget child) {
+          return RouterScope(
+            key: dashboardRouteScreenKey,
+            inject: () {},
+            dispose: () {},
+            child: MultiBlocProvider(
+              providers: [],
+              child: DashboardScreen(child: child),
+            ),
+          );
+        },
+        branches: DashboardRouter.getBranches(),
+      ),
       GoRoute(
         path: mainScreenRoute,
         redirect: (context, state) async {
