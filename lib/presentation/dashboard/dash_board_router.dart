@@ -1,10 +1,10 @@
-import 'package:ev_flutter_app/app/router/animation/fade_transition_screen.dart';
-import 'package:ev_flutter_app/app/router/router_manager.dart';
-import 'package:ev_flutter_app/app/router/router_scope.dart';
-import 'package:ev_flutter_app/presentation/auth/home/home_screen.dart';
-import 'package:ev_flutter_app/presentation/history/history_screen.dart';
-import 'package:ev_flutter_app/presentation/ledger_book/ledger_book_screen.dart';
-import 'package:ev_flutter_app/presentation/profile/profile_screen.dart';
+import 'package:bearnshare/app/router/animation/fade_transition_screen.dart';
+import 'package:bearnshare/app/router/router_manager.dart';
+import 'package:bearnshare/app/router/router_scope.dart';
+import 'package:bearnshare/presentation/auth/home/home_screen.dart';
+import 'package:bearnshare/presentation/history/history_screen.dart';
+import 'package:bearnshare/presentation/ledger_book/ledger_book_screen.dart';
+import 'package:bearnshare/presentation/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

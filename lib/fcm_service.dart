@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:ev_flutter_app/data/local/hive_manager.dart';
-import 'package:ev_flutter_app/presentation/notification/notification_manager.dart';
+import 'package:bearnshare/data/local/hive_manager.dart';
+import 'package:bearnshare/presentation/notification/notification_manager.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';

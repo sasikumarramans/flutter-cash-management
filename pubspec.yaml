@@ -1,6 +1,6 @@
-name: ev_flutter_app
+name: bearnshare
 
-description: "A new Flutter project."
+description: "BearNShare - A cash management application."
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 

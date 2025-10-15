@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:ev_flutter_app/domain/auth/auth_repository.dart';
-import 'package:ev_flutter_app/domain/auth/login/model/login_otp_verify_response.dart';
-import 'package:ev_flutter_app/domain/base/base_use_case.dart';
+import 'package:bearnshare/domain/auth/auth_repository.dart';
+import 'package:bearnshare/domain/auth/login/model/login_otp_verify_response.dart';
+import 'package:bearnshare/domain/base/base_use_case.dart';
 import 'package:get_it/get_it.dart';
 
 class VerifyLoginOtpUseCase

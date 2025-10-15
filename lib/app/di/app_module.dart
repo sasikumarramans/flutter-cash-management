@@ -1,10 +1,10 @@
-import 'package:ev_flutter_app/app/di/base/injectable_module.dart';
-import 'package:ev_flutter_app/app/helpers/app_snack_bar_manager.dart';
-import 'package:ev_flutter_app/app/helpers/permissions_manager.dart';
-import 'package:ev_flutter_app/app/helpers/url_manager.dart';
-import 'package:ev_flutter_app/app/router/router_manager.dart';
-import 'package:ev_flutter_app/fcm_service.dart';
-import 'package:ev_flutter_app/firebase_options.dart';
+import 'package:bearnshare/app/di/base/injectable_module.dart';
+import 'package:bearnshare/app/helpers/app_snack_bar_manager.dart';
+import 'package:bearnshare/app/helpers/permissions_manager.dart';
+import 'package:bearnshare/app/helpers/url_manager.dart';
+import 'package:bearnshare/app/router/router_manager.dart';
+import 'package:bearnshare/fcm_service.dart';
+import 'package:bearnshare/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';

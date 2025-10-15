@@ -1,11 +1,11 @@
-import 'package:flutter/widgets.dart';
+import 'package:bearnshare/app/router/animation/slide_transition_screen.dart';
+import 'package:bearnshare/app/router/router_scope.dart';
+import 'package:bearnshare/presentation/auth/otp/bloc/otp_bloc.dart';
+import 'package:bearnshare/presentation/auth/otp/otp_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ev_flutter_app/app/router/animation/slide_transition_screen.dart';
-import 'package:ev_flutter_app/app/router/router_scope.dart';
-import 'package:ev_flutter_app/presentation/auth/otp/bloc/otp_bloc.dart';
-import 'package:ev_flutter_app/presentation/auth/otp/otp_screen.dart';
 
 class LoginRouter {
   static const String otpScreenRoute = 'otp';

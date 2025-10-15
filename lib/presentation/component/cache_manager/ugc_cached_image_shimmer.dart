@@ -1,7 +1,7 @@
+import 'package:bearnshare/presentation/component/cache_manager/base_cached_image_shimmer.dart';
+import 'package:bearnshare/presentation/component/cache_manager/ugc_image_cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:ev_flutter_app/presentation/component/cache_manager/base_cached_image_shimmer.dart';
-import 'package:ev_flutter_app/presentation/component/cache_manager/ugc_image_cache_manager.dart';
 
 class UGCCachedImageShimmer extends StatelessWidget {
   final String? imageUrl;

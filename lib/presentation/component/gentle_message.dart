@@ -1,4 +1,4 @@
-import 'package:ev_flutter_app/app/theme/app_theme.dart';
+import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class GentleMessage extends StatelessWidget {

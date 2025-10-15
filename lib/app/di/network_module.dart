@@ -1,9 +1,9 @@
+import 'package:bearnshare/app/di/base/injectable_module.dart';
+import 'package:bearnshare/app/environment.dart';
+import 'package:bearnshare/data/network/core/dio_client.dart';
+import 'package:bearnshare/data/network/core/dio_logging_interceptor.dart';
+import 'package:bearnshare/data/network/core/header_interceptor.dart';
 import 'package:dio/dio.dart';
-import 'package:ev_flutter_app/app/di/base/injectable_module.dart';
-import 'package:ev_flutter_app/app/environment.dart';
-import 'package:ev_flutter_app/data/network/core/dio_client.dart';
-import 'package:ev_flutter_app/data/network/core/dio_logging_interceptor.dart';
-import 'package:ev_flutter_app/data/network/core/header_interceptor.dart';
 import 'package:flutter/foundation.dart';
 
 class NetworkModule extends InjectableModule {

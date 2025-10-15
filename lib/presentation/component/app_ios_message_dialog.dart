@@ -1,5 +1,5 @@
+import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:ev_flutter_app/app/theme/app_theme.dart';
 
 class AppIosMessageDialog extends StatelessWidget {
   final Widget? icon;

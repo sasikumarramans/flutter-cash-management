@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:ev_flutter_app/data/local/hive_manager.dart';
-import 'package:ev_flutter_app/data/notification/firebase_notification_service.dart';
-import 'package:ev_flutter_app/domain/notification/model/notification_entity.dart';
-import 'package:ev_flutter_app/domain/notification/notification_repository.dart';
+import 'package:bearnshare/data/local/hive_manager.dart';
+import 'package:bearnshare/data/notification/firebase_notification_service.dart';
+import 'package:bearnshare/domain/notification/model/notification_entity.dart';
+import 'package:bearnshare/domain/notification/notification_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 

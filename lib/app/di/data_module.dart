@@ -1,13 +1,13 @@
-import 'package:ev_flutter_app/app/di/base/injectable_module.dart';
-import 'package:ev_flutter_app/app/helpers/app_file_manager.dart';
-import 'package:ev_flutter_app/app/helpers/file_manager.dart';
-import 'package:ev_flutter_app/data/local/hive_manager.dart';
-import 'package:ev_flutter_app/data/local/session.dart';
-import 'package:ev_flutter_app/data/local/shared_preferences_repository.dart';
-import 'package:ev_flutter_app/presentation/component/cache_manager/drafts_cache_manager.dart';
-import 'package:ev_flutter_app/presentation/component/cache_manager/profile_cache_manager.dart';
-import 'package:ev_flutter_app/presentation/component/cache_manager/ugc_image_cache_manager.dart';
-import 'package:ev_flutter_app/presentation/component/media_picker_manager.dart';
+import 'package:bearnshare/app/di/base/injectable_module.dart';
+import 'package:bearnshare/app/helpers/app_file_manager.dart';
+import 'package:bearnshare/app/helpers/file_manager.dart';
+import 'package:bearnshare/data/local/hive_manager.dart';
+import 'package:bearnshare/data/local/session.dart';
+import 'package:bearnshare/data/local/shared_preferences_repository.dart';
+import 'package:bearnshare/presentation/component/cache_manager/drafts_cache_manager.dart';
+import 'package:bearnshare/presentation/component/cache_manager/profile_cache_manager.dart';
+import 'package:bearnshare/presentation/component/cache_manager/ugc_image_cache_manager.dart';
+import 'package:bearnshare/presentation/component/media_picker_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataModule extends InjectableModule {

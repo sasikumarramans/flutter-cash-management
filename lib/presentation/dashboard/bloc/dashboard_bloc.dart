@@ -1,7 +1,7 @@
-import 'package:ev_flutter_app/app/bloc/base/base_bloc.dart';
-import 'package:ev_flutter_app/presentation/component/app_bottom_nav_bar.dart';
-import 'package:ev_flutter_app/presentation/dashboard/bloc/dashboard_event.dart';
-import 'package:ev_flutter_app/presentation/dashboard/bloc/dashboard_state.dart';
+import 'package:bearnshare/app/bloc/base/base_bloc.dart';
+import 'package:bearnshare/presentation/component/app_bottom_nav_bar.dart';
+import 'package:bearnshare/presentation/dashboard/bloc/dashboard_event.dart';
+import 'package:bearnshare/presentation/dashboard/bloc/dashboard_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DashboardBloc extends BaseBloc<DashboardEvent, DashboardState> {

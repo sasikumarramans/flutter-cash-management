@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:ev_flutter_app/domain/app_update/app_update_repository.dart';
-import 'package:ev_flutter_app/domain/app_update/model/app_update_info.dart';
+import 'package:bearnshare/domain/app_update/app_update_repository.dart';
+import 'package:bearnshare/domain/app_update/model/app_update_info.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart' as android_update;

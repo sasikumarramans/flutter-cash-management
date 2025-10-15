@@ -1,5 +1,5 @@
-import 'package:ev_flutter_app/domain/notification/notification_repository.dart';
-import 'package:ev_flutter_app/generated/l10n.dart';
+import 'package:bearnshare/domain/notification/notification_repository.dart';
+import 'package:bearnshare/generated/l10n.dart';
 
 class InitializeNotificationUseCase {
   final NotificationRepository repository;

@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:ev_flutter_app/app/helpers/app_snack_bar_manager.dart';
-import 'package:ev_flutter_app/app/helpers/download_manager.dart';
+import 'package:bearnshare/app/helpers/app_snack_bar_manager.dart';
+import 'package:bearnshare/app/helpers/download_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart' as path;

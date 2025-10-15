@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:ev_flutter_app/app/helpers/app_snack_bar_manager.dart';
+import 'package:bearnshare/app/helpers/app_snack_bar_manager.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:gal/gal.dart';

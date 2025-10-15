@@ -1,6 +1,6 @@
-import 'package:ev_flutter_app/app/theme/app_theme.dart';
-import 'package:ev_flutter_app/generated/l10n.dart';
-import 'package:ev_flutter_app/presentation/component/app_button.dart';
+import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/generated/l10n.dart';
+import 'package:bearnshare/presentation/component/app_button.dart';
 import 'package:flutter/material.dart';
 
 enum AppDialogType {

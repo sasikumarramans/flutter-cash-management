@@ -1,10 +1,10 @@
+import 'package:bearnshare/domain/app_update/use_cases/check_app_update_use_case.dart';
+import 'package:bearnshare/domain/app_update/use_cases/perform_force_update_use_case.dart';
+import 'package:bearnshare/domain/app_update/use_cases/perform_soft_update_use_case.dart';
+import 'package:bearnshare/presentation/app_update/bloc/app_update_event.dart';
+import 'package:bearnshare/presentation/app_update/bloc/app_update_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:ev_flutter_app/domain/app_update/use_cases/check_app_update_use_case.dart';
-import 'package:ev_flutter_app/domain/app_update/use_cases/perform_force_update_use_case.dart';
-import 'package:ev_flutter_app/domain/app_update/use_cases/perform_soft_update_use_case.dart';
-import 'package:ev_flutter_app/presentation/app_update/bloc/app_update_event.dart';
-import 'package:ev_flutter_app/presentation/app_update/bloc/app_update_state.dart';
 
 class AppUpdateBloc extends Bloc<AppUpdateEvent, AppUpdateState> {
   final _checkAppUpdateUseCase = GetIt.I<CheckAppUpdateUseCase>();

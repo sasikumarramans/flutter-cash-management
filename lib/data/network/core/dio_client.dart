@@ -1,11 +1,11 @@
 import 'dart:core';
 
+import 'package:bearnshare/app/router/router_manager.dart';
+import 'package:bearnshare/data/local/hive_manager.dart';
+import 'package:bearnshare/data/network/core/api_exception.dart';
+import 'package:bearnshare/data/network/core/base_response.dart';
+import 'package:bearnshare/presentation/main_router.dart';
 import 'package:dio/dio.dart';
-import 'package:ev_flutter_app/app/router/router_manager.dart';
-import 'package:ev_flutter_app/data/local/hive_manager.dart';
-import 'package:ev_flutter_app/data/network/core/api_exception.dart';
-import 'package:ev_flutter_app/data/network/core/base_response.dart';
-import 'package:ev_flutter_app/presentation/main_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 

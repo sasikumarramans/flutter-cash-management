@@ -1,6 +1,6 @@
-import 'package:ev_flutter_app/app/theme/app_theme.dart';
-import 'package:ev_flutter_app/generated/assets.gen.dart';
-import 'package:ev_flutter_app/generated/l10n.dart';
+import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/generated/assets.gen.dart';
+import 'package:bearnshare/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 

@@ -1,7 +1,7 @@
+import 'package:bearnshare/app/bloc/base/base_bloc.dart';
+import 'package:bearnshare/presentation/auth/otp/bloc/otp_event.dart';
+import 'package:bearnshare/presentation/auth/otp/bloc/otp_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ev_flutter_app/app/bloc/base/base_bloc.dart';
-import 'package:ev_flutter_app/presentation/auth/otp/bloc/otp_event.dart';
-import 'package:ev_flutter_app/presentation/auth/otp/bloc/otp_state.dart';
 
 class OtpBloc extends BaseBloc<OtpEvent, OtpState> {
   final int otpLength = 4;

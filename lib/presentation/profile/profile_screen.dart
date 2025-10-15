@@ -1,6 +1,7 @@
-import 'package:ev_flutter_app/app/theme/app_theme.dart';
-import 'package:ev_flutter_app/generated/assets.gen.dart';
-import 'package:ev_flutter_app/presentation/component/app_button.dart';
+import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/generated/assets.gen.dart';
+import 'package:bearnshare/generated/l10n.dart';
+import 'package:bearnshare/presentation/component/app_button.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -22,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
                 _buildProfileCard(),
                 const SizedBox(height: 20),
                 Text(
-                  'Settings & Account',
+                  S().settings_account,
                   style: AppTheme.profileTextStyle,
                 ),
                 const SizedBox(height: 8),
@@ -134,32 +135,32 @@ class ProfileScreen extends StatelessWidget {
         children: [
           _buildSettingItem(
             icon: Assets.icons.accountIcon.svg(),
-            title: 'Account Settings',
-            subtitle: 'Name, Email, Password',
+            title: S().account_settings,
+            subtitle: 'Name, Email',
           ),
           _buildDivider(),
           _buildSettingItem(
             icon: Assets.icons.lanIcon.svg(),
-            title: 'Currency & Language',
+            title: S().currency_language,
             subtitle: 'Currently: ₹ (INR)',
           ),
           _buildDivider(),
           _buildSettingItem(
             icon: Assets.icons.notificationIcon.svg(),
-            title: 'Notifications',
-            subtitle: 'Push notifications & alerts',
+            title: S().notifications,
+            subtitle: S().push_notifications_alert,
           ),
           _buildDivider(),
           _buildSettingItem(
             icon: Assets.icons.exportIcon.svg(),
-            title: 'Export Data',
-            subtitle: 'Download reports & data',
+            title: S().export_data,
+            subtitle: S().download_reports,
           ),
           _buildDivider(),
           _buildSettingItem(
             icon: Assets.icons.faqIcon.svg(),
-            title: 'FAQs & Support',
-            subtitle: 'Get help & answers',
+            title: S().s_faq,
+            subtitle: S().get_help_answer,
             isLast: true,
           ),
         ],
@@ -224,14 +225,14 @@ class ProfileScreen extends StatelessWidget {
   Widget _buildLogoutButton() {
     return AppButton(
         buttonType: ButtonType.filled,
-        textString: "Logout",
+        textString: S().s_logout,
         leadingIcon: const Icon(Icons.logout, color: Colors.white, size: 22),
         onPressed: (value) {},
         buttonState: ButtonState.enabled,
         expandButton: true,
         enabledButtonFilledStyle: BoxDecoration(
           color: AppTheme.addExpenseBtnClr,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(30),
         ),
         enabledTextStyle: AppTheme.loginText.copyWith(
           fontSize: 16,

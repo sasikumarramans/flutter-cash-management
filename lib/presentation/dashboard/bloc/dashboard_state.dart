@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:ev_flutter_app/presentation/component/app_bottom_nav_bar.dart';
+import 'package:bearnshare/presentation/component/app_bottom_nav_bar.dart';
 
 class DashboardState extends Equatable {
   final BottomNavItem selectedItem;

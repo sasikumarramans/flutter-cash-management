@@ -1,5 +1,5 @@
-import 'package:ev_flutter_app/generated/fonts.gen.dart';
-import 'package:ev_flutter_app/presentation/component/app_text_field.dart';
+import 'package:bearnshare/generated/fonts.gen.dart';
+import 'package:bearnshare/presentation/component/app_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 

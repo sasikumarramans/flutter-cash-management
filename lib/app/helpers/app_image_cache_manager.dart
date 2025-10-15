@@ -1,5 +1,5 @@
+import 'package:bearnshare/app/helpers/custom_image_cache_manager.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ev_flutter_app/app/helpers/custom_image_cache_manager.dart';
 import 'package:flutter/material.dart';
 
 class AppImageCacheManager {

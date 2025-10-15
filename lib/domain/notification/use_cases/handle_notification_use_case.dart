@@ -1,5 +1,5 @@
+import 'package:bearnshare/domain/notification/notification_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:ev_flutter_app/domain/notification/notification_repository.dart';
 
 class HandleNotificationUseCase {
   final NotificationRepository repository;

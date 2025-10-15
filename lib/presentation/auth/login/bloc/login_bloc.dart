@@ -1,19 +1,19 @@
 import 'dart:async';
 
-import 'package:ev_flutter_app/app/bloc/base/base_bloc.dart';
-import 'package:ev_flutter_app/app/helpers/extensions/string_extensions.dart';
-import 'package:ev_flutter_app/data/local/hive_manager.dart';
-import 'package:ev_flutter_app/data/network/core/api_exception.dart';
-import 'package:ev_flutter_app/domain/auth/login/model/login_otp_response.dart';
-import 'package:ev_flutter_app/domain/auth/login/model/login_otp_verify_response.dart';
-import 'package:ev_flutter_app/domain/auth/login/use_cases/login_otp_use_case.dart';
-import 'package:ev_flutter_app/domain/auth/login/use_cases/verify_login_otp_use_case.dart';
-import 'package:ev_flutter_app/generated/l10n.dart';
-import 'package:ev_flutter_app/presentation/auth/login/bloc/login_event.dart';
-import 'package:ev_flutter_app/presentation/auth/login/bloc/login_state.dart';
-import 'package:ev_flutter_app/presentation/auth/otp/bloc/otp_bloc.dart';
-import 'package:ev_flutter_app/presentation/auth/otp/bloc/otp_event.dart';
-import 'package:ev_flutter_app/presentation/auth/otp/bloc/otp_state.dart';
+import 'package:bearnshare/app/bloc/base/base_bloc.dart';
+import 'package:bearnshare/app/helpers/extensions/string_extensions.dart';
+import 'package:bearnshare/data/local/hive_manager.dart';
+import 'package:bearnshare/data/network/core/api_exception.dart';
+import 'package:bearnshare/domain/auth/login/model/login_otp_response.dart';
+import 'package:bearnshare/domain/auth/login/model/login_otp_verify_response.dart';
+import 'package:bearnshare/domain/auth/login/use_cases/login_otp_use_case.dart';
+import 'package:bearnshare/domain/auth/login/use_cases/verify_login_otp_use_case.dart';
+import 'package:bearnshare/generated/l10n.dart';
+import 'package:bearnshare/presentation/auth/login/bloc/login_event.dart';
+import 'package:bearnshare/presentation/auth/login/bloc/login_state.dart';
+import 'package:bearnshare/presentation/auth/otp/bloc/otp_bloc.dart';
+import 'package:bearnshare/presentation/auth/otp/bloc/otp_event.dart';
+import 'package:bearnshare/presentation/auth/otp/bloc/otp_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginBloc extends BaseBloc<LoginEvent, LoginState> {

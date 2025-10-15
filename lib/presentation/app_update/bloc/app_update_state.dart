@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:ev_flutter_app/domain/app_update/model/app_update_info.dart';
+import 'package:bearnshare/domain/app_update/model/app_update_info.dart';
 
 enum AppUpdateStatus {
   initial,

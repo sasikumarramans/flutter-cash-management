@@ -169,86 +169,76 @@ class S {
     );
   }
 
-  /// `example@email.com`
-  String get email_hint {
+  /// `Logout`
+  String get s_logout {
+    return Intl.message('Logout', name: 's_logout', desc: '', args: []);
+  }
+
+  /// `Account Settings`
+  String get account_settings {
     return Intl.message(
-      'example@email.com',
-      name: 'email_hint',
+      'Account Settings',
+      name: 'account_settings',
       desc: '',
       args: [],
     );
   }
 
-  /// `Continue with email`
-  String get continue_with_email {
+  /// `Currency & Language`
+  String get currency_language {
     return Intl.message(
-      'Continue with email',
-      name: 'continue_with_email',
+      'Currency & Language',
+      name: 'currency_language',
       desc: '',
       args: [],
     );
   }
 
-  /// `By continuing, you are agreeing to our `
-  String get login_terms_and_conditions_1 {
+  /// `Notifications`
+  String get notifications {
     return Intl.message(
-      'By continuing, you are agreeing to our ',
-      name: 'login_terms_and_conditions_1',
+      'Notifications',
+      name: 'notifications',
       desc: '',
       args: [],
     );
   }
 
-  /// `Terms of Service`
-  String get login_terms_and_conditions_2 {
+  /// `Export Data`
+  String get export_data {
+    return Intl.message('Export Data', name: 'export_data', desc: '', args: []);
+  }
+
+  /// `FAQs & Support`
+  String get s_faq {
+    return Intl.message('FAQs & Support', name: 's_faq', desc: '', args: []);
+  }
+
+  /// `Get help & answers`
+  String get get_help_answer {
     return Intl.message(
-      'Terms of Service',
-      name: 'login_terms_and_conditions_2',
+      'Get help & answers',
+      name: 'get_help_answer',
       desc: '',
       args: [],
     );
   }
 
-  /// ` and `
-  String get login_terms_and_conditions_3 {
+  /// `Download reports & data`
+  String get download_reports {
     return Intl.message(
-      ' and ',
-      name: 'login_terms_and_conditions_3',
+      'Download reports & data',
+      name: 'download_reports',
       desc: '',
       args: [],
     );
   }
 
-  /// `Privacy Policy`
-  String get login_terms_and_conditions_4 {
+  /// `Push notifications & alerts`
+  String get push_notifications_alert {
     return Intl.message(
-      'Privacy Policy',
-      name: 'login_terms_and_conditions_4',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// ` to learn how we collect, use, and share your data`
-  String get login_terms_and_conditions_5 {
-    return Intl.message(
-      ' to learn how we collect, use, and share your data',
-      name: 'login_terms_and_conditions_5',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `or`
-  String get or {
-    return Intl.message('or', name: 'or', desc: '', args: []);
-  }
-
-  /// `Check your email`
-  String get otp_check_your_email {
-    return Intl.message(
-      'Check your email',
-      name: 'otp_check_your_email',
+      'Push notifications & alerts',
+      name: 'push_notifications_alert',
       desc: '',
       args: [],
     );
@@ -264,9 +254,14 @@ class S {
     );
   }
 
-  /// `Resend in`
-  String get otp_resend_in {
-    return Intl.message('Resend in', name: 'otp_resend_in', desc: '', args: []);
+  /// `Settings & Account`
+  String get settings_account {
+    return Intl.message(
+      'Settings & Account',
+      name: 'settings_account',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Resend code`

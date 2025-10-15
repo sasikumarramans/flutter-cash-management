@@ -1,6 +1,6 @@
 library flutter_mentions;
 
-import 'package:ev_flutter_app/custom_packages/flutter_mentions_package/flutter_mentions.dart';
+import 'package:bearnshare/custom_packages/flutter_mentions_package/flutter_mentions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_portal/flutter_portal.dart';

@@ -1,4 +1,4 @@
-import 'package:ev_flutter_app/data/local/shared_preferences_repository.dart';
+import 'package:bearnshare/data/local/shared_preferences_repository.dart';
 import 'package:get_it/get_it.dart';
 
 class Session {

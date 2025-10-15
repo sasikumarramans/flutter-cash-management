@@ -1,4 +1,4 @@
-package com.ev_flutter_app
+package com.bearnshare
 
 import io.flutter.embedding.android.FlutterActivity
 

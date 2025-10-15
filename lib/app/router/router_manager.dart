@@ -1,4 +1,4 @@
-import 'package:ev_flutter_app/presentation/main_router.dart';
+import 'package:bearnshare/presentation/main_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';

@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:ev_flutter_app/app/helpers/app_file_manager.dart';
-import 'package:ev_flutter_app/app/helpers/app_snack_bar_manager.dart';
-import 'package:ev_flutter_app/app/theme/app_theme.dart';
-import 'package:ev_flutter_app/presentation/component/outline_ripple_button.dart';
+import 'package:bearnshare/app/helpers/app_file_manager.dart';
+import 'package:bearnshare/app/helpers/app_snack_bar_manager.dart';
+import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/presentation/component/outline_ripple_button.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

@@ -22,6 +22,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "account_settings": MessageLookupByLibrary.simpleMessage(
+      "Account Settings",
+    ),
     "add_expense": MessageLookupByLibrary.simpleMessage("Add Expense"),
     "add_income": MessageLookupByLibrary.simpleMessage("Add Income"),
     "add_photo": MessageLookupByLibrary.simpleMessage("Add Photo"),
@@ -52,12 +55,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "content_deletion_failed": MessageLookupByLibrary.simpleMessage(
       "Content deletion failed",
     ),
-    "continue_with_email": MessageLookupByLibrary.simpleMessage(
-      "Continue with email",
-    ),
     "create_fabric": MessageLookupByLibrary.simpleMessage("Create a fabric"),
     "create_fabric_hint": MessageLookupByLibrary.simpleMessage(
       "You can reuse this Fabric at anytime to create new content",
+    ),
+    "currency_language": MessageLookupByLibrary.simpleMessage(
+      "Currency & Language",
     ),
     "date_of_birth": MessageLookupByLibrary.simpleMessage(
       "What’s your date of birth",
@@ -84,6 +87,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Description contains inappropriate words",
     ),
     "dob": MessageLookupByLibrary.simpleMessage("Date of birth"),
+    "download_reports": MessageLookupByLibrary.simpleMessage(
+      "Download reports & data",
+    ),
     "edit_age": MessageLookupByLibrary.simpleMessage("Edit age"),
     "edit_dob": MessageLookupByLibrary.simpleMessage("Edit date of birth"),
     "edit_gender": MessageLookupByLibrary.simpleMessage("Edit gender"),
@@ -97,7 +103,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "edit_with_your_own_idea": MessageLookupByLibrary.simpleMessage(
       "Enter any text in the prompt to reimagine yourself",
     ),
-    "email_hint": MessageLookupByLibrary.simpleMessage("example@email.com"),
+    "export_data": MessageLookupByLibrary.simpleMessage("Export Data"),
     "fabric_created": MessageLookupByLibrary.simpleMessage("Fabric Created"),
     "fabric_deleted_successfully": MessageLookupByLibrary.simpleMessage(
       "Fabric deleted successfully",
@@ -116,6 +122,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Create your first Fabric",
     ),
     "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
+    "get_help_answer": MessageLookupByLibrary.simpleMessage(
+      "Get help & answers",
+    ),
     "go_to_your_feed": MessageLookupByLibrary.simpleMessage("Go to your feed"),
     "great_job_you": MessageLookupByLibrary.simpleMessage("Great job! you"),
     "how_is_your_experience": MessageLookupByLibrary.simpleMessage(
@@ -130,21 +139,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "later": MessageLookupByLibrary.simpleMessage("Later"),
     "ledger_books": MessageLookupByLibrary.simpleMessage("Ledger Books"),
-    "login_terms_and_conditions_1": MessageLookupByLibrary.simpleMessage(
-      "By continuing, you are agreeing to our ",
-    ),
-    "login_terms_and_conditions_2": MessageLookupByLibrary.simpleMessage(
-      "Terms of Service",
-    ),
-    "login_terms_and_conditions_3": MessageLookupByLibrary.simpleMessage(
-      " and ",
-    ),
-    "login_terms_and_conditions_4": MessageLookupByLibrary.simpleMessage(
-      "Privacy Policy",
-    ),
-    "login_terms_and_conditions_5": MessageLookupByLibrary.simpleMessage(
-      " to learn how we collect, use, and share your data",
-    ),
     "medical_disclaimer_1": MessageLookupByLibrary.simpleMessage(
       "Please read Medical Disclaimer and Appropriate Use of the App",
     ),
@@ -174,11 +168,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_fabric": MessageLookupByLibrary.simpleMessage(
       "No fabrics found \n Create your first fabric!",
     ),
+    "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
     "open_settings": MessageLookupByLibrary.simpleMessage("Open Settings"),
-    "or": MessageLookupByLibrary.simpleMessage("or"),
-    "otp_check_your_email": MessageLookupByLibrary.simpleMessage(
-      "Check your email",
-    ),
     "otp_confirm_email": MessageLookupByLibrary.simpleMessage("Confirm email"),
     "otp_enter_the_otp_sent_to": MessageLookupByLibrary.simpleMessage(
       "Enter the code sent to",
@@ -187,7 +178,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Incorrect code",
     ),
     "otp_resend_code": MessageLookupByLibrary.simpleMessage("Resend code"),
-    "otp_resend_in": MessageLookupByLibrary.simpleMessage("Resend in"),
     "otp_verification_code_resent": MessageLookupByLibrary.simpleMessage(
       "Verification code resent",
     ),
@@ -226,6 +216,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "prompt_replace_text": MessageLookupByLibrary.simpleMessage(
       " the subject from reference image ",
+    ),
+    "push_notifications_alert": MessageLookupByLibrary.simpleMessage(
+      "Push notifications & alerts",
     ),
     "report": MessageLookupByLibrary.simpleMessage("Report"),
     "report_content": MessageLookupByLibrary.simpleMessage("Report Content"),
@@ -287,6 +280,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "s_email": MessageLookupByLibrary.simpleMessage("Email"),
     "s_enter_name": MessageLookupByLibrary.simpleMessage("Enter name"),
+    "s_faq": MessageLookupByLibrary.simpleMessage("FAQs & Support"),
     "s_favorite_empty_desc": MessageLookupByLibrary.simpleMessage(
       "Any content you bookmark and add to \n your favorites will appear here.",
     ),
@@ -324,6 +318,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "s_login_hint": MessageLookupByLibrary.simpleMessage(
       "Login to start stitching",
     ),
+    "s_logout": MessageLookupByLibrary.simpleMessage("Logout"),
     "s_logout_message": MessageLookupByLibrary.simpleMessage(
       "Signing out will clear today\'s progress",
     ),
@@ -392,6 +387,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "send_feedback": MessageLookupByLibrary.simpleMessage("Send feedback"),
     "set_profile_picture": MessageLookupByLibrary.simpleMessage(
       "Set as your Profile Photo",
+    ),
+    "settings_account": MessageLookupByLibrary.simpleMessage(
+      "Settings & Account",
     ),
     "show_less": MessageLookupByLibrary.simpleMessage("show less"),
     "show_more": MessageLookupByLibrary.simpleMessage("show more"),

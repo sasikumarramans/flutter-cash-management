@@ -1,9 +1,9 @@
+import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/presentation/component/cache_manager/profile_cache_manager.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:ev_flutter_app/app/theme/app_theme.dart';
-import 'package:ev_flutter_app/presentation/component/cache_manager/profile_cache_manager.dart';
 
 class ProfileAvatar extends StatelessWidget {
   final String name;

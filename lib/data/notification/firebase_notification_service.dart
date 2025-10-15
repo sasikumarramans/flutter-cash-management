@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:ev_flutter_app/domain/notification/model/notification_entity.dart';
-import 'package:ev_flutter_app/domain/notification/model/notification_modal.dart';
-import 'package:ev_flutter_app/generated/l10n.dart';
+import 'package:bearnshare/domain/notification/model/notification_entity.dart';
+import 'package:bearnshare/domain/notification/model/notification_modal.dart';
+import 'package:bearnshare/generated/l10n.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';

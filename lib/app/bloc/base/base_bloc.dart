@@ -1,5 +1,5 @@
-import 'package:ev_flutter_app/app/helpers/app_snack_bar_manager.dart';
-import 'package:ev_flutter_app/data/network/core/api_exception.dart';
+import 'package:bearnshare/app/helpers/app_snack_bar_manager.dart';
+import 'package:bearnshare/data/network/core/api_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';

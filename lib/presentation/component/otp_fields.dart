@@ -1,8 +1,8 @@
+import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/generated/l10n.dart';
+import 'package:bearnshare/presentation/component/field_error_text.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
-import 'package:ev_flutter_app/app/theme/app_theme.dart';
-import 'package:ev_flutter_app/generated/l10n.dart';
-import 'package:ev_flutter_app/presentation/component/field_error_text.dart';
 
 class OtpFields extends StatelessWidget {
   final int length;

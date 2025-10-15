@@ -1,7 +1,7 @@
-import 'package:ev_flutter_app/app/theme/app_theme.dart';
-import 'package:ev_flutter_app/generated/assets.gen.dart';
-import 'package:ev_flutter_app/presentation/component/cache_manager/base_cached_image_shimmer.dart';
-import 'package:ev_flutter_app/presentation/component/cache_manager/profile_cache_manager.dart';
+import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/generated/assets.gen.dart';
+import 'package:bearnshare/presentation/component/cache_manager/base_cached_image_shimmer.dart';
+import 'package:bearnshare/presentation/component/cache_manager/profile_cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 

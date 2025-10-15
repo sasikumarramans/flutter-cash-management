@@ -38,7 +38,7 @@ android {
     compileSdk = 36
     ndkVersion = "27.0.12077973"
 
-    namespace 'com.splitkash'
+    namespace 'com.bearnshare'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_21
@@ -73,26 +73,26 @@ android {
     productFlavors {
         staging {
             dimension "flavor-type"
-            applicationId "staging.splitkash"
-            resValue "string", "app_name", "SplitKash Staging"
+            applicationId "staging.bearnshare"
+            resValue "string", "app_name", "BearNShare Staging"
             signingConfig signingConfigs.release // Use the shared release keystore
         }
         demo {
             dimension "flavor-type"
-            applicationId "demo.splitkash"
-            resValue "string", "app_name", "SplitKash Demo"
+            applicationId "demo.bearnshare"
+            resValue "string", "app_name", "BearNShare Demo"
             signingConfig signingConfigs.release // Use the shared release keystore
         }
         prod {
             dimension "flavor-type"
-            applicationId "com.splitkash"
-            resValue "string", "app_name", "SplitKash"
+            applicationId "com.bearnshare"
+            resValue "string", "app_name", "BearNShare"
             signingConfig signingConfigs.release // Use the shared release keystore
         }
     }
 
     defaultConfig {
-        applicationId "com.splitkash"
+        applicationId "com.bearnshare"
         minSdkVersion 28
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()

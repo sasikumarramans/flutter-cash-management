@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:bearnshare/domain/notification/model/notification_entity.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:ev_flutter_app/domain/notification/model/notification_entity.dart';
 
 class NotificationModel extends NotificationEntity {
   NotificationModel({

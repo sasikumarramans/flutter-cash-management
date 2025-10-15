@@ -1,23 +1,23 @@
   flavors:
     staging:
       app:
-        name: "SplitKash Test Staging"
+        name: "BearNShare Test Staging"
 
       android:
-        applicationId: "staging.splitkash"
+        applicationId: "staging.bearnshare"
         icon: "assets/images/launcher_logo.png"  
     demo:
       app:
-        name: "SplitKash Test Demo"
+        name: "BearNShare Test Demo"
 
       android:
-        applicationId: "demo.splitkash"
+        applicationId: "demo.bearnshare"
         icon: "assets/images/launcher_logo.png"  
     prod:
       app:
-        name: "SplitKash Test Prod"
+        name: "BearNShare Test Prod"
 
       android:
-        applicationId: "com.splitkash"
+        applicationId: "com.bearnshare"
         icon: "assets/images/launcher_logo.png"  
   ide: vscode

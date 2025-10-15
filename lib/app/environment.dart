@@ -1,7 +1,7 @@
 // Import the envied configuration files for each flavor
-import 'package:ev_flutter_app/env_demo.dart';
-import 'package:ev_flutter_app/env_prod.dart';
-import 'package:ev_flutter_app/env_staging.dart';
+import 'package:bearnshare/env_demo.dart';
+import 'package:bearnshare/env_prod.dart';
+import 'package:bearnshare/env_staging.dart';
 
 class EnvironmentConfig {
   static const String flavor =

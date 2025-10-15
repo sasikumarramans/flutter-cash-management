@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:ev_flutter_app/app/helpers/file_manager.dart';
+import 'package:bearnshare/app/helpers/file_manager.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart' as p;
 import 'package:uuid/uuid.dart';

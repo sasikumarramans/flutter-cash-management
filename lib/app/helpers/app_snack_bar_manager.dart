@@ -1,5 +1,5 @@
-import 'package:ev_flutter_app/app/helpers/extensions/context_extension.dart';
-import 'package:ev_flutter_app/app/router/router_manager.dart';
+import 'package:bearnshare/app/helpers/extensions/context_extension.dart';
+import 'package:bearnshare/app/router/router_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:loader_overlay/loader_overlay.dart';

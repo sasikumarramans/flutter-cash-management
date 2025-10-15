@@ -1,16 +1,16 @@
+import 'package:bearnshare/app/helpers/extensions/string_extensions.dart';
+import 'package:bearnshare/app/router/router_manager.dart';
+import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/domain/app_update/model/app_update_info.dart';
+import 'package:bearnshare/generated/l10n.dart';
+import 'package:bearnshare/presentation/app_update/bloc/app_update_bloc.dart';
+import 'package:bearnshare/presentation/app_update/bloc/app_update_event.dart';
+import 'package:bearnshare/presentation/app_update/bloc/app_update_state.dart';
+import 'package:bearnshare/presentation/component/app_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:ev_flutter_app/app/helpers/extensions/string_extensions.dart';
-import 'package:ev_flutter_app/app/router/router_manager.dart';
-import 'package:ev_flutter_app/app/theme/app_theme.dart';
-import 'package:ev_flutter_app/domain/app_update/model/app_update_info.dart';
-import 'package:ev_flutter_app/generated/l10n.dart';
-import 'package:ev_flutter_app/presentation/app_update/bloc/app_update_bloc.dart';
-import 'package:ev_flutter_app/presentation/app_update/bloc/app_update_event.dart';
-import 'package:ev_flutter_app/presentation/app_update/bloc/app_update_state.dart';
-import 'package:ev_flutter_app/presentation/component/app_button.dart';
 
 class AppUpdateManager extends StatefulWidget {
   final Widget child;

@@ -1,7 +1,7 @@
+import 'package:bearnshare/app/environment.dart';
+import 'package:bearnshare/app/helpers/extensions/string_extensions.dart';
+import 'package:bearnshare/data/local/hive_manager.dart';
 import 'package:dio/dio.dart';
-import 'package:ev_flutter_app/app/environment.dart';
-import 'package:ev_flutter_app/app/helpers/extensions/string_extensions.dart';
-import 'package:ev_flutter_app/data/local/hive_manager.dart';
 import 'package:get_it/get_it.dart';
 
 class HeaderInterceptor extends Interceptor {
