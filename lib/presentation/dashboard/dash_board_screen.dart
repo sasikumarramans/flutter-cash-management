@@ -5,9 +5,11 @@ import 'package:ev_flutter_app/presentation/component/cache_manager/profile_cach
 import 'package:ev_flutter_app/presentation/dashboard/bloc/dashboard_bloc.dart';
 import 'package:ev_flutter_app/presentation/dashboard/bloc/dashboard_event.dart';
 import 'package:ev_flutter_app/presentation/dashboard/bloc/dashboard_state.dart';
+import 'package:ev_flutter_app/presentation/dashboard/dash_board_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class DashboardScreen extends StatefulWidget {
   final Widget child;
@@ -168,21 +170,25 @@ class _DashboardScreenState extends State<DashboardScreen>
         context
             .read<DashboardBloc>()
             .add(const DashboardTabChanged(BottomNavItem.home));
+        context.go(DashboardRouter.homeRoute);
         break;
       case BottomNavItem.ledger:
         context
             .read<DashboardBloc>()
             .add(const DashboardTabChanged(BottomNavItem.ledger));
+        context.go(DashboardRouter.ledgerRoute);
         break;
       case BottomNavItem.history:
         context
             .read<DashboardBloc>()
             .add(const DashboardTabChanged(BottomNavItem.history));
+        context.go(DashboardRouter.historyRoute);
         break;
       case BottomNavItem.profile:
         context
             .read<DashboardBloc>()
             .add(const DashboardTabChanged(BottomNavItem.profile));
+        context.go(DashboardRouter.profileRoute);
         break;
     }
   }

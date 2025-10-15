@@ -51,17 +51,49 @@ class $AssetsFontsGen {
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/account_icon.svg
+  SvgGenImage get accountIcon =>
+      const SvgGenImage('assets/icons/account_icon.svg');
+
+  /// File path: assets/icons/delete_icon.svg
+  SvgGenImage get deleteIcon =>
+      const SvgGenImage('assets/icons/delete_icon.svg');
+
+  /// File path: assets/icons/edit_icon.svg
+  SvgGenImage get editIcon => const SvgGenImage('assets/icons/edit_icon.svg');
+
+  /// File path: assets/icons/export_icon.svg
+  SvgGenImage get exportIcon =>
+      const SvgGenImage('assets/icons/export_icon.svg');
+
+  /// File path: assets/icons/faq_icon.svg
+  SvgGenImage get faqIcon => const SvgGenImage('assets/icons/faq_icon.svg');
+
+  /// File path: assets/icons/filter_icon.svg
+  SvgGenImage get filterIcon =>
+      const SvgGenImage('assets/icons/filter_icon.svg');
+
   /// File path: assets/icons/history.svg
   SvgGenImage get history => const SvgGenImage('assets/icons/history.svg');
 
   /// File path: assets/icons/home.svg
   SvgGenImage get home => const SvgGenImage('assets/icons/home.svg');
 
+  /// File path: assets/icons/lan_icon.svg
+  SvgGenImage get lanIcon => const SvgGenImage('assets/icons/lan_icon.svg');
+
   /// File path: assets/icons/ledger.svg
   SvgGenImage get ledger => const SvgGenImage('assets/icons/ledger.svg');
 
+  /// File path: assets/icons/notification_icon.svg
+  SvgGenImage get notificationIcon =>
+      const SvgGenImage('assets/icons/notification_icon.svg');
+
   /// File path: assets/icons/profile.svg
   SvgGenImage get profile => const SvgGenImage('assets/icons/profile.svg');
+
+  /// File path: assets/icons/report_img.svg
+  SvgGenImage get reportImg => const SvgGenImage('assets/icons/report_img.svg');
 
   /// File path: assets/icons/split_dollar_icon.svg
   SvgGenImage get splitDollarIcon =>
@@ -72,8 +104,23 @@ class $AssetsIconsGen {
       const SvgGenImage('assets/icons/split_wise_icon.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values =>
-      [history, home, ledger, profile, splitDollarIcon, splitWiseIcon];
+  List<SvgGenImage> get values => [
+        accountIcon,
+        deleteIcon,
+        editIcon,
+        exportIcon,
+        faqIcon,
+        filterIcon,
+        history,
+        home,
+        lanIcon,
+        ledger,
+        notificationIcon,
+        profile,
+        reportImg,
+        splitDollarIcon,
+        splitWiseIcon
+      ];
 }
 
 class $AssetsImagesGen {

@@ -22,6 +22,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "add_expense": MessageLookupByLibrary.simpleMessage("Add Expense"),
+    "add_income": MessageLookupByLibrary.simpleMessage("Add Income"),
     "add_photo": MessageLookupByLibrary.simpleMessage("Add Photo"),
     "add_references": MessageLookupByLibrary.simpleMessage("Add references"),
     "analyzing_your_answer": MessageLookupByLibrary.simpleMessage(
@@ -50,14 +52,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "content_deletion_failed": MessageLookupByLibrary.simpleMessage(
       "Content deletion failed",
     ),
-    "continue_with_apple": MessageLookupByLibrary.simpleMessage(
-      "Continue with Apple",
-    ),
     "continue_with_email": MessageLookupByLibrary.simpleMessage(
       "Continue with email",
-    ),
-    "continue_with_google": MessageLookupByLibrary.simpleMessage(
-      "Continue with Google",
     ),
     "create_fabric": MessageLookupByLibrary.simpleMessage("Create a fabric"),
     "create_fabric_hint": MessageLookupByLibrary.simpleMessage(
@@ -368,6 +364,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "s_rename_collection": MessageLookupByLibrary.simpleMessage(
       "Rename collection",
     ),
+    "s_report": MessageLookupByLibrary.simpleMessage("Report"),
     "s_save": MessageLookupByLibrary.simpleMessage("Save"),
     "s_saved_to": MessageLookupByLibrary.simpleMessage("Saved to "),
     "s_select_date_of_birth": MessageLookupByLibrary.simpleMessage(
@@ -413,6 +410,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Thank you so much for taking the time to share your thoughts and feedback with us",
     ),
     "this_month": MessageLookupByLibrary.simpleMessage("This month"),
+    "total_cash_in": MessageLookupByLibrary.simpleMessage("Total Cash In"),
+    "total_cash_out": MessageLookupByLibrary.simpleMessage("Total Cash Out"),
+    "total_entries": MessageLookupByLibrary.simpleMessage("Total Entries"),
     "total_savings": MessageLookupByLibrary.simpleMessage("Total savings"),
     "unblock": MessageLookupByLibrary.simpleMessage("Unblock"),
     "unique_fabric": MessageLookupByLibrary.simpleMessage(

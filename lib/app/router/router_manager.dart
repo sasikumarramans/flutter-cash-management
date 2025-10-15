@@ -9,8 +9,9 @@ class RouterManager {
   static final rootNavigatorKey = GlobalKey<NavigatorState>();
   static final shellNavigatorKey = GlobalKey<NavigatorState>();
   static final homeBranchNavigatorKey = GlobalKey<NavigatorState>();
-  static final notificationsBranchNavigatorKey = GlobalKey<NavigatorState>();
-  static final searchBranchNavigatorKey = GlobalKey<NavigatorState>();
+  static final ledgerNavigatorKey = GlobalKey<NavigatorState>();
+  static final historyKey = GlobalKey<NavigatorState>();
+  static final profileNavigatorKey = GlobalKey<NavigatorState>();
   RouterManager() {
     _initRouter();
   }

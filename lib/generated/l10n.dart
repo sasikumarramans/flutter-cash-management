@@ -124,21 +124,46 @@ class S {
     return Intl.message('Add', name: 's_add', desc: '', args: []);
   }
 
-  /// `Continue with Apple`
-  String get continue_with_apple {
+  /// `Add Income`
+  String get add_income {
+    return Intl.message('Add Income', name: 'add_income', desc: '', args: []);
+  }
+
+  /// `Add Expense`
+  String get add_expense {
+    return Intl.message('Add Expense', name: 'add_expense', desc: '', args: []);
+  }
+
+  /// `Report`
+  String get s_report {
+    return Intl.message('Report', name: 's_report', desc: '', args: []);
+  }
+
+  /// `Total Entries`
+  String get total_entries {
     return Intl.message(
-      'Continue with Apple',
-      name: 'continue_with_apple',
+      'Total Entries',
+      name: 'total_entries',
       desc: '',
       args: [],
     );
   }
 
-  /// `Continue with Google`
-  String get continue_with_google {
+  /// `Total Cash In`
+  String get total_cash_in {
     return Intl.message(
-      'Continue with Google',
-      name: 'continue_with_google',
+      'Total Cash In',
+      name: 'total_cash_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Cash Out`
+  String get total_cash_out {
+    return Intl.message(
+      'Total Cash Out',
+      name: 'total_cash_out',
       desc: '',
       args: [],
     );
