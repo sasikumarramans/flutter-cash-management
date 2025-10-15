@@ -88,7 +88,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Description contains inappropriate words",
     ),
     "dob": MessageLookupByLibrary.simpleMessage("Date of birth"),
-    "done": MessageLookupByLibrary.simpleMessage("DONE"),
     "edit_age": MessageLookupByLibrary.simpleMessage("Edit age"),
     "edit_dob": MessageLookupByLibrary.simpleMessage("Edit date of birth"),
     "edit_gender": MessageLookupByLibrary.simpleMessage("Edit gender"),
@@ -134,6 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "It goes against our Terms of Service",
     ),
     "later": MessageLookupByLibrary.simpleMessage("Later"),
+    "ledger_books": MessageLookupByLibrary.simpleMessage("Ledger Books"),
     "login_terms_and_conditions_1": MessageLookupByLibrary.simpleMessage(
       "By continuing, you are agreeing to our ",
     ),
@@ -195,6 +195,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "otp_verification_code_resent": MessageLookupByLibrary.simpleMessage(
       "Verification code resent",
     ),
+    "overall_expenses": MessageLookupByLibrary.simpleMessage(
+      "Overall Expenses",
+    ),
     "permission_denied_msg": MessageLookupByLibrary.simpleMessage(
       "access is required to select images. Please enable it in app settings.",
     ),
@@ -244,7 +247,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "s_account": MessageLookupByLibrary.simpleMessage("ACCOUNT"),
     "s_add": MessageLookupByLibrary.simpleMessage("Add"),
-    "s_add_entry": MessageLookupByLibrary.simpleMessage("Add Entry"),
     "s_age": MessageLookupByLibrary.simpleMessage("Age"),
     "s_age_range": MessageLookupByLibrary.simpleMessage(
       "You must be between 13 and 120 years old.",
@@ -368,9 +370,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "s_save": MessageLookupByLibrary.simpleMessage("Save"),
     "s_saved_to": MessageLookupByLibrary.simpleMessage("Saved to "),
-    "s_see_previous_entries": MessageLookupByLibrary.simpleMessage(
-      "See Previous Entries",
-    ),
     "s_select_date_of_birth": MessageLookupByLibrary.simpleMessage(
       "Date of birth",
     ),
@@ -399,15 +398,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "show_less": MessageLookupByLibrary.simpleMessage("show less"),
     "show_more": MessageLookupByLibrary.simpleMessage("show more"),
-    "sign_in_or_create_an_account": MessageLookupByLibrary.simpleMessage(
-      "Sign in or create an account",
-    ),
     "skip": MessageLookupByLibrary.simpleMessage("skip"),
+    "split_activity": MessageLookupByLibrary.simpleMessage("Split Activity"),
     "stitch_your_first_video": MessageLookupByLibrary.simpleMessage(
       "Stitch your first video",
-    ),
-    "swipe_up_to_continue": MessageLookupByLibrary.simpleMessage(
-      "Swipe up to continue",
     ),
     "tell_us_what_you_think": MessageLookupByLibrary.simpleMessage(
       "Tell us what you think",
@@ -418,6 +412,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "thanks_for_feedback_desc": MessageLookupByLibrary.simpleMessage(
       "Thank you so much for taking the time to share your thoughts and feedback with us",
     ),
+    "this_month": MessageLookupByLibrary.simpleMessage("This month"),
+    "total_savings": MessageLookupByLibrary.simpleMessage("Total savings"),
     "unblock": MessageLookupByLibrary.simpleMessage("Unblock"),
     "unique_fabric": MessageLookupByLibrary.simpleMessage(
       "Upload your photo to create a Fabric for your profile photo",
@@ -437,7 +433,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "video_moderated_error_desc": MessageLookupByLibrary.simpleMessage(
       "It goes against our Terms of Service",
     ),
+    "view_all": MessageLookupByLibrary.simpleMessage("View all"),
     "welcome_aboard": MessageLookupByLibrary.simpleMessage("Welcome aboard"),
+    "you_get": MessageLookupByLibrary.simpleMessage("You Get"),
+    "you_give": MessageLookupByLibrary.simpleMessage("You Give"),
     "your_gender": MessageLookupByLibrary.simpleMessage("Select your gender"),
     "your_gender_hint": MessageLookupByLibrary.simpleMessage(
       "This will help get you recommended relevant content and connect you with friends.",

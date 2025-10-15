@@ -54,31 +54,61 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `Swipe up to continue`
-  String get swipe_up_to_continue {
+  /// `Overall Expenses`
+  String get overall_expenses {
     return Intl.message(
-      'Swipe up to continue',
-      name: 'swipe_up_to_continue',
+      'Overall Expenses',
+      name: 'overall_expenses',
       desc: '',
       args: [],
     );
   }
 
-  /// `DONE`
-  String get done {
-    return Intl.message('DONE', name: 'done', desc: '', args: []);
-  }
-
-  /// `Add Entry`
-  String get s_add_entry {
-    return Intl.message('Add Entry', name: 's_add_entry', desc: '', args: []);
-  }
-
-  /// `See Previous Entries`
-  String get s_see_previous_entries {
+  /// `Total savings`
+  String get total_savings {
     return Intl.message(
-      'See Previous Entries',
-      name: 's_see_previous_entries',
+      'Total savings',
+      name: 'total_savings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This month`
+  String get this_month {
+    return Intl.message('This month', name: 'this_month', desc: '', args: []);
+  }
+
+  /// `Split Activity`
+  String get split_activity {
+    return Intl.message(
+      'Split Activity',
+      name: 'split_activity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View all`
+  String get view_all {
+    return Intl.message('View all', name: 'view_all', desc: '', args: []);
+  }
+
+  /// `You Get`
+  String get you_get {
+    return Intl.message('You Get', name: 'you_get', desc: '', args: []);
+  }
+
+  /// `You Give`
+  String get you_give {
+    return Intl.message('You Give', name: 'you_give', desc: '', args: []);
+  }
+
+  /// `Ledger Books`
+  String get ledger_books {
+    return Intl.message(
+      'Ledger Books',
+      name: 'ledger_books',
       desc: '',
       args: [],
     );
@@ -89,14 +119,9 @@ class S {
     return Intl.message('Causten', name: 'causten', desc: '', args: []);
   }
 
-  /// `Sign in or create an account`
-  String get sign_in_or_create_an_account {
-    return Intl.message(
-      'Sign in or create an account',
-      name: 'sign_in_or_create_an_account',
-      desc: '',
-      args: [],
-    );
+  /// `Add`
+  String get s_add {
+    return Intl.message('Add', name: 's_add', desc: '', args: []);
   }
 
   /// `Continue with Apple`
@@ -542,11 +567,6 @@ class S {
       desc: '',
       args: [],
     );
-  }
-
-  /// `Add`
-  String get s_add {
-    return Intl.message('Add', name: 's_add', desc: '', args: []);
   }
 
   /// `Profile photo`

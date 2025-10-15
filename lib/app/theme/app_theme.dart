@@ -9,13 +9,15 @@ class AppTheme {
   static const Color primaryColor = Color(0xFF1A1A1A);
   static const Color secondaryColor = Colors.white;
   static const Color tertiaryColor = Color(0xFF55B685);
+  static const Color amountPosTextColor = Color(0xff4CA054);
+  static const Color amountNegTextColor = Color(0xffFF7E78);
   static const Color buttonCompleted = Color(0xFF40A1FB);
   static const Color labelTextColor = Color(0xFFB0B0B0);
   static const Color createProfileSaveTextColor = Color(0xFF454545);
   static const Color loginButtonTextColor = primaryColor;
   static const Color bottomBarImgColor = Color(0xff9CA6BB);
 
-  static const Color fabricTextColor = Color(0xFFFF9F0A);
+  static const Color splitBorderLineColor = Color(0xff4C4B4B);
 
   //* -------------------- Label Colors -------------------- */
   static const Color primaryLabelColor = Color(0xFFFFFFFF);
@@ -173,6 +175,8 @@ class AppTheme {
 
   //* -------------------- Home Page Content Info -------------------- */
   static const Color homePageAppBarTitleColor = Colors.white;
+  static const Color homePageCardBgColor = Color(0xff28272D);
+  static const Color homePageSubtitleColor = Color(0xffC0C0C0);
   static const Color homePageContentInfoHeadingColor = Colors.white;
   static const Color homePageContentInfohashTagColor = Colors.white;
   static const Color homePageContentInfoButtonEnabledTextColor = Colors.white;
@@ -1018,22 +1022,22 @@ class AppTheme {
 
   //* -------------------- HomePageContentInfo -------------------- */
 
-  static TextStyle homePageAppBarTitleTextStyle = _baseTextStyle(
+  static TextStyle homePageTitleTextStyle = _baseTextStyle(
     homePageAppBarTitleColor,
-    16,
-    FontWeight.w400,
-  );
-
-  static TextStyle homePageContentInfoHeaderTextStyle = _baseTextStyle(
-    homePageContentInfoHeadingColor,
-    30,
-    FontWeight.w400,
-  );
-
-  static TextStyle homePageContentInfoHashtagTextStyle = _baseTextStyle(
-    homePageContentInfohashTagColor,
     14,
-    FontWeight.w400,
+    FontWeight.w500,
+  );
+
+  static TextStyle homePageContentHeaderTextStyle = _baseTextStyle(
+    homePageContentInfoHeadingColor,
+    35,
+    FontWeight.w600,
+  );
+
+  static TextStyle homePageContentAmntTextStyle = _baseTextStyle(
+    homePageContentInfohashTagColor,
+    16,
+    FontWeight.w700,
   );
 
   static TextStyle homePageContentInfoButtonEnabledTextStyle = _baseTextStyle(

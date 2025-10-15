@@ -63,8 +63,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/profile.svg
   SvgGenImage get profile => const SvgGenImage('assets/icons/profile.svg');
 
+  /// File path: assets/icons/split_dollar_icon.svg
+  SvgGenImage get splitDollarIcon =>
+      const SvgGenImage('assets/icons/split_dollar_icon.svg');
+
+  /// File path: assets/icons/split_wise_icon.svg
+  SvgGenImage get splitWiseIcon =>
+      const SvgGenImage('assets/icons/split_wise_icon.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values => [history, home, ledger, profile];
+  List<SvgGenImage> get values =>
+      [history, home, ledger, profile, splitDollarIcon, splitWiseIcon];
 }
 
 class $AssetsImagesGen {
