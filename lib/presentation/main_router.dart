@@ -13,6 +13,7 @@ import 'package:bearnshare/presentation/dashboard/bloc/dashboard_bloc.dart';
 import 'package:bearnshare/presentation/dashboard/dash_board_router.dart';
 import 'package:bearnshare/presentation/dashboard/dash_board_screen.dart';
 import 'package:bearnshare/presentation/dashboard/di/dashboard_module.dart';
+import 'package:bearnshare/presentation/ledger_book/add_income_screen.dart';
 import 'package:bearnshare/presentation/reports/report_screen.dart';
 import 'package:bearnshare/presentation/total_savings/total_savings_screen.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class MainRouter {
   static const String reportRoute = '/reports';
   static const String totalSavingRoute = '/totalSaving';
   static const String createProfileRoute = '/createProfile';
+  static const String addIncomeRoute = '/addIncome';
 
   static bool isDashboardInitialized = false;
 
@@ -36,6 +38,7 @@ class MainRouter {
     const Key reportsScreenKey = Key('reports');
     const Key totalSavingKey = Key('totalSavingRoute');
     const Key createProfileKey = Key('createProfile');
+    const Key addIncomeKey = Key('addIncome');
 
     return [
       StatefulShellRoute.indexedStack(
@@ -147,6 +150,20 @@ class MainRouter {
               inject: () {},
               dispose: () {},
               child: const CreateProfileScreen(),
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: addIncomeRoute,
+        name: addIncomeRoute,
+        pageBuilder: (context, state) {
+          return SlideTransitionScreen<void>(
+            child: RouterScope(
+              key: addIncomeKey,
+              inject: () {},
+              dispose: () {},
+              child: const AddIncomeScreen(),
             ),
           );
         },

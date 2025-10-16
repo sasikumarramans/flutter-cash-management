@@ -3,11 +3,13 @@ import 'package:bearnshare/app/di/app_module.dart';
 import 'package:bearnshare/app/di/data_module.dart';
 import 'package:bearnshare/app/di/network_module.dart';
 import 'package:bearnshare/app/helpers/extensions/string_extensions.dart';
+import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/fcm_service.dart';
 import 'package:bearnshare/presentation/app_update/di/app_update_module.dart';
 import 'package:bearnshare/presentation/component/locale/di/locale_module.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -26,6 +28,9 @@ Future<void> backgroundMessageHandler(RemoteMessage message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Set system UI overlay style globally
+  SystemChrome.setSystemUIOverlayStyle(AppTheme.systemUiOverlayStyle);
 
   FlutterNativeSplash.preserve(
       widgetsBinding: WidgetsFlutterBinding.ensureInitialized());

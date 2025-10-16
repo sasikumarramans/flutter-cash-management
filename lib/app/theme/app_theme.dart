@@ -1,6 +1,7 @@
 import 'package:bearnshare/generated/fonts.gen.dart';
 import 'package:bearnshare/presentation/component/app_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pinput/pinput.dart';
 
 /// A class that defines the theme and styles for the application.
@@ -21,7 +22,7 @@ class AppTheme {
   static const Color primaryLabelColor = Color(0xFFFFFFFF);
   static const Color secondaryLabelColor = Color(0x99EBEBF5);
   static const Color tertiaryLabelColor = Color(0x4DEBEBF5);
-  static const Color loginBgColor = Color(0xffECFFED);
+  static const Color loginBgColor = Color(0xff003925);
 
   //* -------------------- Background Colors -------------------- */
 
@@ -768,7 +769,7 @@ class AppTheme {
     decoration: otpDefaultPinTheme.decoration?.copyWith(
       color: Colors.transparent,
       border: Border.all(
-        color: const Color(0xFF7316D0),
+        color: const Color(0xFF2E7D32),
         width: otpFocusedBorderWidth,
       ),
       boxShadow: [
@@ -810,6 +811,13 @@ class AppTheme {
       fontFamily: FontFamily.causten,
     );
   }
+
+  //* -------------------- System UI Overlay Style -------------------- */
+  static const SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.light, // Light icons (white) for dark backgrounds
+    statusBarBrightness: Brightness.dark, // For iOS
+  );
 
   //* -------------------- HomePageContentInfo -------------------- */
 

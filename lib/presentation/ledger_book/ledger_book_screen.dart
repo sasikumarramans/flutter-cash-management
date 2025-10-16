@@ -2,13 +2,18 @@ import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/generated/l10n.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
+import 'package:bearnshare/presentation/ledger_book/book_selection_dialog.dart';
 import 'package:bearnshare/presentation/main_router.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class LedgerBookScreen extends StatelessWidget {
+class LedgerBookScreen extends StatefulWidget {
   const LedgerBookScreen({super.key});
+  @override
+  State<LedgerBookScreen> createState() => _LedgerBookScreenState();
+}
 
+class _LedgerBookScreenState extends State<LedgerBookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,10 +27,19 @@ class LedgerBookScreen extends StatelessWidget {
             Expanded(
               child: _buildTransactionsList(),
             ),
-            _buildActionButtons(),
+            _buildActionButtons(context),
           ],
         ),
       ),
+    );
+  }
+
+  void showBottomDialog(context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const BookSelectionDialog(),
     );
   }
 
@@ -35,12 +49,23 @@ class LedgerBookScreen extends StatelessWidget {
       child: Row(
         children: [
           const SizedBox(width: 5),
-          Text(
-            'Home Expenses',
-            style: AppTheme.ledgerTitleTextStyle,
+          GestureDetector(
+            child: Text(
+              'Home Expenses',
+              style: AppTheme.ledgerTitleTextStyle,
+            ),
+            onTap: () {
+              showBottomDialog(context);
+            },
           ),
           const SizedBox(width: 8),
-          const Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 24),
+          GestureDetector(
+            child: const Icon(Icons.keyboard_arrow_down,
+                color: Colors.white, size: 24),
+            onTap: () {
+              showBottomDialog(context);
+            },
+          ),
           const Spacer(),
           GestureDetector(
             child: Container(
@@ -236,7 +261,7 @@ class LedgerBookScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       child: Row(
@@ -250,7 +275,9 @@ class LedgerBookScreen extends StatelessWidget {
                   size: 20,
                   color: Colors.white,
                 ),
-                onPressed: (value) {},
+                onPressed: (value) {
+                  context.pushNamed(MainRouter.addIncomeRoute);
+                },
                 buttonState: ButtonState.enabled,
                 expandButton: true,
                 enabledButtonFilledStyle: BoxDecoration(
@@ -273,7 +300,9 @@ class LedgerBookScreen extends StatelessWidget {
                   size: 20,
                   color: Colors.white,
                 ),
-                onPressed: (value) {},
+                onPressed: (value) {
+                  context.pushNamed(MainRouter.addIncomeRoute);
+                },
                 buttonState: ButtonState.enabled,
                 expandButton: true,
                 enabledButtonFilledStyle: BoxDecoration(

@@ -33,7 +33,7 @@ class _OtpScreenState extends State<OtpScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE8F5E9),
+      backgroundColor: AppTheme.loginBgColor,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Column(

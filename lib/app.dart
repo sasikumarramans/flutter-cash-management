@@ -9,6 +9,7 @@ import 'package:bearnshare/presentation/component/locale/bloc/locale_bloc.dart';
 import 'package:bearnshare/presentation/component/locale/bloc/locale_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_portal/flutter_portal.dart';
@@ -40,27 +41,30 @@ class _MyAppState extends State<MyApp> {
       ],
       child: BlocBuilder<LocaleBloc, LocaleState>(
         builder: (context, state) {
-          return GlobalLoaderOverlay(
-            overlayColor: Colors.grey.withValues(alpha: 0.5),
-            overlayWidgetBuilder: (_) {
-              return const AppProgressIndicator();
-            },
-            child: Portal(
-              child: MaterialApp.router(
-                debugShowCheckedModeBanner: false,
-                localizationsDelegates: const [
-                  S.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                ],
-                locale: state.locale,
-                theme: AppTheme.getTheme(),
-                supportedLocales: S.delegate.supportedLocales,
-                routerConfig: GetIt.I.get<RouterManager>().goRouter,
-                builder: (context, child) {
-                  return AppUpdateManager(child: child ?? const SizedBox());
-                },
+          return AnnotatedRegion<SystemUiOverlayStyle>(
+            value: AppTheme.systemUiOverlayStyle,
+            child: GlobalLoaderOverlay(
+              overlayColor: Colors.grey.withValues(alpha: 0.5),
+              overlayWidgetBuilder: (_) {
+                return const AppProgressIndicator();
+              },
+              child: Portal(
+                child: MaterialApp.router(
+                  debugShowCheckedModeBanner: false,
+                  localizationsDelegates: const [
+                    S.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                  ],
+                  locale: state.locale,
+                  theme: AppTheme.getTheme(),
+                  supportedLocales: S.delegate.supportedLocales,
+                  routerConfig: GetIt.I.get<RouterManager>().goRouter,
+                  builder: (context, child) {
+                    return AppUpdateManager(child: child ?? const SizedBox());
+                  },
+                ),
               ),
             ),
           );

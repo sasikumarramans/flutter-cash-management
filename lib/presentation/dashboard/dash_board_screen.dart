@@ -7,7 +7,6 @@ import 'package:bearnshare/presentation/dashboard/bloc/dashboard_event.dart';
 import 'package:bearnshare/presentation/dashboard/bloc/dashboard_state.dart';
 import 'package:bearnshare/presentation/dashboard/dash_board_router.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -29,13 +28,6 @@ class _DashboardScreenState extends State<DashboardScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.dark,
-      ),
-    );
   }
 
   @override

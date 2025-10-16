@@ -1,10 +1,12 @@
 import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/data/local/hive_manager.dart';
 import 'package:bearnshare/generated/l10n.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
 import 'package:bearnshare/presentation/component/app_text_field.dart';
 import 'package:bearnshare/presentation/main_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 class CreateProfileScreen extends StatefulWidget {
@@ -249,6 +251,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
       ),
       buttonState: _isFormValid ? ButtonState.enabled : ButtonState.disabled,
       onPressed: (_) {
+        GetIt.I<HiveManager>().saveToHive(HiveManager.profileUpdatedKey, true);
         context.go(MainRouter.mainScreenRoute);
       },
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),

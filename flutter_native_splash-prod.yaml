@@ -6,4 +6,5 @@ flutter_native_splash:
   android_gravity: center
   ios_content_mode: center
   ios: true
+  android: true
   web: false
