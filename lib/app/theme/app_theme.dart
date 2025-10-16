@@ -36,6 +36,7 @@ class AppTheme {
   static const Color tertiaryTextColor = Color(0x4DEBEBF5);
   static const Color quaternaryTextColor = Color(0x29EBEBF5);
   static const Color tabDividerColor = Color(0xff303030);
+  static const Color reportTabActiveColor = Color(0xff015D41);
 
   //* -------------------- Gradient Colors -------------------- */
 

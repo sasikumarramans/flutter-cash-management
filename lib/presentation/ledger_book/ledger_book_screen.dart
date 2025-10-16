@@ -2,7 +2,9 @@ import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/generated/l10n.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
+import 'package:bearnshare/presentation/main_router.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LedgerBookScreen extends StatelessWidget {
   const LedgerBookScreen({super.key});
@@ -32,11 +34,7 @@ class LedgerBookScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () {},
-            child: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
-          ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 5),
           Text(
             'Home Expenses',
             style: AppTheme.ledgerTitleTextStyle,
@@ -44,22 +42,27 @@ class LedgerBookScreen extends StatelessWidget {
           const SizedBox(width: 8),
           const Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 24),
           const Spacer(),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: BoxDecoration(
-              color: AppTheme.reportBtnColor,
-              borderRadius: BorderRadius.circular(8),
+          GestureDetector(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: AppTheme.reportBtnColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Assets.icons.reportImg.svg(),
+                  const SizedBox(width: 6),
+                  Text(
+                    S().s_report,
+                    style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 14),
+                  ),
+                ],
+              ),
             ),
-            child: Row(
-              children: [
-                Assets.icons.reportImg.svg(),
-                const SizedBox(width: 6),
-                Text(
-                  S().s_report,
-                  style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 14),
-                ),
-              ],
-            ),
+            onTap: () {
+              context.pushNamed(MainRouter.reportRoute);
+            },
           ),
         ],
       ),

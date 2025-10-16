@@ -1,8 +1,10 @@
 import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/generated/l10n.dart';
+import 'package:bearnshare/presentation/main_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -174,28 +176,33 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildMetricBox(String amount, String label) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF0F0F1E),
-        borderRadius: BorderRadius.circular(12),
+    return GestureDetector(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0F0F1E),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              amount,
+              style: AppTheme.homePageContentHeaderTextStyle
+                  .copyWith(fontSize: 20),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: AppTheme.homePageTitleTextStyle.copyWith(
+                  fontSize: 12, color: AppTheme.homePageSubtitleColor),
+            ),
+          ],
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            amount,
-            style:
-                AppTheme.homePageContentHeaderTextStyle.copyWith(fontSize: 20),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: AppTheme.homePageTitleTextStyle
-                .copyWith(fontSize: 12, color: AppTheme.homePageSubtitleColor),
-          ),
-        ],
-      ),
+      onTap: () {
+        context.pushNamed(MainRouter.totalSavingRoute);
+      },
     );
   }
 

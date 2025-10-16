@@ -103,6 +103,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "edit_with_your_own_idea": MessageLookupByLibrary.simpleMessage(
       "Enter any text in the prompt to reimagine yourself",
     ),
+    "email_address": MessageLookupByLibrary.simpleMessage("Email Address"),
+    "email_hint": MessageLookupByLibrary.simpleMessage("Enter your email"),
     "export_data": MessageLookupByLibrary.simpleMessage("Export Data"),
     "fabric_created": MessageLookupByLibrary.simpleMessage("Fabric Created"),
     "fabric_deleted_successfully": MessageLookupByLibrary.simpleMessage(
@@ -129,9 +131,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "great_job_you": MessageLookupByLibrary.simpleMessage("Great job! you"),
     "how_is_your_experience": MessageLookupByLibrary.simpleMessage(
       "How\'s your experience so far?",
-    ),
-    "how_old_are_your": MessageLookupByLibrary.simpleMessage(
-      "How old are you?",
     ),
     "i_love_it": MessageLookupByLibrary.simpleMessage("I love it"),
     "image_moderation": MessageLookupByLibrary.simpleMessage(
@@ -170,7 +169,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
     "open_settings": MessageLookupByLibrary.simpleMessage("Open Settings"),
-    "otp_confirm_email": MessageLookupByLibrary.simpleMessage("Confirm email"),
     "otp_enter_the_otp_sent_to": MessageLookupByLibrary.simpleMessage(
       "Enter the code sent to",
     ),
@@ -270,7 +268,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "s_create_a_unique_username_hint": MessageLookupByLibrary.simpleMessage(
       "Your friends will be able to tag you with this username. You can change it later",
     ),
-    "s_create_account": MessageLookupByLibrary.simpleMessage("Create account"),
     "s_create_collection": MessageLookupByLibrary.simpleMessage(
       "Create collection",
     ),
@@ -388,11 +385,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "set_profile_picture": MessageLookupByLibrary.simpleMessage(
       "Set as your Profile Photo",
     ),
+    "set_up_your_profile": MessageLookupByLibrary.simpleMessage(
+      "Set up your profile",
+    ),
+    "set_up_your_profile_hint": MessageLookupByLibrary.simpleMessage(
+      "We\'ll personalize your experience",
+    ),
     "settings_account": MessageLookupByLibrary.simpleMessage(
       "Settings & Account",
     ),
-    "show_less": MessageLookupByLibrary.simpleMessage("show less"),
-    "show_more": MessageLookupByLibrary.simpleMessage("show more"),
     "skip": MessageLookupByLibrary.simpleMessage("skip"),
     "split_activity": MessageLookupByLibrary.simpleMessage("Split Activity"),
     "stitch_your_first_video": MessageLookupByLibrary.simpleMessage(
@@ -421,6 +422,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "update_now": MessageLookupByLibrary.simpleMessage("Update Now"),
     "update_required": MessageLookupByLibrary.simpleMessage("Update Required"),
+    "usename_hint": MessageLookupByLibrary.simpleMessage(
+      "\'Enter your user name",
+    ),
+    "user_name": MessageLookupByLibrary.simpleMessage("User name"),
     "user_name_error": MessageLookupByLibrary.simpleMessage(
       "User name goes against our policy",
     ),

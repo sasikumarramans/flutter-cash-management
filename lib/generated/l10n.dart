@@ -284,11 +284,51 @@ class S {
     );
   }
 
-  /// `Confirm email`
-  String get otp_confirm_email {
+  /// `Set up your profile`
+  String get set_up_your_profile {
     return Intl.message(
-      'Confirm email',
-      name: 'otp_confirm_email',
+      'Set up your profile',
+      name: 'set_up_your_profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We'll personalize your experience`
+  String get set_up_your_profile_hint {
+    return Intl.message(
+      'We\'ll personalize your experience',
+      name: 'set_up_your_profile_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User name`
+  String get user_name {
+    return Intl.message('User name', name: 'user_name', desc: '', args: []);
+  }
+
+  /// `Email Address`
+  String get email_address {
+    return Intl.message(
+      'Email Address',
+      name: 'email_address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue`
+  String get s_continue {
+    return Intl.message('Continue', name: 's_continue', desc: '', args: []);
+  }
+
+  /// `Enter your email`
+  String get email_hint {
+    return Intl.message(
+      'Enter your email',
+      name: 'email_hint',
       desc: '',
       args: [],
     );
@@ -304,36 +344,11 @@ class S {
     );
   }
 
-  /// `show more`
-  String get show_more {
-    return Intl.message('show more', name: 'show_more', desc: '', args: []);
-  }
-
-  /// `show less`
-  String get show_less {
-    return Intl.message('show less', name: 'show_less', desc: '', args: []);
-  }
-
-  /// `Continue`
-  String get s_continue {
-    return Intl.message('Continue', name: 's_continue', desc: '', args: []);
-  }
-
-  /// `Create account`
-  String get s_create_account {
+  /// `'Enter your user name`
+  String get usename_hint {
     return Intl.message(
-      'Create account',
-      name: 's_create_account',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `How old are you?`
-  String get how_old_are_your {
-    return Intl.message(
-      'How old are you?',
-      name: 'how_old_are_your',
+      '\'Enter your user name',
+      name: 'usename_hint',
       desc: '',
       args: [],
     );

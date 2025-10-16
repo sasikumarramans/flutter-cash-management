@@ -108,12 +108,9 @@ class HistoryScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          GestureDetector(
-            onTap: () {},
-            child: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
-          ),
-          const SizedBox(width: 20),
+          const SizedBox(width: 5),
           Text(
             'History',
             style: AppTheme.ledgerTitleTextStyle,

@@ -40,10 +40,13 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildHeader() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            /*
             Container(
               padding: const EdgeInsets.all(12),
               decoration: const BoxDecoration(
@@ -52,8 +55,9 @@ class ProfileScreen extends StatelessWidget {
               ),
               child:
                   const Icon(Icons.arrow_back, color: Colors.white, size: 24),
-            ),
-            const SizedBox(width: 16),
+            ),*/
+
+            const SizedBox(width: 5),
             Text(
               'Profile',
               style: AppTheme.ledgerTitleTextStyle,
