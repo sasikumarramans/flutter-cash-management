@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 20),
                 _buildSplitActivity(),
                 const SizedBox(height: 20),
-                _buildLedgerBooks(),
+                _buildLedgerBooks(context),
               ],
             ),
           ),
@@ -284,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildLedgerBooks() {
+  Widget _buildLedgerBooks(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -295,23 +295,30 @@ class _HomeScreenState extends State<HomeScreen> {
               style: AppTheme.homePageContentHeaderTextStyle
                   .copyWith(fontSize: 16),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppTheme.amountPosTextColor,
-                borderRadius: BorderRadius.circular(20),
+            GestureDetector(
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppTheme.amountPosTextColor,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.add, size: 18, color: Colors.white),
+                    const SizedBox(width: 4),
+                    Text(
+                      S.of(context).s_add,
+                      style: AppTheme.homePageTitleTextStyle.copyWith(
+                          fontSize: 12,
+                          color: AppTheme.homePageAppBarTitleColor),
+                    ),
+                  ],
+                ),
               ),
-              child: Row(
-                children: [
-                  const Icon(Icons.add, size: 18, color: Colors.white),
-                  const SizedBox(width: 4),
-                  Text(
-                    S.of(context).s_add,
-                    style: AppTheme.homePageTitleTextStyle.copyWith(
-                        fontSize: 12, color: AppTheme.homePageAppBarTitleColor),
-                  ),
-                ],
-              ),
+              onTap: () {
+                context.pushNamed(MainRouter.addBookRoute);
+              },
             ),
           ],
         ),

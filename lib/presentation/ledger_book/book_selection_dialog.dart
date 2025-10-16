@@ -1,7 +1,9 @@
 import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
 import 'package:bearnshare/presentation/component/app_text_field.dart';
+import 'package:bearnshare/presentation/main_router.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class BookSelectionDialog extends StatefulWidget {
   const BookSelectionDialog({super.key});
@@ -126,7 +128,9 @@ class _BooksBottomSheetState extends State<BookSelectionDialog> {
                     color: Colors.white,
                     size: 16,
                   ),
-                  onPressed: (_) {},
+                  onPressed: (_) {
+                    context.pushNamed(MainRouter.addBookRoute);
+                  },
                   padding: const EdgeInsets.symmetric(
                     horizontal: 14,
                     vertical: 8,

@@ -13,6 +13,7 @@ import 'package:bearnshare/presentation/dashboard/bloc/dashboard_bloc.dart';
 import 'package:bearnshare/presentation/dashboard/dash_board_router.dart';
 import 'package:bearnshare/presentation/dashboard/dash_board_screen.dart';
 import 'package:bearnshare/presentation/dashboard/di/dashboard_module.dart';
+import 'package:bearnshare/presentation/ledger_book/add_book_screen.dart';
 import 'package:bearnshare/presentation/ledger_book/add_income_screen.dart';
 import 'package:bearnshare/presentation/profile/edit_profile_screen.dart';
 import 'package:bearnshare/presentation/reports/report_screen.dart';
@@ -39,6 +40,7 @@ class MainRouter {
   static const String addIncomeRoute = '/addIncome';
   static const String addExpenseRoute = '/addExpense';
   static const String splitReportSummaryRoute = '/splitReportSummary';
+  static const String addBookRoute = '/addBook';
 
   static bool isDashboardInitialized = false;
 
@@ -52,6 +54,7 @@ class MainRouter {
     const Key addExpenseKey = Key('addExpense');
     const Key splitReportSummaryKey = Key('splitReportSummary');
     const Key editProfileKey = Key('editProfile');
+    const Key addBookKey = Key('addBook');
 
     return [
       StatefulShellRoute.indexedStack(
@@ -243,6 +246,20 @@ class MainRouter {
               inject: () {},
               dispose: () {},
               child: const SplitReportScreen(),
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: addBookRoute,
+        name: addBookRoute,
+        pageBuilder: (context, state) {
+          return SlideTransitionScreen<void>(
+            child: RouterScope(
+              key: addBookKey,
+              inject: () {},
+              dispose: () {},
+              child: const AddBookScreen(),
             ),
           );
         },

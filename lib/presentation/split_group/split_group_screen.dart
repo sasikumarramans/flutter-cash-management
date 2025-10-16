@@ -4,6 +4,7 @@ import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
 import 'package:bearnshare/presentation/component/app_text_field.dart';
 import 'package:bearnshare/presentation/main_router.dart';
+import 'package:bearnshare/presentation/split_home/add_member_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -113,7 +114,7 @@ class _SplitGroupScreenState extends State<SplitGroupScreen> {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           onPressed: (_) {
-            context.pushNamed(MainRouter.addExpenseRoute);
+            AddExpenseMembersSheet.showAddExpenseMembersDialog(context);
           },
         ),
       ),
