@@ -55,6 +55,10 @@ class $AssetsIconsGen {
   SvgGenImage get accountIcon =>
       const SvgGenImage('assets/icons/account_icon.svg');
 
+  /// File path: assets/icons/add_expense.svg
+  SvgGenImage get addExpense =>
+      const SvgGenImage('assets/icons/add_expense.svg');
+
   /// File path: assets/icons/delete_icon.svg
   SvgGenImage get deleteIcon =>
       const SvgGenImage('assets/icons/delete_icon.svg');
@@ -72,6 +76,15 @@ class $AssetsIconsGen {
   /// File path: assets/icons/filter_icon.svg
   SvgGenImage get filterIcon =>
       const SvgGenImage('assets/icons/filter_icon.svg');
+
+  /// File path: assets/icons/friends.svg
+  SvgGenImage get friends => const SvgGenImage('assets/icons/friends.svg');
+
+  /// File path: assets/icons/graph.svg
+  SvgGenImage get graph => const SvgGenImage('assets/icons/graph.svg');
+
+  /// File path: assets/icons/group.svg
+  SvgGenImage get group => const SvgGenImage('assets/icons/group.svg');
 
   /// File path: assets/icons/history.svg
   SvgGenImage get history => const SvgGenImage('assets/icons/history.svg');
@@ -95,9 +108,27 @@ class $AssetsIconsGen {
   /// File path: assets/icons/report_img.svg
   SvgGenImage get reportImg => const SvgGenImage('assets/icons/report_img.svg');
 
+  /// File path: assets/icons/search.svg
+  SvgGenImage get search => const SvgGenImage('assets/icons/search.svg');
+
+  /// File path: assets/icons/split_123.svg
+  SvgGenImage get split123 => const SvgGenImage('assets/icons/split_123.svg');
+
+  /// File path: assets/icons/split_chart.svg
+  SvgGenImage get splitChart =>
+      const SvgGenImage('assets/icons/split_chart.svg');
+
   /// File path: assets/icons/split_dollar_icon.svg
   SvgGenImage get splitDollarIcon =>
       const SvgGenImage('assets/icons/split_dollar_icon.svg');
+
+  /// File path: assets/icons/split_percentage.svg
+  SvgGenImage get splitPercentage =>
+      const SvgGenImage('assets/icons/split_percentage.svg');
+
+  /// File path: assets/icons/split_scene.svg
+  SvgGenImage get splitScene =>
+      const SvgGenImage('assets/icons/split_scene.svg');
 
   /// File path: assets/icons/split_wise_icon.svg
   SvgGenImage get splitWiseIcon =>
@@ -106,11 +137,15 @@ class $AssetsIconsGen {
   /// List of all assets
   List<SvgGenImage> get values => [
         accountIcon,
+        addExpense,
         deleteIcon,
         editIcon,
         exportIcon,
         faqIcon,
         filterIcon,
+        friends,
+        graph,
+        group,
         history,
         home,
         lanIcon,
@@ -118,7 +153,12 @@ class $AssetsIconsGen {
         notificationIcon,
         profile,
         reportImg,
+        search,
+        split123,
+        splitChart,
         splitDollarIcon,
+        splitPercentage,
+        splitScene,
         splitWiseIcon
       ];
 }

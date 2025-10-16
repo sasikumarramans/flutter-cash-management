@@ -2,7 +2,9 @@ import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/generated/l10n.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
+import 'package:bearnshare/presentation/main_router.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -20,7 +22,7 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 _buildHeader(),
                 const SizedBox(height: 24),
-                _buildProfileCard(),
+                _buildProfileCard(context),
                 const SizedBox(height: 20),
                 Text(
                   S().settings_account,
@@ -68,7 +70,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileCard() {
+  Widget _buildProfileCard(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -113,16 +115,21 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            decoration: BoxDecoration(
-              color: AppTheme.amountPosTextColor,
-              borderRadius: BorderRadius.circular(10),
+          GestureDetector(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: BoxDecoration(
+                color: AppTheme.splitGroupColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                'Edit Profile',
+                style: AppTheme.profileTextStyle.copyWith(color: Colors.white),
+              ),
             ),
-            child: Text(
-              'Edit Profile',
-              style: AppTheme.profileTextStyle.copyWith(color: Colors.white),
-            ),
+            onTap: () {
+              context.pushNamed(MainRouter.editProfileRoute);
+            },
           ),
         ],
       ),

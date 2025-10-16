@@ -2,6 +2,7 @@ import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/generated/l10n.dart';
 import 'package:bearnshare/presentation/main_router.dart';
+import 'package:bearnshare/presentation/split_dashboard/split_dash_board_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
@@ -23,31 +24,36 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Container(
-        padding: const EdgeInsets.all(13),
-        margin: const EdgeInsets.only(bottom: 80),
-        width: 130,
-        decoration: BoxDecoration(
-            color: AppTheme.homePageCardBgColor,
-            borderRadius: BorderRadius.circular(35),
-            gradient: const LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [AppTheme.amountPosTextColor, Color(0xff007652)])),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Assets.icons.splitWiseIcon.svg(),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Splitwise",
-              style: AppTheme.homePageTitleTextStyle,
-            )
-          ],
+      floatingActionButton: GestureDetector(
+        child: Container(
+          padding: const EdgeInsets.all(13),
+          margin: const EdgeInsets.only(bottom: 80),
+          width: 130,
+          decoration: BoxDecoration(
+              color: AppTheme.homePageCardBgColor,
+              borderRadius: BorderRadius.circular(35),
+              gradient: const LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [AppTheme.amountPosTextColor, Color(0xff007652)])),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Assets.icons.splitWiseIcon.svg(),
+              const SizedBox(
+                width: 10,
+              ),
+              Text(
+                "Splitwise",
+                style: AppTheme.homePageTitleTextStyle,
+              )
+            ],
+          ),
         ),
+        onTap: () {
+          context.go(SplitDashboardRouter.splitHomeRoute);
+        },
       ),
       body: SafeArea(
         child: SingleChildScrollView(

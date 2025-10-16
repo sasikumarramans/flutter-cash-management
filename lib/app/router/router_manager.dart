@@ -12,6 +12,11 @@ class RouterManager {
   static final ledgerNavigatorKey = GlobalKey<NavigatorState>();
   static final historyKey = GlobalKey<NavigatorState>();
   static final profileNavigatorKey = GlobalKey<NavigatorState>();
+  static final splitProfileNavigatorKey = GlobalKey<NavigatorState>();
+
+  static final splitHomeBranchNavigatorKey = GlobalKey<NavigatorState>();
+  static final groupNavigatorKey = GlobalKey<NavigatorState>();
+  static final friendsKey = GlobalKey<NavigatorState>();
   RouterManager() {
     _initRouter();
   }

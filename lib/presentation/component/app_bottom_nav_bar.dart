@@ -8,6 +8,13 @@ enum BottomNavItem {
   profile,
 }
 
+enum SplitBottomNavItem {
+  home,
+  group,
+  friends,
+  profile,
+}
+
 enum BottomNavIconStatus {
   enabled,
   selected,
@@ -25,6 +32,21 @@ extension BottomNavItemExtension on BottomNavItem {
       case BottomNavItem.history:
         return 'History';
       case BottomNavItem.profile:
+        return 'Profile';
+    }
+  }
+}
+
+extension SplitBottomNavItemExtension on SplitBottomNavItem {
+  String get label {
+    switch (this) {
+      case SplitBottomNavItem.home:
+        return 'Home';
+      case SplitBottomNavItem.group:
+        return 'Group';
+      case SplitBottomNavItem.friends:
+        return 'Friends';
+      case SplitBottomNavItem.profile:
         return 'Profile';
     }
   }
@@ -106,6 +128,84 @@ class BottomNavBarItem {
   final Widget icon;
 
   BottomNavBarItem({
+    required this.item,
+    required this.status,
+    required this.onPressed,
+    required this.icon,
+  });
+}
+
+class SplitBottomNavBar extends StatelessWidget {
+  final List<SplitBottomNavBarItem> items;
+
+  const SplitBottomNavBar({
+    super.key,
+    required this.items,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+      decoration: BoxDecoration(
+        color: const Color(0x99000000),
+        border: Border.all(
+          width: 1,
+          color: AppTheme.quaternaryTextColor,
+        ),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: Row(
+        children: items.map((item) {
+          final isSelected = item.status == BottomNavIconStatus.selected;
+
+          Widget iconWidget;
+          if (isSelected) {
+            iconWidget = Container(
+              child: item.icon,
+            );
+          } else {
+            iconWidget = item.icon;
+          }
+
+          return Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: item.onPressed,
+              child: SizedBox(
+                height: 60,
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      iconWidget,
+                      Text(
+                        item.item.label,
+                        style: AppTheme.bottomBarText.copyWith(
+                            color: isSelected
+                                ? AppTheme.tertiaryColor
+                                : const Color(0xff9CA6BB)),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class SplitBottomNavBarItem {
+  final SplitBottomNavItem item;
+  final BottomNavIconStatus status;
+  final VoidCallback onPressed;
+  final Widget icon;
+
+  SplitBottomNavBarItem({
     required this.item,
     required this.status,
     required this.onPressed,

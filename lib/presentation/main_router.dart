@@ -14,7 +14,14 @@ import 'package:bearnshare/presentation/dashboard/dash_board_router.dart';
 import 'package:bearnshare/presentation/dashboard/dash_board_screen.dart';
 import 'package:bearnshare/presentation/dashboard/di/dashboard_module.dart';
 import 'package:bearnshare/presentation/ledger_book/add_income_screen.dart';
+import 'package:bearnshare/presentation/profile/edit_profile_screen.dart';
 import 'package:bearnshare/presentation/reports/report_screen.dart';
+import 'package:bearnshare/presentation/split_add_expense/add_expense_split_screen.dart';
+import 'package:bearnshare/presentation/split_dashboard/bloc/split_dashboard_bloc.dart';
+import 'package:bearnshare/presentation/split_dashboard/di/split_dashboard_module.dart';
+import 'package:bearnshare/presentation/split_dashboard/split_dash_board_router.dart';
+import 'package:bearnshare/presentation/split_dashboard/split_dash_board_screen.dart';
+import 'package:bearnshare/presentation/split_report/split_report_screen.dart';
 import 'package:bearnshare/presentation/total_savings/total_savings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +35,10 @@ class MainRouter {
   static const String reportRoute = '/reports';
   static const String totalSavingRoute = '/totalSaving';
   static const String createProfileRoute = '/createProfile';
+  static const String editProfileRoute = '/editProfile';
   static const String addIncomeRoute = '/addIncome';
+  static const String addExpenseRoute = '/addExpense';
+  static const String splitReportSummaryRoute = '/splitReportSummary';
 
   static bool isDashboardInitialized = false;
 
@@ -39,6 +49,9 @@ class MainRouter {
     const Key totalSavingKey = Key('totalSavingRoute');
     const Key createProfileKey = Key('createProfile');
     const Key addIncomeKey = Key('addIncome');
+    const Key addExpenseKey = Key('addExpense');
+    const Key splitReportSummaryKey = Key('splitReportSummary');
+    const Key editProfileKey = Key('editProfile');
 
     return [
       StatefulShellRoute.indexedStack(
@@ -64,6 +77,30 @@ class MainRouter {
           );
         },
         branches: DashboardRouter.getBranches(),
+      ),
+      StatefulShellRoute.indexedStack(
+        builder: (BuildContext context, GoRouterState state, Widget child) {
+          final dashboardModule = SplitDashboardModule();
+          dashboardModule.injectBloc();
+          return RouterScope(
+            key: dashboardRouteScreenKey,
+            inject: () {
+              dashboardModule.inject();
+            },
+            dispose: () {
+              dashboardModule.dispose();
+            },
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider<SplitDashboardBloc>.value(
+                  value: GetIt.I<SplitDashboardBloc>(),
+                ),
+              ],
+              child: SplitDashBoardScreen(child: child),
+            ),
+          );
+        },
+        branches: SplitDashboardRouter.getBranches(),
       ),
       GoRoute(
         path: mainScreenRoute,
@@ -155,6 +192,20 @@ class MainRouter {
         },
       ),
       GoRoute(
+        path: editProfileRoute,
+        name: editProfileRoute,
+        pageBuilder: (context, state) {
+          return SlideTransitionScreen<void>(
+            child: RouterScope(
+              key: editProfileKey,
+              inject: () {},
+              dispose: () {},
+              child: const EditProfileScreen(),
+            ),
+          );
+        },
+      ),
+      GoRoute(
         path: addIncomeRoute,
         name: addIncomeRoute,
         pageBuilder: (context, state) {
@@ -164,6 +215,34 @@ class MainRouter {
               inject: () {},
               dispose: () {},
               child: const AddIncomeScreen(),
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: addExpenseRoute,
+        name: addExpenseRoute,
+        pageBuilder: (context, state) {
+          return SlideTransitionScreen<void>(
+            child: RouterScope(
+              key: addExpenseKey,
+              inject: () {},
+              dispose: () {},
+              child: const AddExpenseSplitScreen(),
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: splitReportSummaryRoute,
+        name: splitReportSummaryRoute,
+        pageBuilder: (context, state) {
+          return SlideTransitionScreen<void>(
+            child: RouterScope(
+              key: splitReportSummaryKey,
+              inject: () {},
+              dispose: () {},
+              child: const SplitReportScreen(),
             ),
           );
         },

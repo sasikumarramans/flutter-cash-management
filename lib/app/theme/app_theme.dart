@@ -97,6 +97,7 @@ class AppTheme {
   static const Color buttonBorderColor = Color(0xFFB0E0E6);
   static const Color buttonCompletedTextColor = Colors.white;
   static const Color buttonCompletedFillColor = tertiaryColor;
+  static const Color splitGroupColor = Color(0xff015D41);
 
   static const FontWeight textFieldFontWeight = FontWeight.w400;
 
@@ -815,7 +816,8 @@ class AppTheme {
   //* -------------------- System UI Overlay Style -------------------- */
   static const SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.light, // Light icons (white) for dark backgrounds
+    statusBarIconBrightness:
+        Brightness.light, // Light icons (white) for dark backgrounds
     statusBarBrightness: Brightness.dark, // For iOS
   );
 
