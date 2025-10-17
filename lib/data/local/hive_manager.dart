@@ -9,6 +9,7 @@ class HiveManager {
 
   static const String userSessionTokenKey = 'user_token';
   static const String profileUpdatedKey = 'profile_updated';
+  static const String languageUpdatedKey = 'language_updated';
   static const String appSessionId = 'app_session_id';
   static const String userIdKey = 'user_id';
   static const String notificationToken = 'notificationToken';

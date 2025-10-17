@@ -9,6 +9,7 @@ import 'package:bearnshare/presentation/auth/login/di/login_module.dart';
 import 'package:bearnshare/presentation/auth/login/login_screen.dart';
 import 'package:bearnshare/presentation/auth/login_router.dart';
 import 'package:bearnshare/presentation/create_profile/create_profile_screen.dart';
+import 'package:bearnshare/presentation/create_profile/language_selection_screen.dart';
 import 'package:bearnshare/presentation/dashboard/bloc/dashboard_bloc.dart';
 import 'package:bearnshare/presentation/dashboard/dash_board_router.dart';
 import 'package:bearnshare/presentation/dashboard/dash_board_screen.dart';
@@ -41,6 +42,7 @@ class MainRouter {
   static const String addExpenseRoute = '/addExpense';
   static const String splitReportSummaryRoute = '/splitReportSummary';
   static const String addBookRoute = '/addBook';
+  static const String languageRoute = '/language';
 
   static bool isDashboardInitialized = false;
 
@@ -55,6 +57,7 @@ class MainRouter {
     const Key splitReportSummaryKey = Key('splitReportSummary');
     const Key editProfileKey = Key('editProfile');
     const Key addBookKey = Key('addBook');
+    const Key languageBookKey = Key('language');
 
     return [
       StatefulShellRoute.indexedStack(
@@ -114,8 +117,12 @@ class MainRouter {
           final isProfileUpdated = GetIt.I<HiveManager>()
                   .getFromHive(HiveManager.profileUpdatedKey) ??
               false;
+          final isLanguageUpdated = !GetIt.I<HiveManager>()
+              .getFromHive<String>(HiveManager.languageUpdatedKey).isNullOrEmpty;
           if (!isUserLoggedIn) {
             return loginScreenRoute;
+          } else if (!isLanguageUpdated) {
+            return languageRoute;
           } else if (!isProfileUpdated) {
             return createProfileRoute;
           }
@@ -260,6 +267,20 @@ class MainRouter {
               inject: () {},
               dispose: () {},
               child: const AddBookScreen(),
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: languageRoute,
+        name: languageRoute,
+        pageBuilder: (context, state) {
+          return SlideTransitionScreen<void>(
+            child: RouterScope(
+              key: languageBookKey,
+              inject: () {},
+              dispose: () {},
+              child: const LanguageSelectionScreen(),
             ),
           );
         },
