@@ -16,6 +16,7 @@ enum SplitBottomNavItem {
 }
 
 enum BottomNavIconStatus {
+
   enabled,
   selected,
   disabled,
@@ -107,7 +108,7 @@ class AppBottomNavBar extends StatelessWidget {
                         style: AppTheme.bottomBarText.copyWith(
                             color: isSelected
                                 ? AppTheme.tertiaryColor
-                                : const Color(0xff9CA6BB)),
+                                : const Color(0xff9CA6BB),fontWeight:  isSelected?FontWeight.w700:FontWeight.w500),
                       )
                     ],
                   ),
@@ -185,7 +186,7 @@ class SplitBottomNavBar extends StatelessWidget {
                         style: AppTheme.bottomBarText.copyWith(
                             color: isSelected
                                 ? AppTheme.tertiaryColor
-                                : const Color(0xff9CA6BB)),
+                                : const Color(0xff9CA6BB),fontWeight:  isSelected?FontWeight.w700:FontWeight.w500),
                       )
                     ],
                   ),
