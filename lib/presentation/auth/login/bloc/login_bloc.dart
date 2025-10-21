@@ -5,7 +5,7 @@ import 'package:bearnshare/app/helpers/extensions/string_extensions.dart';
 import 'package:bearnshare/data/local/hive_manager.dart';
 import 'package:bearnshare/data/network/core/api_exception.dart';
 import 'package:bearnshare/domain/auth/login/model/login_otp_response.dart';
-import 'package:bearnshare/domain/auth/login/model/login_otp_verify_response.dart';
+import 'package:bearnshare/domain/auth/login/model/user_response_object.dart';
 import 'package:bearnshare/domain/auth/login/use_cases/login_otp_use_case.dart';
 import 'package:bearnshare/domain/auth/login/use_cases/verify_login_otp_use_case.dart';
 import 'package:bearnshare/generated/l10n.dart';
@@ -89,7 +89,7 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
       ValidateLoginMobileNumberOtpRequested event,
       Emitter<LoginState> emit) async {
     try {
-      final response = await safeExecute<LoginOtpVerifyResponse>(
+      final response = await safeExecute<UserResponseObject>(
         function: () async {
           return await _verifyLoginOtpUseCase.execute(
             request: VerifyLoginOtpRequest(
@@ -102,13 +102,9 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
         showError: false,
       );
 
-      print(response);
-      print("otpResponse");
       if (response == null) {
         return;
       }
-      print(response.sessionToken);
-
       await showSuccessMsg("Logged in successfully");
 
       await _hiveManager.saveToHive(
@@ -120,7 +116,10 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
         HiveManager.userIdKey,
         response.userId,
       );
-
+      await _hiveManager.saveToHive(
+        HiveManager.profileUpdatedKey,
+        response.username.isNotEmpty,
+      );
       emit(state.copyWith(status: LoginStatus.userAuthenticated));
     } catch (e) {
       if (e is ApiException) {

@@ -1,11 +1,19 @@
 import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/domain/ledger/model/get_books_response.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
 import 'package:bearnshare/presentation/component/app_text_field.dart';
+import 'package:bearnshare/presentation/create_book/bloc/create_book_bloc.dart';
+import 'package:bearnshare/presentation/create_book/bloc/create_book_event.dart';
+import 'package:bearnshare/presentation/create_book/bloc/create_book_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 class AddBookScreen extends StatefulWidget {
-  const AddBookScreen({super.key});
+  final BooksItem? bookItem;
+
+  const AddBookScreen({super.key, this.bookItem});
 
   @override
   State<AddBookScreen> createState() => _AddBookScreenState();
@@ -13,7 +21,8 @@ class AddBookScreen extends StatefulWidget {
 
 class _AddBookScreenState extends State<AddBookScreen> {
   final TextEditingController _bookNameController = TextEditingController();
-  final TextEditingController _memberSearchController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  late final CreateBookBloc _bloc;
   int? selectedIconIndex;
 
   final List<IconData> defaultIcons = [
@@ -27,10 +36,24 @@ class _AddBookScreenState extends State<AddBookScreen> {
     Icons.directions_car,
   ];
 
+  final List<String> currencies = ['INR', 'USD', 'EUR', 'GBP'];
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc = GetIt.I.get<CreateBookBloc>();
+    _bloc.add(const InitBook());
+    if (widget.bookItem != null) {
+      _bloc.add(InitializeEditMode(bookItem: widget.bookItem!));
+      _bookNameController.text = widget.bookItem!.name;
+      _descriptionController.text = widget.bookItem!.description;
+    }
+  }
+
   @override
   void dispose() {
     _bookNameController.dispose();
-    _memberSearchController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -39,30 +62,39 @@ class _AddBookScreenState extends State<AddBookScreen> {
     return Scaffold(
       backgroundColor: AppTheme.primaryBackgroundColor,
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(context),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildBookNameField(),
-                    const SizedBox(height: 16),
-                    _buildDefaultIcons(),
-                  ],
+        child: BlocConsumer<CreateBookBloc, CreateBookState>(
+          listener: (context, state) {
+            if (state.status == CreateBookStatus.success) {
+              context.pop();
+            }
+          },
+          builder: (context, state) {
+            return Column(
+              children: [
+                _buildHeader(context, state),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildBookNameField(),
+                        const SizedBox(height: 16),
+                        _buildDescriptionField(),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            _buildCreateButton(),
-          ],
+                _buildCreateButton(state),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, CreateBookState state) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -75,7 +107,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
           ),
           const SizedBox(width: 16),
           Text(
-            'Add Book',
+            state.isEditMode ? 'Edit Book' : 'Add Book',
             style:
                 AppTheme.homePageContentHeaderTextStyle.copyWith(fontSize: 20),
           ),
@@ -98,6 +130,14 @@ class _AddBookScreenState extends State<AddBookScreen> {
           textFieldStyle: TextFieldStyle.outlined,
           textFieldState: TextFieldState.enabled,
           textFieldType: TextFieldType.text,
+          onChanged: (value) {
+            context.read<CreateBookBloc>().add(
+                  BookNameChanged(value),
+                );
+          },
+          onValidation: (isValid) => context
+              .read<CreateBookBloc>()
+              .add(BookNameCompleted(isValid: isValid)),
           textStyle: AppTheme.historyTextStyle.copyWith(fontSize: 15),
           outlinedEnabledStyle: InputDecoration(
             hintText: 'Enter a Book Name',
@@ -117,7 +157,8 @@ class _AddBookScreenState extends State<AddBookScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppTheme.splitGroupColor),
+              borderSide:
+                  const BorderSide(color: AppTheme.splitBorderLineColor),
             ),
             filled: true,
             fillColor: AppTheme.primaryColor,
@@ -128,116 +169,31 @@ class _AddBookScreenState extends State<AddBookScreen> {
     );
   }
 
-  Widget _buildDefaultIcons() {
+  Widget _buildDescriptionField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Default icons',
-          style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 15),
-        ),
-        const SizedBox(height: 16),
-        Wrap(
-          spacing: 6,
-          runSpacing: 6,
-          children: [
-            ...List.generate(
-              defaultIcons.length,
-              (index) => _buildIconButton(defaultIcons[index], index),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildIconButton(IconData icon, int index) {
-    final isSelected = selectedIconIndex == index;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedIconIndex = index;
-        });
-      },
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: isSelected ? AppTheme.splitGroupColor : AppTheme.primaryColor,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected
-                ? AppTheme.splitGroupColor
-                : AppTheme.splitBorderLineColor,
-            width: 1.5,
-          ),
-        ),
-        child: Icon(
-          icon,
-          color: Colors.white,
-          size: 20,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAddNewButton() {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        decoration: BoxDecoration(
-          color: AppTheme.primaryColor,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: AppTheme.splitBorderLineColor,
-            width: 1.5,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.add_circle_outline,
-              color: Colors.white,
-              size: 22,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              'Add new',
-              style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 14),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAddMembers() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Add Members',
+          'Description',
           style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 15),
         ),
         const SizedBox(height: 12),
         AppTextField(
-          controller: _memberSearchController,
+          controller: _descriptionController,
           textFieldStyle: TextFieldStyle.outlined,
           textFieldState: TextFieldState.enabled,
           textFieldType: TextFieldType.text,
+          onChanged: (value) {
+            context.read<CreateBookBloc>().add(
+                  BookDescChanged(value),
+                );
+          },
           textStyle: AppTheme.historyTextStyle.copyWith(fontSize: 15),
           outlinedEnabledStyle: InputDecoration(
-            hintText: 'Enter name, email, or phone',
+            hintText: 'Enter Description',
             hintStyle: AppTheme.homePageTitleTextStyle.copyWith(
               fontSize: 15,
               color: AppTheme.homePageSubtitleColor,
-            ),
-            prefixIcon: const Icon(
-              Icons.search,
-              color: Colors.white,
-              size: 22,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -251,28 +207,35 @@ class _AddBookScreenState extends State<AddBookScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppTheme.splitGroupColor),
+              borderSide:
+                  const BorderSide(color: AppTheme.splitBorderLineColor),
             ),
             filled: true,
             fillColor: AppTheme.primaryColor,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            contentPadding: const EdgeInsets.all(16),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildCreateButton() {
+  Widget _buildCreateButton(CreateBookState state) {
+    final isButtonEnabled = state.isButtonEnabled;
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: AppButton(
-        textString: 'Create Book',
+        textString: state.isEditMode ? 'Update Book' : 'Create Book',
         buttonType: ButtonType.filled,
         expandButton: true,
-        buttonState: ButtonState.enabled,
+        buttonState:
+            isButtonEnabled ? ButtonState.enabled : ButtonState.disabled,
         onPressed: (_) {
-          // Handle create book action
+          if (state.isEditMode) {
+            _bloc.add(const EditBook());
+          } else {
+            _bloc.add(const CreateBook());
+          }
         },
         enabledButtonFilledStyle: BoxDecoration(
           color: AppTheme.splitGroupColor,

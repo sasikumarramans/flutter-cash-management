@@ -1,11 +1,23 @@
+import 'dart:async';
+
+import 'package:bearnshare/app/helpers/app_utils.dart';
 import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/domain/ledger/model/get_entries_response.dart';
 import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/generated/l10n.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
+import 'package:bearnshare/presentation/component/app_text_field.dart';
+import 'package:bearnshare/presentation/ledger_book/bloc/ledger_book_bloc.dart';
+import 'package:bearnshare/presentation/ledger_book/bloc/ledger_book_event.dart';
+import 'package:bearnshare/presentation/ledger_book/bloc/ledger_book_state.dart';
 import 'package:bearnshare/presentation/ledger_book/book_selection_dialog.dart';
 import 'package:bearnshare/presentation/main_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class LedgerBookScreen extends StatefulWidget {
   const LedgerBookScreen({super.key});
@@ -14,24 +26,67 @@ class LedgerBookScreen extends StatefulWidget {
 }
 
 class _LedgerBookScreenState extends State<LedgerBookScreen> {
+  late final LedgerBookBloc _bloc;
+  late final ScrollController _scrollController;
+  final TextEditingController _searchController = TextEditingController();
+  late StreamSubscription<bool> keyboardSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc = GetIt.I.get<LedgerBookBloc>();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+    var keyboardVisibilityController = KeyboardVisibilityController();
+
+    _bloc.add(LoadEntries(
+        bookId: GetIt.I.get<LedgerBookBloc>().state.selectedBookItem?.id ?? 0));
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
+      if (!mounted) return;
+      context.read<LedgerBookBloc>().add(KeyboardVisibilityChanged(visible));
+    });
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      _bloc.add(const LoadMoreEntries());
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    _searchController.dispose();
+    keyboardSubscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(context),
-            _buildSearchBar(),
-            _buildSummaryCards(),
-            Expanded(
-              child: _buildTransactionsList(),
-            ),
-            _buildActionButtons(context),
-          ],
-        ),
+      body: BlocConsumer<LedgerBookBloc, LedgerBookState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return Column(
+            children: [
+              _buildHeader(context, state),
+              _buildSearchBar(),
+              _buildSummaryCards(state),
+              Expanded(
+                child: _buildTransactionsList(state),
+              ),
+              if (!state.isKeyboardVisible) _buildActionButtons(context)
+            ],
+          );
+        },
       ),
-    );
+    ));
   }
 
   void showBottomDialog(context) {
@@ -43,25 +98,84 @@ class _LedgerBookScreenState extends State<LedgerBookScreen> {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  void _handleEditEntry(entry) {
+    print("handleEditEntry");
+    context.pushNamed(
+      MainRouter.addIncomeRoute,
+      extra: {
+        'bookId': entry.bookId,
+        'entryType': entry.type,
+        'entryId': entry.id,
+        "entryItem": entry
+      },
+    );
+  }
+
+  void _handleDeleteEntry(entry) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppTheme.homePageCardBgColor,
+        title: Text(
+          'Delete Entry',
+          style: AppTheme.ledgerTitleTextStyle
+              .copyWith(color: AppTheme.addExpenseBtnClr),
+        ),
+        content: Text(
+          'Are you sure you want to delete this entry?',
+          style: AppTheme.homePageTitleTextStyle,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              context.pop();
+            },
+            child: Text(
+              'Cancel',
+              style: AppTheme.homePageTitleTextStyle.copyWith(
+                color: AppTheme.genderInfoTextColor,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              GetIt.I<LedgerBookBloc>().add(LedgerDeleteEntry(entry.id));
+              context.pop();
+              _bloc.add(LoadEntries(
+                  bookId:
+                      GetIt.I.get<LedgerBookBloc>().state.selectedBookItem!.id!,
+                  isRefresh: true));
+            },
+            child: Text(
+              'Delete',
+              style: AppTheme.homePageTitleTextStyle.copyWith(
+                color: AppTheme.addExpenseBtnClr,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, LedgerBookState state) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
-          const SizedBox(width: 5),
-          GestureDetector(
-            child: Text(
-              'Home Expenses',
-              style: AppTheme.ledgerTitleTextStyle,
+          InkWell(
+            child: Row(
+              children: [
+                const SizedBox(width: 5),
+                Text(
+                  state.selectedBookItem?.name ?? "",
+                  style: AppTheme.ledgerTitleTextStyle,
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.keyboard_arrow_down,
+                    color: Colors.white, size: 24),
+              ],
             ),
-            onTap: () {
-              showBottomDialog(context);
-            },
-          ),
-          const SizedBox(width: 8),
-          GestureDetector(
-            child: const Icon(Icons.keyboard_arrow_down,
-                color: Colors.white, size: 24),
             onTap: () {
               showBottomDialog(context);
             },
@@ -100,24 +214,30 @@ class _LedgerBookScreenState extends State<LedgerBookScreen> {
       child: Row(
         children: [
           Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: AppTheme.homePageCardBgColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.search,
-                      color: AppTheme.searchTextColor, size: 20),
-                  const SizedBox(width: 12),
-                  Text(
-                    'Search transactions',
-                    style: AppTheme.ledgerSearchTextStyle
-                        .copyWith(color: AppTheme.searchTextColor),
+            child: StatefulBuilder(
+              builder: (context, setSearchState) {
+                return AppTextField(
+                  controller: _searchController,
+                  textFieldStyle: TextFieldStyle.filled,
+                  textFieldState: TextFieldState.enabled,
+                  textFieldType: TextFieldType.text,
+                  hint: 'Search transactions',
+                  debounceDuration: const Duration(milliseconds: 1000),
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: Colors.white54,
+                    size: 22,
                   ),
-                ],
-              ),
+                  onChanged: (value) {
+                    _bloc.add(SearchEntriesChanged(value));
+                  },
+                  onTapOutside: (v) {
+                    AppUtils.hideKeyboard();
+                  },
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                );
+              },
             ),
           ),
           const SizedBox(width: 12),
@@ -134,7 +254,8 @@ class _LedgerBookScreenState extends State<LedgerBookScreen> {
     );
   }
 
-  Widget _buildSummaryCards() {
+  Widget _buildSummaryCards(LedgerBookState state) {
+    final summary = state.selectedBookItem;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
@@ -146,7 +267,11 @@ class _LedgerBookScreenState extends State<LedgerBookScreen> {
         child: Row(
           children: [
             Expanded(
-              child: _buildSummaryItem(S().total_entries, '257', Colors.white),
+              child: _buildSummaryItem(
+                S().total_entries,
+                state.totalElements.toString() ?? '0',
+                Colors.white,
+              ),
             ),
             Container(
               width: 1,
@@ -155,7 +280,10 @@ class _LedgerBookScreenState extends State<LedgerBookScreen> {
             ),
             Expanded(
               child: _buildSummaryItem(
-                  S().total_cash_in, '\$ 43,000', AppTheme.amountPosTextColor),
+                S().total_cash_in,
+                '₹ ${NumberFormat('#,##,###').format(summary?.totalIncome ?? 0)}',
+                AppTheme.amountPosTextColor,
+              ),
             ),
             Container(
               width: 1,
@@ -164,7 +292,10 @@ class _LedgerBookScreenState extends State<LedgerBookScreen> {
             ),
             Expanded(
               child: _buildSummaryItem(
-                  S().total_cash_out, '\$ 58,000', AppTheme.addExpenseBtnClr),
+                S().total_cash_out,
+                '₹ ${NumberFormat('#,##,###').format(summary?.totalExpense ?? 0)}',
+                AppTheme.addExpenseBtnClr,
+              ),
             ),
           ],
         ),
@@ -190,25 +321,84 @@ class _LedgerBookScreenState extends State<LedgerBookScreen> {
     );
   }
 
-  Widget _buildTransactionsList() {
-    final transactions = [
-      Transaction('Grocery Shopping', 'Today, 2:30 PM', 2500, true),
-      Transaction('Freelance Payment', 'Today, 2:30 PM', 500, true),
-      Transaction('Electricity Bill', 'Dec 15, 10:20 AM', 500, false),
-      Transaction('Salary Deposit', 'Dec 15, 10:20 AM', 40000, true),
-      Transaction('Gas Station', 'Dec 15, 10:20 AM', 4500, false),
-    ];
+  Widget _buildTransactionsList(LedgerBookState state) {
+    /*  if (state.status == LedgerBookStatus.loading) {
+      return const Center(
+        child: CircularProgressIndicator(
+          color: AppTheme.amountPosTextColor,
+        ),
+      );
+    }
+*/
 
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: transactions.length,
-      itemBuilder: (context, index) {
-        return _buildTransactionCard(transactions[index]);
+    return RefreshIndicator(
+      onRefresh: () async {
+        _bloc.add(LoadEntries(
+            bookId: GetIt.I.get<LedgerBookBloc>().state.selectedBookItem!.id,
+            isRefresh: true));
+        await Future.delayed(const Duration(milliseconds: 500));
       },
+      color: AppTheme.amountPosTextColor,
+      child: state.entries.isEmpty
+          ? ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  child: Center(
+                    child: Text(
+                      'No transactions found',
+                      style: AppTheme.ledgerTitleTextStyle.copyWith(
+                        color: AppTheme.genderInfoTextColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : ListView.builder(
+              controller: _scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: state.entries.length + 1,
+              itemBuilder: (context, index) {
+                if (index == state.entries.length) {
+                  return state.isLoadingMore
+                      ? const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: AppTheme.amountPosTextColor,
+                            ),
+                          ),
+                        )
+                      : const SizedBox(height: 80);
+                }
+
+                final entry = state.entries[index];
+                return _buildTransactionCard(entry);
+              },
+            ),
     );
   }
 
-  Widget _buildTransactionCard(Transaction transaction) {
+  Widget _buildTransactionCard(EntryItem entry) {
+    // Format date
+    final createdAt = DateTime.tryParse(entry.dateTime!);
+    String formattedDate = 'Unknown';
+    if (createdAt != null) {
+      final now = DateTime.now();
+      final difference = now.difference(createdAt);
+
+      if (difference.inDays == 0) {
+        formattedDate = 'Today, ${DateFormat('h:mm a').format(createdAt)}';
+      } else if (difference.inDays == 1) {
+        formattedDate = 'Yesterday, ${DateFormat('h:mm a').format(createdAt)}';
+      } else {
+        formattedDate = DateFormat('MMM d, h:mm a').format(createdAt);
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -223,13 +413,13 @@ class _LedgerBookScreenState extends State<LedgerBookScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  transaction.title,
+                  entry.title,
                   style: AppTheme.homePageContentHeaderTextStyle
                       .copyWith(fontSize: 16),
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  transaction.date,
+                  formattedDate,
                   style: AppTheme.homePageTitleTextStyle
                       .copyWith(color: AppTheme.genderInfoTextColor),
                 ),
@@ -237,23 +427,27 @@ class _LedgerBookScreenState extends State<LedgerBookScreen> {
             ),
           ),
           Text(
-            '${transaction.isIncome ? '+' : '-'}₹${transaction.amount.toStringAsFixed(0)}',
+            '${entry.isIncome ? '+' : '-'}₹${NumberFormat('#,##,###').format(entry.amount)}',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: transaction.isIncome
+              color: entry.isIncome
                   ? AppTheme.amountPosTextColor
                   : AppTheme.addExpenseBtnClr,
             ),
           ),
           const SizedBox(width: 16),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              _handleEditEntry(entry);
+            },
             child: Assets.icons.editIcon.svg(),
           ),
           const SizedBox(width: 12),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              _handleDeleteEntry(entry);
+            },
             child: Assets.icons.deleteIcon.svg(),
           ),
         ],
@@ -276,7 +470,17 @@ class _LedgerBookScreenState extends State<LedgerBookScreen> {
                   color: Colors.white,
                 ),
                 onPressed: (value) {
-                  context.pushNamed(MainRouter.addIncomeRoute);
+                  context.pushNamed(
+                    MainRouter.addIncomeRoute,
+                    extra: {
+                      'bookId': GetIt.I
+                          .get<LedgerBookBloc>()
+                          .state
+                          .selectedBookItem
+                          ?.id,
+                      'entryType': 'INCOME',
+                    },
+                  );
                 },
                 buttonState: ButtonState.enabled,
                 expandButton: true,
@@ -301,7 +505,17 @@ class _LedgerBookScreenState extends State<LedgerBookScreen> {
                   color: Colors.white,
                 ),
                 onPressed: (value) {
-                  context.pushNamed(MainRouter.addIncomeRoute);
+                  context.pushNamed(
+                    MainRouter.addIncomeRoute,
+                    extra: {
+                      'bookId': GetIt.I
+                          .get<LedgerBookBloc>()
+                          .state
+                          .selectedBookItem
+                          ?.id,
+                      'entryType': 'EXPENSE',
+                    },
+                  );
                 },
                 buttonState: ButtonState.enabled,
                 expandButton: true,
@@ -319,13 +533,4 @@ class _LedgerBookScreenState extends State<LedgerBookScreen> {
       ),
     );
   }
-}
-
-class Transaction {
-  final String title;
-  final String date;
-  final double amount;
-  final bool isIncome;
-
-  Transaction(this.title, this.date, this.amount, this.isIncome);
 }

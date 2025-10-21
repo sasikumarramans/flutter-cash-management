@@ -15,6 +15,9 @@ class AppTheme {
   static const Color buttonCompleted = Color(0xFF40A1FB);
   static const Color labelTextColor = Color(0xFFB0B0B0);
   static const Color bottomBarImgColor = Color(0xff9CA6BB);
+  static const Color imageSelectionBackgroundColor = Color(0xFF252525);
+  static const Color medicalDisclaimerDiverColor = Color(0xFF272727);
+  static const Color profileBorderColor = Color(0x4CEBEBF5);
 
   static const Color splitBorderLineColor = Color(0xff4C4B4B);
 
@@ -913,6 +916,17 @@ class AppTheme {
   static TextStyle get snackBarChangeText => _baseTextStyle(
         Colors.white,
         14,
+        FontWeight.w500,
+      );
+
+  static TextStyle get userNameText => _baseTextStyle(
+        Colors.white,
+        25,
+        FontWeight.w500,
+      );
+  static TextStyle get imageSelectionDialogText => _baseTextStyle(
+        Colors.white,
+        20,
         FontWeight.w500,
       );
 }

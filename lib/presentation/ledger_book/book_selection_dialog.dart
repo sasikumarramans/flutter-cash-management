@@ -1,12 +1,20 @@
 import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
 import 'package:bearnshare/presentation/component/app_text_field.dart';
+import 'package:bearnshare/presentation/ledger_book/bloc/ledger_book_bloc.dart';
+import 'package:bearnshare/presentation/ledger_book/bloc/ledger_book_event.dart';
+import 'package:bearnshare/presentation/ledger_book/bloc/ledger_book_state.dart';
 import 'package:bearnshare/presentation/main_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 class BookSelectionDialog extends StatefulWidget {
-  const BookSelectionDialog({super.key});
+  final Function(int bookId, String bookName)? onBookSelected;
+
+  const BookSelectionDialog({super.key, this.onBookSelected});
 
   @override
   State<BookSelectionDialog> createState() => _BooksBottomSheetState();
@@ -14,30 +22,32 @@ class BookSelectionDialog extends StatefulWidget {
 
 class _BooksBottomSheetState extends State<BookSelectionDialog> {
   final TextEditingController _searchController = TextEditingController();
-  int? selectedIndex;
+  late final LedgerBookBloc _bloc;
+  late final ScrollController _scrollController;
+  int? selectedBookId;
 
-  final List<BookData> books = [
-    BookData(
-      icon: Icons.home,
-      title: 'Home Expenses',
-      iconBg: const Color(0xFF4A4A5A),
-    ),
-    BookData(
-      icon: null,
-      title: 'House Rent',
-      iconBg: const Color(0xFF6A6A7A),
-    ),
-    BookData(
-      icon: null,
-      title: 'New Year 2025',
-      iconBg: const Color(0xFF8B4513),
-      customImage: true,
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _bloc = GetIt.I.get<LedgerBookBloc>();
+    _bloc.add(const LoadBooks());
+    selectedBookId = GetIt.I.get<LedgerBookBloc>().state.selectedBookItem?.id;
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      _bloc.add(const LoadMoreBooks());
+    }
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -57,7 +67,50 @@ class _BooksBottomSheetState extends State<BookSelectionDialog> {
           _buildHeader(context),
           _buildSearchBar(),
           _buildBooksList(),
-          _buildSubmitButton(context),
+          //  _buildSubmitButton(context),
+        ],
+      ),
+    );
+  }
+
+  void _handleDeleteBook(book) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppTheme.homePageCardBgColor,
+        title: Text(
+          'Delete Book',
+          style: AppTheme.ledgerTitleTextStyle
+              .copyWith(color: AppTheme.addExpenseBtnClr),
+        ),
+        content: Text(
+          'Are you sure you want to delete this book?',
+          style: AppTheme.homePageTitleTextStyle,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              context.pop();
+            },
+            child: Text(
+              'Cancel',
+              style: AppTheme.homePageTitleTextStyle.copyWith(
+                color: AppTheme.genderInfoTextColor,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              context.pop();
+              _bloc.add(DeleteBook(book.id));
+            },
+            child: Text(
+              'Delete',
+              style: AppTheme.homePageTitleTextStyle.copyWith(
+                color: AppTheme.addExpenseBtnClr,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -75,7 +128,7 @@ class _BooksBottomSheetState extends State<BookSelectionDialog> {
           const SizedBox(width: 16),
           Text(
             'Books',
-            style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 22),
+            style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 16),
           ),
           const Spacer(),
           GestureDetector(
@@ -96,11 +149,15 @@ class _BooksBottomSheetState extends State<BookSelectionDialog> {
         textFieldState: TextFieldState.enabled,
         textFieldType: TextFieldType.text,
         hint: 'Search Books',
+        debounceDuration: const Duration(milliseconds: 1000),
         prefixIcon: const Icon(
           Icons.search,
           color: Colors.white54,
           size: 22,
         ),
+        onChanged: (value) {
+          _bloc.add(SearchBooksChanged(value));
+        },
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       ),
     );
@@ -108,128 +165,176 @@ class _BooksBottomSheetState extends State<BookSelectionDialog> {
 
   Widget _buildBooksList() {
     return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Book',
-                  style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 18),
-                ),
-                AppButton(
-                  textString: 'Add',
-                  buttonType: ButtonType.filled,
-                  leadingIcon: const Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: 16,
-                  ),
-                  onPressed: (_) {
-                    context.pushNamed(MainRouter.addBookRoute);
-                  },
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 8,
-                  ),
-                  enabledButtonFilledStyle: BoxDecoration(
-                    color: AppTheme.amountPosTextColor,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  enabledTextStyle: AppTheme.ledgerTitleTextStyle.copyWith(
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: books.length,
-              itemBuilder: (context, index) {
-                final book = books[index];
-                return Column(
+      child: BlocConsumer<LedgerBookBloc, LedgerBookState>(
+        bloc: _bloc,
+        listener: (context, state) {},
+        builder: (context, state) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildBookItem(
-                      index: index,
-                      icon: book.icon,
-                      title: book.title,
-                      iconBg: book.iconBg,
-                      customImage: book.customImage,
+                    Text(
+                      '',
+                      style:
+                          AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 18),
                     ),
-                    if (index < books.length - 1) _buildDivider(),
+                    AppButton(
+                      textString: 'Add',
+                      buttonType: ButtonType.filled,
+                      leadingIcon: const Icon(
+                        Icons.add,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                      onPressed: (_) {
+                        context.pop();
+                        context.pushNamed(MainRouter.addBookRoute);
+                      },
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 8,
+                      ),
+                      enabledButtonFilledStyle: BoxDecoration(
+                        color: AppTheme.amountPosTextColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledTextStyle: AppTheme.ledgerTitleTextStyle.copyWith(
+                        fontSize: 14,
+                      ),
+                    ),
                   ],
-                );
-              },
-            ),
-          ),
-        ],
+                ),
+              ),
+              Expanded(
+                child: _buildBooksListContent(state),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildBookItem({
-    required int index,
-    IconData? icon,
-    required String title,
-    required Color iconBg,
-    bool customImage = false,
-  }) {
-    final isSelected = selectedIndex == index;
+  Widget _buildBooksListContent(LedgerBookState state) {
+    if (state.books.isEmpty) {
+      return Center(
+        child: Text(
+          'No books found',
+          style: AppTheme.ledgerTitleTextStyle.copyWith(
+            color: AppTheme.genderInfoTextColor,
+          ),
+        ),
+      );
+    }
 
-    return GestureDetector(
+    return ListView.builder(
+      controller: _scrollController,
+      padding: EdgeInsets.zero,
+      itemCount: state.books.length + 1,
+      itemBuilder: (context, index) {
+        if (index == state.books.length) {
+          return state.isLoadingMoreBooks
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: AppTheme.amountPosTextColor,
+                    ),
+                  ),
+                )
+              : const SizedBox(height: 20);
+        }
+
+        final book = state.books[index];
+        final isSelected = selectedBookId == book.id;
+
+        return Column(
+          children: [
+            _buildBookItemFromApi(
+              book: book,
+              index: index,
+              isSelected: isSelected,
+            ),
+            if (index < state.books.length - 1) _buildDivider(),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildBookItemFromApi({
+    required book,
+    required int index,
+    required bool isSelected,
+  }) {
+    return InkWell(
       onTap: () {
-        setState(() {
-          selectedIndex = index;
-        });
+        _bloc.add(SelectedBook(book));
+        _bloc.add(LoadEntries(bookId: book.id));
+        context.pop();
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        color: isSelected ? const Color(0xFF3A3A4A) : Colors.transparent,
+        color: Colors.transparent,
         child: Row(
           children: [
             Container(
               width: 40,
               height: 40,
-              decoration: BoxDecoration(
-                color: iconBg,
+              decoration: const BoxDecoration(
+                color: Color(0xFF4A4A5A),
                 shape: BoxShape.circle,
               ),
-              child: customImage
-                  ? ClipOval(
-                      child: Image.network(
-                        'https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=100&h=100&fit=crop',
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(
-                            Icons.celebration,
-                            color: Colors.white70,
-                            size: 28,
-                          );
-                        },
-                      ),
-                    )
-                  : icon != null
-                      ? Icon(icon, color: Colors.white, size: 28)
-                      : const SizedBox(),
+              child: const Icon(Icons.book, color: Colors.white, size: 24),
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: Text(
-                title,
-                style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    book.name,
+                    style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 14),
+                  ),
+                  if (book.description.isNotEmpty)
+                    Text(
+                      book.description,
+                      style: AppTheme.homePageTitleTextStyle.copyWith(
+                        fontSize: 12,
+                        color: AppTheme.genderInfoTextColor,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
               ),
             ),
-            if (isSelected)
-              const Icon(
-                Icons.check_circle,
-                color: AppTheme.amountPosTextColor,
-                size: 24,
-              ),
+            GestureDetector(
+              onTap: () {
+                context.pushNamed(MainRouter.addBookRoute,
+                    extra: {"bookItem": book});
+              },
+              child: Assets.icons.editIcon.svg(),
+            ),
+            const SizedBox(width: 12),
+            GestureDetector(
+              onTap: () {
+                _handleDeleteBook(book);
+              },
+              child: Assets.icons.deleteIcon.svg(),
+            ),
+            const SizedBox(width: 12),
+            Icon(
+              isSelected ? Icons.check_circle : Icons.circle_outlined,
+              color: isSelected
+                  ? AppTheme.amountPosTextColor
+                  : AppTheme.splitBorderLineColor,
+              size: 24,
+            ),
           ],
         ),
       ),
@@ -241,55 +346,8 @@ class _BooksBottomSheetState extends State<BookSelectionDialog> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
         height: 1,
-        color: const Color(0xFF3A3A4A),
+        color: AppTheme.splitBorderLineColor,
       ),
     );
   }
-
-  Widget _buildSubmitButton(BuildContext context) {
-    final bottomPadding = MediaQuery.of(context).viewInsets.bottom +
-        MediaQuery.of(context).padding.bottom;
-
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 20.0,
-        right: 20.0,
-        top: 20.0,
-        bottom: bottomPadding > 0 ? bottomPadding : 20.0,
-      ),
-      child: AppButton(
-        textString: 'Submit',
-        buttonType: ButtonType.filled,
-        expandButton: true,
-        buttonState:
-            selectedIndex != null ? ButtonState.enabled : ButtonState.disabled,
-        onPressed: (_) {
-          Navigator.pop(context);
-        },
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-        enabledButtonFilledStyle: BoxDecoration(
-          color: AppTheme.amountPosTextColor,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        enabledTextStyle: AppTheme.loginText.copyWith(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}
-
-class BookData {
-  final IconData? icon;
-  final String title;
-  final Color iconBg;
-  final bool customImage;
-
-  BookData({
-    this.icon,
-    required this.title,
-    required this.iconBg,
-    this.customImage = false,
-  });
 }

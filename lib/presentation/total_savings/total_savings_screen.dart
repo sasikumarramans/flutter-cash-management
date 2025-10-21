@@ -1,7 +1,20 @@
 import 'package:bearnshare/app/theme/app_theme.dart';
-import 'package:bearnshare/generated/assets.gen.dart';
+import 'package:bearnshare/presentation/component/app_bottom_nav_bar.dart';
+import 'package:bearnshare/presentation/dashboard/bloc/dashboard_bloc.dart';
+import 'package:bearnshare/presentation/dashboard/bloc/dashboard_event.dart';
+import 'package:bearnshare/presentation/dashboard/dash_board_router.dart';
+import 'package:bearnshare/presentation/history/bloc/ledger_history_bloc.dart';
+import 'package:bearnshare/presentation/history/bloc/ledger_history_event.dart';
+import 'package:bearnshare/presentation/history/bloc/ledger_history_state.dart';
+import 'package:bearnshare/presentation/ledger_book/bloc/ledger_book_bloc.dart';
+import 'package:bearnshare/presentation/ledger_book/bloc/ledger_book_event.dart';
+import 'package:bearnshare/presentation/ledger_book/bloc/ledger_book_state.dart';
+import 'package:bearnshare/presentation/main_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class TotalSavingsScreen extends StatefulWidget {
   const TotalSavingsScreen({super.key});
@@ -12,32 +25,51 @@ class TotalSavingsScreen extends StatefulWidget {
 
 class _TotalSavingsScreenState extends State<TotalSavingsScreen> {
   @override
+  void initState() {
+    super.initState();
+    GetIt.I<LedgerBookBloc>().add(const LoadDashboard());
+    GetIt.I<LedgerHistoryBloc>().add(const LoadHistoryRecentEntries());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(),
-            _buildSavingsBanner(),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  _buildStatsCards(),
-                  const SizedBox(height: 16),
-                  _buildRecentEntriesHeader(),
-                ],
+        child: BlocBuilder<LedgerBookBloc, LedgerBookState>(
+            builder: (context, state) {
+          return Column(
+            children: [
+              _buildHeader(),
+              _buildSavingsBanner(state),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    _buildStatsCards(state),
+                    const SizedBox(height: 16),
+                    _buildRecentEntriesHeader(),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: _buildRecentEntries(),
-            ),
-          ],
-        ),
+              Expanded(
+                child: _buildRecentEntries(state),
+              ),
+            ],
+          );
+        }),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          context.pushNamed(
+            MainRouter.addIncomeRoute,
+            extra: {
+              'bookId':
+                  GetIt.I.get<LedgerBookBloc>().state.selectedBookItem?.id,
+              'entryType': 'INCOME',
+            },
+          );
+        },
         backgroundColor: AppTheme.amountPosTextColor,
         child: const Icon(Icons.add, size: 32, color: Colors.white),
       ),
@@ -69,7 +101,9 @@ class _TotalSavingsScreenState extends State<TotalSavingsScreen> {
     );
   }
 
-  Widget _buildSavingsBanner() {
+  Widget _buildSavingsBanner(LedgerBookState state) {
+    final createdAt = DateTime.now();
+    String formattedDate = DateFormat('MMM dd, yyyy').format(createdAt);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 0),
       padding: const EdgeInsets.all(24),
@@ -109,7 +143,7 @@ class _TotalSavingsScreenState extends State<TotalSavingsScreen> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Jun 25, 2025',
+                    formattedDate,
                     style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 14),
                   ),
                 ],
@@ -118,7 +152,7 @@ class _TotalSavingsScreenState extends State<TotalSavingsScreen> {
           ),
           const SizedBox(height: 10),
           Text(
-            '₹15,750',
+            '₹${state.dashboardData?.totalSavings ?? 0}',
             style: AppTheme.homePageContentAmntTextStyle.copyWith(fontSize: 32),
           ),
           Text(
@@ -131,12 +165,14 @@ class _TotalSavingsScreenState extends State<TotalSavingsScreen> {
               const Icon(Icons.arrow_upward, color: Colors.white, size: 16),
               const SizedBox(width: 4),
               Text(
-                '+₹3,200 this month |',
+                '+' +
+                    '₹${state.dashboardData?.totalSavings ?? 0}' +
+                    "  this month |",
                 style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 14),
               ),
               const SizedBox(width: 12),
               Text(
-                '85% of goal',
+                "${state.dashboardData?.goalProgress ?? 0}% of goal",
                 style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 14),
               ),
             ],
@@ -146,7 +182,23 @@ class _TotalSavingsScreenState extends State<TotalSavingsScreen> {
     );
   }
 
-  Widget _buildStatsCards() {
+  Widget _buildStatsCards(LedgerBookState state) {
+    const double goalAmount = 100000;
+    final double totalSavings = state.dashboardData?.totalSavings ?? 0;
+    final double thisMonthSavings = state.dashboardData?.thisMonthSavings ?? 0;
+
+    // Calculate remaining amount to reach goal
+    final double remainingAmount = goalAmount - totalSavings;
+    final String remainingText = remainingAmount > 0
+        ? '₹${remainingAmount.toStringAsFixed(0)} to go'
+        : 'Goal reached!';
+
+    // Calculate this month's savings as percentage of goal
+    final double thisMonthPercentage = (thisMonthSavings / goalAmount) * 100;
+    final String thisMonthPercentageText = thisMonthPercentage > 0
+        ? '+${thisMonthPercentage.toStringAsFixed(1)}%'
+        : '0%';
+
     return Row(
       children: [
         Expanded(
@@ -179,13 +231,13 @@ class _TotalSavingsScreenState extends State<TotalSavingsScreen> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  '+₹3,200',
+                  '+₹${state.dashboardData?.thisMonthSavings ?? 0}',
                   style: AppTheme.homePageContentAmntTextStyle
                       .copyWith(fontSize: 18),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '+12.5%',
+                  thisMonthPercentageText,
                   style: AppTheme.ledgerSearchTextStyle
                       .copyWith(color: const Color(0xFF4CAF50), fontSize: 12),
                 ),
@@ -224,13 +276,13 @@ class _TotalSavingsScreenState extends State<TotalSavingsScreen> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  '85%',
+                  "${state.dashboardData?.goalProgress ?? 0}%",
                   style: AppTheme.homePageContentAmntTextStyle
                       .copyWith(fontSize: 18),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '₹2,750 to go',
+                  remainingText,
                   style: AppTheme.ledgerSearchTextStyle
                       .copyWith(color: const Color(0xFF4B83EE), fontSize: 12),
                 ),
@@ -249,8 +301,9 @@ class _TotalSavingsScreenState extends State<TotalSavingsScreen> {
         Text(
           'Recent Entries',
           style: AppTheme.ledgerTitleTextStyle,
-        ),
-        Row(
+        )
+
+        /*Row(
           children: [
             Assets.icons.filterIcon.svg(),
             const SizedBox(width: 6),
@@ -260,91 +313,67 @@ class _TotalSavingsScreenState extends State<TotalSavingsScreen> {
                   .copyWith(color: Colors.white, fontSize: 16),
             ),
           ],
-        ),
+        ),*/
       ],
     );
   }
 
-  Widget _buildRecentEntries() {
-    final entries = [
-      SavingsEntry(
-        icon: Icons.add,
-        iconBg: const Color(0xFFE8F5E9),
-        iconColor: const Color(0xFF4CAF50),
-        title: 'Salary Deposit',
-        date: 'Dec 25, 2024',
-        amount: '+₹2,500',
-        amountColor: AppTheme.tertiaryColor,
-        tag: 'Savings',
-      ),
-      SavingsEntry(
-        icon: Icons.add,
-        iconBg: const Color(0xFFE8F5E9),
-        iconColor: AppTheme.tertiaryColor,
-        title: 'Bonus Savings',
-        date: 'Dec 25, 2024',
-        amount: '+₹700',
-        amountColor: AppTheme.tertiaryColor,
-        tag: 'Bonus',
-      ),
-      SavingsEntry(
-        icon: Icons.remove,
-        iconBg: const Color(0xFFFFEBEE),
-        iconColor: const Color(0xFFFF5252),
-        title: 'Emergency With...',
-        date: 'Dec 18, 2024',
-        amount: '-₹500',
-        amountColor: AppTheme.addExpenseBtnClr,
-        tag: 'Emergency',
-      ),
-      SavingsEntry(
-        icon: Icons.add,
-        iconBg: const Color(0xFFE8F5E9),
-        iconColor: const Color(0xFF4CAF50),
-        title: 'Monthly Savings',
-        date: 'Dec 10, 2024',
-        amount: '+₹1,000',
-        amountColor: AppTheme.tertiaryColor,
-        tag: 'Savings',
-      ),
-      SavingsEntry(
-        icon: Icons.add,
-        iconBg: const Color(0xFFE8F5E9),
-        iconColor: AppTheme.tertiaryColor,
-        title: 'Investment Return',
-        date: 'Dec 5, 2024',
-        amount: '+₹1,500',
-        amountColor: AppTheme.tertiaryColor,
-        tag: 'Investment',
-      ),
-    ];
-
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      itemCount: entries.length + 1,
-      itemBuilder: (context, index) {
-        if (index == entries.length) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 4, bottom: 16),
-            child: _buildViewAllButton(),
-          );
-        }
-
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: _buildEntryItem(
-            icon: entries[index].icon,
-            iconBg: entries[index].iconBg,
-            iconColor: entries[index].iconColor,
-            title: entries[index].title,
-            date: entries[index].date,
-            amount: entries[index].amount,
-            amountColor: entries[index].amountColor,
-            tag: entries[index].tag,
-          ),
-        );
-      },
-    );
+  Widget _buildRecentEntries(LedgerBookState state) {
+    return BlocBuilder<LedgerHistoryBloc, LedgerHistoryState>(
+        builder: (context, state) {
+      return state.recentEntries.isNotEmpty
+          ? ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              itemCount: state.recentEntries.length + 1,
+              itemBuilder: (context, index) {
+                if (index == state.recentEntries.length) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 4, bottom: 16),
+                    child: _buildViewAllButton(),
+                  );
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _buildEntryItem(
+                    icon: state.recentEntries[index].type == "EXPENSE"
+                        ? Icons.remove
+                        : Icons.add,
+                    iconBg: state.recentEntries[index].type == "EXPENSE"
+                        ? const Color(0xFFFFEBEE)
+                        : const Color(0xFFE8F5E9),
+                    iconColor: state.recentEntries[index].type == "EXPENSE"
+                        ? const Color(0xFFFF5252)
+                        : const Color(0xFF4CAF50),
+                    title: state.recentEntries[index].title,
+                    date: state.recentEntries[index].dateTime ?? "",
+                    amount: (state.recentEntries[index].amount ?? 0).toString(),
+                    amountColor: state.recentEntries[index].type == "EXPENSE"
+                        ? AppTheme.addExpenseBtnClr
+                        : AppTheme.tertiaryColor,
+                    tag: state.recentEntries[index].type,
+                  ),
+                );
+              },
+            )
+          : Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.history,
+                    size: 30,
+                    color: AppTheme.searchTextColor.withOpacity(0.5),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No entries found',
+                    style: AppTheme.homePageContentHeaderTextStyle.copyWith(
+                        color: AppTheme.searchTextColor, fontSize: 14),
+                  ),
+                ],
+              ),
+            );
+    });
   }
 
   Widget _buildEntryItem({
@@ -422,7 +451,11 @@ class _TotalSavingsScreenState extends State<TotalSavingsScreen> {
     return SizedBox(
       width: double.infinity,
       child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          GetIt.I<DashboardBloc>()
+              .add(const DashboardTabChanged(BottomNavItem.history));
+          context.go(DashboardRouter.historyRoute);
+        },
         style: TextButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16),
         ),
@@ -433,26 +466,4 @@ class _TotalSavingsScreenState extends State<TotalSavingsScreen> {
       ),
     );
   }
-}
-
-class SavingsEntry {
-  final IconData icon;
-  final Color iconBg;
-  final Color iconColor;
-  final String title;
-  final String date;
-  final String amount;
-  final Color amountColor;
-  final String tag;
-
-  SavingsEntry({
-    required this.icon,
-    required this.iconBg,
-    required this.iconColor,
-    required this.title,
-    required this.date,
-    required this.amount,
-    required this.amountColor,
-    required this.tag,
-  });
 }

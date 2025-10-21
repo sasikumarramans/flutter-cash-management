@@ -344,10 +344,10 @@ class S {
     );
   }
 
-  /// `'Enter your user name`
+  /// `Enter your user name`
   String get usename_hint {
     return Intl.message(
-      '\'Enter your user name',
+      'Enter your user name',
       name: 'usename_hint',
       desc: '',
       args: [],

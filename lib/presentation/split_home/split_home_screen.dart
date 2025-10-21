@@ -1,8 +1,11 @@
 import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/generated/assets.gen.dart';
+import 'package:bearnshare/presentation/create_profile/bloc/profile_bloc.dart';
+import 'package:bearnshare/presentation/create_profile/bloc/profile_state.dart';
 import 'package:bearnshare/presentation/dashboard/dash_board_router.dart';
 import 'package:bearnshare/presentation/main_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class SplitHomeScreen extends StatefulWidget {
@@ -18,6 +21,37 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: GestureDetector(
+        child: Container(
+          padding: const EdgeInsets.all(13),
+          margin: const EdgeInsets.only(bottom: 80),
+          width: 140,
+          decoration: BoxDecoration(
+              color: AppTheme.homePageCardBgColor,
+              borderRadius: BorderRadius.circular(35),
+              gradient: const LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [AppTheme.amountPosTextColor, Color(0xff007652)])),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Assets.icons.splitWiseIcon.svg(),
+              const SizedBox(
+                width: 10,
+              ),
+              Text(
+                "LedgerBook",
+                style: AppTheme.homePageTitleTextStyle,
+              )
+            ],
+          ),
+        ),
+        onTap: () {
+          context.go(DashboardRouter.homeRoute);
+        },
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -43,44 +77,41 @@ class _SplitHomeScreenState extends State<SplitHomeScreen> {
   }
 
   Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          GestureDetector(
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                color: AppTheme.homePageCardBgColor,
-                shape: BoxShape.circle,
+    return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            Text.rich(
+              TextSpan(
+                text: 'Welcome, ',
+                style: AppTheme.homePageContentHeaderTextStyle
+                    .copyWith(fontSize: 18),
+                children: [
+                  TextSpan(
+                    text: state.userDataObject?.username ?? "" "!",
+                    style: AppTheme.homePageContentHeaderTextStyle.copyWith(
+                        fontSize: 18, color: AppTheme.amountPosTextColor),
+                  ),
+                ],
               ),
-              child:
-                  const Icon(Icons.arrow_back, color: Colors.white, size: 22),
             ),
-            onTap: () {
-              context.go(DashboardRouter.homeRoute);
-            },
-          ),
-          const SizedBox(width: 12),
-          Text(
-            "Back to your book",
-            style: AppTheme.ledgerTitleTextStyle,
-          ),
-          const Spacer(),
-          GestureDetector(
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Assets.icons.graph.svg(),
+            const Spacer(),
+            GestureDetector(
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                child: Assets.icons.graph.svg(),
+              ),
+              onTap: () {
+                context.pushNamed(MainRouter.splitReportSummaryRoute);
+              },
             ),
-            onTap: () {
-              context.pushNamed(MainRouter.splitReportSummaryRoute);
-            },
-          ),
-          const SizedBox(width: 8),
-          Assets.icons.search.svg(),
-        ],
-      ),
-    );
+            const SizedBox(width: 8),
+            Assets.icons.search.svg(),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildOverallSpending() {

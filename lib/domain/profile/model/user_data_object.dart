@@ -1,5 +1,4 @@
-class LoginOtpVerifyResponse {
-  String sessionToken;
+class UserDataObject {
   String userId;
   dynamic firstName;
   dynamic lastName;
@@ -8,9 +7,10 @@ class LoginOtpVerifyResponse {
   String email;
   String profileImageUrl;
   String username;
+  String address;
+  String companyName;
 
-  LoginOtpVerifyResponse({
-    required this.sessionToken,
+  UserDataObject({
     required this.userId,
     required this.firstName,
     required this.lastName,
@@ -19,12 +19,12 @@ class LoginOtpVerifyResponse {
     required this.email,
     required this.profileImageUrl,
     required this.username,
+    required this.companyName,
+    required this.address,
   });
 
-  factory LoginOtpVerifyResponse.fromJson(Map<String, dynamic> json) =>
-      LoginOtpVerifyResponse(
-        sessionToken: json["accessToken"],
-        userId: json["userId"],
+  factory UserDataObject.fromJson(Map<String, dynamic> json) => UserDataObject(
+        userId: json["id"] ?? "",
         firstName: json["firstName"] ?? "",
         lastName: json["lastName"] ?? "",
         phoneNumber: json["phoneNumber"] ?? "",
@@ -32,15 +32,18 @@ class LoginOtpVerifyResponse {
         email: json["email"] ?? "",
         profileImageUrl: json["profileImageUrl"] ?? "",
         username: json["username"] ?? "",
+        address: json["address"] ?? "",
+        companyName: json["companyName"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
-        "sessionToken": sessionToken,
         "userId": userId,
         "firstName": firstName,
         "lastName": lastName,
         "phoneNumber": phoneNumber,
         "countryCode": countryCode,
         "email": email,
+        "companyName": companyName,
+        "address": address,
       };
 }

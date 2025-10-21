@@ -423,7 +423,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "update_now": MessageLookupByLibrary.simpleMessage("Update Now"),
     "update_required": MessageLookupByLibrary.simpleMessage("Update Required"),
     "usename_hint": MessageLookupByLibrary.simpleMessage(
-      "\'Enter your user name",
+      "Enter your user name",
     ),
     "user_name": MessageLookupByLibrary.simpleMessage("User name"),
     "user_name_error": MessageLookupByLibrary.simpleMessage(

@@ -2,40 +2,62 @@ import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/generated/l10n.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
+import 'package:bearnshare/presentation/component/cache_manager/profile_cached_image_shimmer.dart';
+import 'package:bearnshare/presentation/create_profile/bloc/profile_bloc.dart';
+import 'package:bearnshare/presentation/create_profile/bloc/profile_event.dart';
+import 'package:bearnshare/presentation/create_profile/bloc/profile_state.dart';
 import 'package:bearnshare/presentation/main_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({
+    super.key,
+  });
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProfileBloc>().add(const GetProfile());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(),
-                const SizedBox(height: 24),
-                _buildProfileCard(context),
-                const SizedBox(height: 20),
-                Text(
-                  S().settings_account,
-                  style: AppTheme.profileTextStyle,
-                ),
-                const SizedBox(height: 8),
-                _buildSettingsCard(),
-                const SizedBox(height: 24),
-                _buildLogoutButton(),
-              ],
+        child:
+            BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+          print("userDataObject");
+          print(state.userDataObject);
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(),
+                  const SizedBox(height: 24),
+                  _buildProfileCard(context, state),
+                  const SizedBox(height: 20),
+                  Text(
+                    S().settings_account,
+                    style: AppTheme.profileTextStyle,
+                  ),
+                  const SizedBox(height: 8),
+                  _buildSettingsCard(),
+                  const SizedBox(height: 24),
+                  _buildLogoutButton(),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        }),
       ),
     );
   }
@@ -48,17 +70,6 @@ class ProfileScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            /*
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: const BoxDecoration(
-                color: AppTheme.homePageCardBgColor,
-                shape: BoxShape.circle,
-              ),
-              child:
-                  const Icon(Icons.arrow_back, color: Colors.white, size: 24),
-            ),*/
-
             const SizedBox(width: 5),
             Text(
               'Profile',
@@ -70,9 +81,9 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileCard(BuildContext context) {
+  Widget _buildProfileCard(BuildContext context, ProfileState state) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
       decoration: BoxDecoration(
         color: AppTheme.homePageCardBgColor,
         borderRadius: BorderRadius.circular(20),
@@ -82,17 +93,27 @@ class ProfileScreen extends StatelessWidget {
           Container(
             width: 50,
             height: 50,
+            margin: const EdgeInsets.only(left: 0),
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: AppTheme.medicalDisclaimerDiverColor,
               shape: BoxShape.circle,
             ),
-            child: const Center(
-              child: Text(
-                'RK',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF00796B),
+            child: Container(
+              decoration: const ShapeDecoration(
+                shape: OvalBorder(
+                  side: BorderSide(
+                    width: 1,
+                    color: AppTheme.profileBorderColor,
+                  ),
+                ),
+              ),
+              padding: const EdgeInsets.all(5),
+              child: ClipOval(
+                child: ProfileCachedImageShimmer(
+                  imageUrl: state.userDataObject?.profileImageUrl,
+                  width: 100,
+                  height: 100,
+                  name: state.userDataObject?.username,
                 ),
               ),
             ),
@@ -103,13 +124,13 @@ class ProfileScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Alex Johnson',
+                  state.userDataObject?.username ?? "",
                   style:
                       AppTheme.profileTextStyle.copyWith(color: Colors.white),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
-                  'TechFlow Solutions',
+                  state.userDataObject?.email ?? "",
                   style: AppTheme.profileTextStyle.copyWith(fontSize: 12),
                 ),
               ],
@@ -124,7 +145,8 @@ class ProfileScreen extends StatelessWidget {
               ),
               child: Text(
                 'Edit Profile',
-                style: AppTheme.profileTextStyle.copyWith(color: Colors.white),
+                style: AppTheme.profileTextStyle
+                    .copyWith(color: Colors.white, fontSize: 12),
               ),
             ),
             onTap: () {

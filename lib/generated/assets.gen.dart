@@ -59,6 +59,9 @@ class $AssetsIconsGen {
   SvgGenImage get addExpense =>
       const SvgGenImage('assets/icons/add_expense.svg');
 
+  /// File path: assets/icons/camera.svg
+  SvgGenImage get camera => const SvgGenImage('assets/icons/camera.svg');
+
   /// File path: assets/icons/delete_icon.svg
   SvgGenImage get deleteIcon =>
       const SvgGenImage('assets/icons/delete_icon.svg');
@@ -73,12 +76,18 @@ class $AssetsIconsGen {
   /// File path: assets/icons/faq_icon.svg
   SvgGenImage get faqIcon => const SvgGenImage('assets/icons/faq_icon.svg');
 
+  /// File path: assets/icons/files.svg
+  SvgGenImage get files => const SvgGenImage('assets/icons/files.svg');
+
   /// File path: assets/icons/filter_icon.svg
   SvgGenImage get filterIcon =>
       const SvgGenImage('assets/icons/filter_icon.svg');
 
   /// File path: assets/icons/friends.svg
   SvgGenImage get friends => const SvgGenImage('assets/icons/friends.svg');
+
+  /// File path: assets/icons/gallery.svg
+  SvgGenImage get gallery => const SvgGenImage('assets/icons/gallery.svg');
 
   /// File path: assets/icons/graph.svg
   SvgGenImage get graph => const SvgGenImage('assets/icons/graph.svg');
@@ -134,16 +143,31 @@ class $AssetsIconsGen {
   SvgGenImage get splitWiseIcon =>
       const SvgGenImage('assets/icons/split_wise_icon.svg');
 
+  /// File path: assets/icons/username_already_taken.svg
+  SvgGenImage get usernameAlreadyTaken =>
+      const SvgGenImage('assets/icons/username_already_taken.svg');
+
+  /// File path: assets/icons/username_error.svg
+  SvgGenImage get usernameError =>
+      const SvgGenImage('assets/icons/username_error.svg');
+
+  /// File path: assets/icons/username_success.svg
+  SvgGenImage get usernameSuccess =>
+      const SvgGenImage('assets/icons/username_success.svg');
+
   /// List of all assets
   List<SvgGenImage> get values => [
         accountIcon,
         addExpense,
+        camera,
         deleteIcon,
         editIcon,
         exportIcon,
         faqIcon,
+        files,
         filterIcon,
         friends,
+        gallery,
         graph,
         group,
         history,
@@ -159,7 +183,10 @@ class $AssetsIconsGen {
         splitDollarIcon,
         splitPercentage,
         splitScene,
-        splitWiseIcon
+        splitWiseIcon,
+        usernameAlreadyTaken,
+        usernameError,
+        usernameSuccess
       ];
 }
 

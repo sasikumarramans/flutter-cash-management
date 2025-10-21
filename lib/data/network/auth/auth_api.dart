@@ -1,7 +1,7 @@
 import 'package:bearnshare/data/network/core/dio_client.dart';
 import 'package:bearnshare/domain/auth/auth_repository.dart';
 import 'package:bearnshare/domain/auth/login/model/login_otp_response.dart';
-import 'package:bearnshare/domain/auth/login/model/login_otp_verify_response.dart';
+import 'package:bearnshare/domain/auth/login/model/user_response_object.dart';
 import 'package:bearnshare/domain/auth/login/use_cases/login_otp_use_case.dart';
 import 'package:bearnshare/domain/auth/login/use_cases/verify_login_otp_use_case.dart';
 import 'package:get_it/get_it.dart';
@@ -24,11 +24,11 @@ class AuthApi extends AuthRepository {
   }
 
   @override
-  Future<LoginOtpVerifyResponse> verifyLoginOtp(VerifyLoginOtpRequest request) {
-    final verifyResponse = _dioClient.postRequest<LoginOtpVerifyResponse>(
+  Future<UserResponseObject> verifyLoginOtp(VerifyLoginOtpRequest request) {
+    final verifyResponse = _dioClient.postRequest<UserResponseObject>(
       pathVerifyOtp,
       data: request.toJson(),
-      parseDataJson: LoginOtpVerifyResponse.fromJson,
+      parseDataJson: UserResponseObject.fromJson,
     );
 
     return verifyResponse;

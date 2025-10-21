@@ -2,10 +2,17 @@ import 'package:bearnshare/app/router/animation/fade_transition_screen.dart';
 import 'package:bearnshare/app/router/router_manager.dart';
 import 'package:bearnshare/app/router/router_scope.dart';
 import 'package:bearnshare/presentation/auth/home/home_screen.dart';
+import 'package:bearnshare/presentation/create_profile/bloc/profile_bloc.dart';
+import 'package:bearnshare/presentation/create_profile/di/profile_module.dart';
+import 'package:bearnshare/presentation/history/bloc/ledger_history_bloc.dart';
+import 'package:bearnshare/presentation/history/di/ledger_history_module.dart';
 import 'package:bearnshare/presentation/history/history_screen.dart';
+import 'package:bearnshare/presentation/ledger_book/bloc/ledger_book_bloc.dart';
 import 'package:bearnshare/presentation/ledger_book/ledger_book_screen.dart';
 import 'package:bearnshare/presentation/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 class DashboardRouter {
@@ -31,7 +38,10 @@ class DashboardRouter {
                   key: homeScreenKey,
                   inject: () {},
                   dispose: () {},
-                  child: const HomeScreen(),
+                  child: BlocProvider<LedgerBookBloc>.value(
+                    value: GetIt.I<LedgerBookBloc>(),
+                    child: const HomeScreen(),
+                  ),
                 ),
               );
             },
@@ -50,7 +60,10 @@ class DashboardRouter {
                   key: ledgerScreenKey,
                   inject: () {},
                   dispose: () {},
-                  child: const LedgerBookScreen(),
+                  child: BlocProvider<LedgerBookBloc>.value(
+                    value: GetIt.I<LedgerBookBloc>(),
+                    child: const LedgerBookScreen(),
+                  ),
                 ),
               );
             },
@@ -64,12 +77,21 @@ class DashboardRouter {
             path: historyRoute,
             name: historyRoute,
             pageBuilder: (context, state) {
+              final ledgerHistoryModule = LedgerHistoryModule();
+              ledgerHistoryModule.injectBloc();
               return FadeTransitionScreen<void>(
                 child: RouterScope(
                   key: historyScreenKey,
-                  inject: () {},
-                  dispose: () {},
-                  child: const HistoryScreen(),
+                  inject: () {
+                    ledgerHistoryModule.inject();
+                  },
+                  dispose: () {
+                    ledgerHistoryModule.dispose();
+                  },
+                  child: BlocProvider<LedgerHistoryBloc>.value(
+                    value: GetIt.I<LedgerHistoryBloc>(),
+                    child: const HistoryScreen(),
+                  ),
                 ),
               );
             },
@@ -83,12 +105,19 @@ class DashboardRouter {
             path: profileRoute,
             name: profileRoute,
             pageBuilder: (context, state) {
+              final profileModule = ProfileModule();
+              profileModule.injectBloc();
               return FadeTransitionScreen<void>(
                 child: RouterScope(
                   key: profileScreenKey,
-                  inject: () {},
+                  inject: () {
+                    profileModule.inject();
+                  },
                   dispose: () {},
-                  child: const ProfileScreen(),
+                  child: BlocProvider<ProfileBloc>.value(
+                    value: GetIt.I.get<ProfileBloc>(),
+                    child: const ProfileScreen(),
+                  ),
                 ),
               );
             },

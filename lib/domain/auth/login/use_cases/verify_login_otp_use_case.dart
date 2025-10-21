@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:bearnshare/domain/auth/auth_repository.dart';
-import 'package:bearnshare/domain/auth/login/model/login_otp_verify_response.dart';
+import 'package:bearnshare/domain/auth/login/model/user_response_object.dart';
 import 'package:bearnshare/domain/base/base_use_case.dart';
 import 'package:get_it/get_it.dart';
 
 class VerifyLoginOtpUseCase
-    extends BaseUseCase<VerifyLoginOtpRequest, LoginOtpVerifyResponse> {
+    extends BaseUseCase<VerifyLoginOtpRequest, UserResponseObject> {
   final _authRepository = GetIt.instance.get<AuthRepository>();
   @override
-  Future<LoginOtpVerifyResponse> execute({VerifyLoginOtpRequest? request}) {
+  Future<UserResponseObject> execute({VerifyLoginOtpRequest? request}) {
     return _authRepository.verifyLoginOtp(request!);
   }
 }

@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:bearnshare/data/local/hive_manager.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -11,6 +13,7 @@ enum FileType {
   video,
   image,
   audio,
+  pdf,
 }
 
 class DownloadManager {
@@ -37,8 +40,19 @@ class DownloadManager {
       String uniqueFileName = _generateUniqueFileName(fileName);
       String savePath = path.join(directory.path, uniqueFileName);
       print("savePath: $savePath");
+      print("savePath: $url");
 
-      await _dio.download(url, savePath);
+      await _dio.download(
+        url,
+        savePath,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ' +
+                GetIt.I<HiveManager>()
+                    .getFromHive(HiveManager.userSessionTokenKey),
+          },
+        ),
+      );
       return savePath;
     } catch (e) {
       debugPrint("Error downloading file: $e");
@@ -81,6 +95,7 @@ class DownloadManager {
       switch (fileType) {
         case FileType.video:
         case FileType.image:
+        case FileType.pdf:
           return await getApplicationDocumentsDirectory();
         case FileType.audio:
           return await getApplicationSupportDirectory();

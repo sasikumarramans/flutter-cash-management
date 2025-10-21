@@ -2,12 +2,15 @@ import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/presentation/component/app_bottom_nav_bar.dart';
 import 'package:bearnshare/presentation/component/cache_manager/profile_cached_image_shimmer.dart';
+import 'package:bearnshare/presentation/create_profile/bloc/profile_bloc.dart';
+import 'package:bearnshare/presentation/create_profile/bloc/profile_event.dart';
 import 'package:bearnshare/presentation/split_dashboard/bloc/split_dashboard_bloc.dart';
 import 'package:bearnshare/presentation/split_dashboard/bloc/split_dashboard_event.dart';
 import 'package:bearnshare/presentation/split_dashboard/bloc/split_dashboard_state.dart';
 import 'package:bearnshare/presentation/split_dashboard/split_dash_board_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 
 class SplitDashBoardScreen extends StatefulWidget {
@@ -27,7 +30,9 @@ class _DashboardScreenState extends State<SplitDashBoardScreen>
   @override
   void initState() {
     super.initState();
+    FlutterNativeSplash.remove();
     WidgetsBinding.instance.addObserver(this);
+    context.read<ProfileBloc>().add(const GetProfile());
   }
 
   @override

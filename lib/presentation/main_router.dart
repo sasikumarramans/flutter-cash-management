@@ -3,22 +3,38 @@ import 'package:bearnshare/app/router/animation/slide_transition_screen.dart';
 import 'package:bearnshare/app/router/animation/vertical_page_transition.dart';
 import 'package:bearnshare/app/router/router_scope.dart';
 import 'package:bearnshare/data/local/hive_manager.dart';
+import 'package:bearnshare/domain/ledger/model/get_books_response.dart';
+import 'package:bearnshare/domain/ledger/model/get_entries_response.dart';
 import 'package:bearnshare/presentation/auth/di/auth_module.dart';
 import 'package:bearnshare/presentation/auth/login/bloc/login_bloc.dart';
 import 'package:bearnshare/presentation/auth/login/di/login_module.dart';
 import 'package:bearnshare/presentation/auth/login/login_screen.dart';
 import 'package:bearnshare/presentation/auth/login_router.dart';
+import 'package:bearnshare/presentation/create_book/bloc/create_book_bloc.dart';
+import 'package:bearnshare/presentation/create_book/di/create_book_module.dart';
+import 'package:bearnshare/presentation/create_profile/bloc/profile_bloc.dart';
 import 'package:bearnshare/presentation/create_profile/create_profile_screen.dart';
-import 'package:bearnshare/presentation/create_profile/language_selection_screen.dart';
+import 'package:bearnshare/presentation/create_profile/di/profile_module.dart';
 import 'package:bearnshare/presentation/dashboard/bloc/dashboard_bloc.dart';
 import 'package:bearnshare/presentation/dashboard/dash_board_router.dart';
 import 'package:bearnshare/presentation/dashboard/dash_board_screen.dart';
 import 'package:bearnshare/presentation/dashboard/di/dashboard_module.dart';
+import 'package:bearnshare/presentation/history/bloc/ledger_history_bloc.dart';
+import 'package:bearnshare/presentation/history/di/ledger_history_module.dart';
 import 'package:bearnshare/presentation/ledger_book/add_book_screen.dart';
-import 'package:bearnshare/presentation/ledger_book/add_income_screen.dart';
+import 'package:bearnshare/presentation/ledger_book/bloc/ledger_book_bloc.dart';
+import 'package:bearnshare/presentation/ledger_book/di/ledger_book_module.dart';
+import 'package:bearnshare/presentation/ledger_entries/add_income_screen.dart';
+import 'package:bearnshare/presentation/ledger_entries/bloc/ledger_entries_bloc.dart';
+import 'package:bearnshare/presentation/ledger_entries/di/ledger_entries_module.dart';
 import 'package:bearnshare/presentation/profile/edit_profile_screen.dart';
+import 'package:bearnshare/presentation/reports/bloc/reports_bloc.dart';
+import 'package:bearnshare/presentation/reports/di/reports_module.dart';
 import 'package:bearnshare/presentation/reports/report_screen.dart';
 import 'package:bearnshare/presentation/split_add_expense/add_expense_split_screen.dart';
+import 'package:bearnshare/presentation/split_create_group/bloc/create_group_bloc.dart';
+import 'package:bearnshare/presentation/split_create_group/di/create_group_module.dart';
+import 'package:bearnshare/presentation/split_create_group/split_create_group_screen.dart';
 import 'package:bearnshare/presentation/split_dashboard/bloc/split_dashboard_bloc.dart';
 import 'package:bearnshare/presentation/split_dashboard/di/split_dashboard_module.dart';
 import 'package:bearnshare/presentation/split_dashboard/split_dash_board_router.dart';
@@ -42,7 +58,7 @@ class MainRouter {
   static const String addExpenseRoute = '/addExpense';
   static const String splitReportSummaryRoute = '/splitReportSummary';
   static const String addBookRoute = '/addBook';
-  static const String languageRoute = '/language';
+  static const String splitCreateGroupRoute = '/splitCreateGroup';
 
   static bool isDashboardInitialized = false;
 
@@ -57,25 +73,39 @@ class MainRouter {
     const Key splitReportSummaryKey = Key('splitReportSummary');
     const Key editProfileKey = Key('editProfile');
     const Key addBookKey = Key('addBook');
-    const Key languageBookKey = Key('language');
+    const Key splitCreateGroupKey = Key('splitCreateGroup');
 
     return [
       StatefulShellRoute.indexedStack(
         builder: (BuildContext context, GoRouterState state, Widget child) {
           final dashboardModule = DashboardModule();
           dashboardModule.injectBloc();
+          final ledgerBookModule = LedgerBookModule();
+          final createBookModule = CreateBookModule();
+          ledgerBookModule.injectBloc();
+          createBookModule.injectBloc();
+          final profileModule = ProfileModule();
+          profileModule.injectBloc();
           return RouterScope(
             key: dashboardRouteScreenKey,
             inject: () {
               dashboardModule.inject();
+              ledgerBookModule.inject();
+              createBookModule.inject();
+              profileModule.inject();
             },
             dispose: () {
               dashboardModule.dispose();
+              ledgerBookModule.dispose();
+              createBookModule.dispose();
             },
             child: MultiBlocProvider(
               providers: [
                 BlocProvider<DashboardBloc>.value(
                   value: GetIt.I<DashboardBloc>(),
+                ),
+                BlocProvider<ProfileBloc>.value(
+                  value: GetIt.I<ProfileBloc>(),
                 ),
               ],
               child: DashboardScreen(child: child),
@@ -88,18 +118,25 @@ class MainRouter {
         builder: (BuildContext context, GoRouterState state, Widget child) {
           final dashboardModule = SplitDashboardModule();
           dashboardModule.injectBloc();
+          final profileModule = ProfileModule();
+          profileModule.injectBloc();
           return RouterScope(
             key: dashboardRouteScreenKey,
             inject: () {
               dashboardModule.inject();
+              profileModule.inject();
             },
             dispose: () {
               dashboardModule.dispose();
+              profileModule.dispose();
             },
             child: MultiBlocProvider(
               providers: [
                 BlocProvider<SplitDashboardBloc>.value(
                   value: GetIt.I<SplitDashboardBloc>(),
+                ),
+                BlocProvider<ProfileBloc>.value(
+                  value: GetIt.I<ProfileBloc>(),
                 ),
               ],
               child: SplitDashBoardScreen(child: child),
@@ -117,17 +154,13 @@ class MainRouter {
           final isProfileUpdated = GetIt.I<HiveManager>()
                   .getFromHive(HiveManager.profileUpdatedKey) ??
               false;
-          final isLanguageUpdated = !GetIt.I<HiveManager>()
-              .getFromHive<String>(HiveManager.languageUpdatedKey).isNullOrEmpty;
           if (!isUserLoggedIn) {
             return loginScreenRoute;
-          } else if (!isLanguageUpdated) {
-            return languageRoute;
           } else if (!isProfileUpdated) {
             return createProfileRoute;
           }
 
-          return homeRoute;
+          return SplitDashboardRouter.splitHomeRoute;
         },
       ),
       GoRoute(
@@ -163,12 +196,21 @@ class MainRouter {
         path: reportRoute,
         name: reportRoute,
         pageBuilder: (context, state) {
+          final reportsModule = ReportsModule();
+          reportsModule.injectBloc();
           return SlideTransitionScreen<void>(
             child: RouterScope(
               key: reportsScreenKey,
-              inject: () {},
-              dispose: () {},
-              child: const ReportsScreen(),
+              inject: () {
+                reportsModule.inject();
+              },
+              dispose: () {
+                reportsModule.dispose();
+              },
+              child: BlocProvider<ReportsBloc>.value(
+                value: GetIt.I<ReportsBloc>(),
+                child: const ReportsScreen(),
+              ),
             ),
           );
         },
@@ -177,12 +219,28 @@ class MainRouter {
         path: totalSavingRoute,
         name: totalSavingRoute,
         pageBuilder: (context, state) {
+          final ledgerHistoryModule = LedgerHistoryModule();
+          ledgerHistoryModule.injectBloc();
           return SlideTransitionScreen<void>(
             child: RouterScope(
               key: totalSavingKey,
-              inject: () {},
-              dispose: () {},
-              child: const TotalSavingsScreen(),
+              inject: () {
+                ledgerHistoryModule.inject();
+              },
+              dispose: () {
+                ledgerHistoryModule.dispose();
+              },
+              child: MultiBlocProvider(
+                providers: [
+                  BlocProvider<LedgerHistoryBloc>.value(
+                    value: GetIt.I<LedgerHistoryBloc>(),
+                  ),
+                  BlocProvider<LedgerBookBloc>.value(
+                    value: GetIt.I<LedgerBookBloc>(),
+                  ),
+                ],
+                child: const TotalSavingsScreen(),
+              ),
             ),
           );
         },
@@ -191,12 +249,19 @@ class MainRouter {
         path: createProfileRoute,
         name: createProfileRoute,
         pageBuilder: (context, state) {
+          final profileModule = ProfileModule();
+          profileModule.injectBloc();
           return SlideTransitionScreen<void>(
             child: RouterScope(
               key: createProfileKey,
-              inject: () {},
+              inject: () {
+                profileModule.inject();
+              },
               dispose: () {},
-              child: const CreateProfileScreen(),
+              child: BlocProvider<ProfileBloc>.value(
+                value: GetIt.I<ProfileBloc>(),
+                child: const CreateProfileScreen(),
+              ),
             ),
           );
         },
@@ -219,12 +284,31 @@ class MainRouter {
         path: addIncomeRoute,
         name: addIncomeRoute,
         pageBuilder: (context, state) {
+          final ledgerEntriesModule = LedgerEntriesModule();
+          final data = state.extra as Map<String, dynamic>;
+          int bookId = data["bookId"];
+          String entryType = data["entryType"];
+          int? entryId = data["entryId"];
+          EntryItem? entryItem = data["entryItem"];
+          ledgerEntriesModule.injectBloc();
           return SlideTransitionScreen<void>(
             child: RouterScope(
               key: addIncomeKey,
-              inject: () {},
-              dispose: () {},
-              child: const AddIncomeScreen(),
+              inject: () {
+                ledgerEntriesModule.inject();
+              },
+              dispose: () {
+                ledgerEntriesModule.dispose();
+              },
+              child: BlocProvider<LedgerEntriesBloc>.value(
+                value: GetIt.I<LedgerEntriesBloc>(),
+                child: AddIncomeScreen(
+                  bookId: bookId,
+                  entryId: entryId,
+                  entryType: entryType,
+                  entryItem: entryItem,
+                ),
+              ),
             ),
           );
         },
@@ -261,26 +345,44 @@ class MainRouter {
         path: addBookRoute,
         name: addBookRoute,
         pageBuilder: (context, state) {
+          BooksItem? bookItem;
+          if (state.extra != null) {
+            final data = state.extra as Map<String, dynamic>;
+            bookItem = data["bookItem"];
+          }
+
           return SlideTransitionScreen<void>(
             child: RouterScope(
               key: addBookKey,
               inject: () {},
               dispose: () {},
-              child: const AddBookScreen(),
+              child: BlocProvider<CreateBookBloc>.value(
+                value: GetIt.I<CreateBookBloc>(),
+                child: AddBookScreen(bookItem: bookItem),
+              ),
             ),
           );
         },
       ),
       GoRoute(
-        path: languageRoute,
-        name: languageRoute,
+        path: splitCreateGroupRoute,
+        name: splitCreateGroupRoute,
         pageBuilder: (context, state) {
+          final createGroupModule = CreateGroupModule();
+          createGroupModule.injectBloc();
           return SlideTransitionScreen<void>(
             child: RouterScope(
-              key: languageBookKey,
-              inject: () {},
-              dispose: () {},
-              child: const LanguageSelectionScreen(),
+              key: splitCreateGroupKey,
+              inject: () {
+                createGroupModule.inject();
+              },
+              dispose: () {
+                createGroupModule.dispose();
+              },
+              child: BlocProvider<CreateGroupBloc>.value(
+                value: GetIt.I<CreateGroupBloc>(),
+                child: const SplitCreateGroupScreen(),
+              ),
             ),
           );
         },

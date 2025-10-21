@@ -1,11 +1,16 @@
 import 'package:bearnshare/app/router/animation/fade_transition_screen.dart';
 import 'package:bearnshare/app/router/router_manager.dart';
 import 'package:bearnshare/app/router/router_scope.dart';
+import 'package:bearnshare/presentation/create_profile/bloc/profile_bloc.dart';
 import 'package:bearnshare/presentation/profile/profile_screen.dart';
 import 'package:bearnshare/presentation/split_friends/split_friends_screen.dart';
+import 'package:bearnshare/presentation/split_group/bloc/split_group_bloc.dart';
+import 'package:bearnshare/presentation/split_group/di/split_group_module.dart';
 import 'package:bearnshare/presentation/split_group/split_group_screen.dart';
 import 'package:bearnshare/presentation/split_home/split_home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 class SplitDashboardRouter {
@@ -39,18 +44,27 @@ class SplitDashboardRouter {
         ],
       ),
       StatefulShellBranch(
-        navigatorKey: RouterManager.ledgerNavigatorKey,
+        navigatorKey: RouterManager.groupNavigatorKey,
         routes: [
           GoRoute(
             path: splitGroupRoute,
             name: splitGroupRoute,
             pageBuilder: (context, state) {
+              final splitGroupModule = SplitGroupModule();
+              splitGroupModule.injectBloc();
               return FadeTransitionScreen<void>(
                 child: RouterScope(
                   key: groupScreenKey,
-                  inject: () {},
-                  dispose: () {},
-                  child: const SplitGroupScreen(),
+                  inject: () {
+                    splitGroupModule.inject();
+                  },
+                  dispose: () {
+                    splitGroupModule.dispose();
+                  },
+                  child: BlocProvider<SplitGroupBloc>.value(
+                    value: GetIt.I<SplitGroupBloc>(),
+                    child: const SplitGroupScreen(),
+                  ),
                 ),
               );
             },
@@ -58,7 +72,7 @@ class SplitDashboardRouter {
         ],
       ),
       StatefulShellBranch(
-        navigatorKey: RouterManager.historyKey,
+        navigatorKey: RouterManager.friendsKey,
         routes: [
           GoRoute(
             path: friendsRoute,
@@ -77,7 +91,7 @@ class SplitDashboardRouter {
         ],
       ),
       StatefulShellBranch(
-        navigatorKey: RouterManager.splitProfileNavigatorKey,
+        navigatorKey: RouterManager.profileNavigatorKey,
         routes: [
           GoRoute(
             path: splitProfileRoute,
@@ -88,7 +102,10 @@ class SplitDashboardRouter {
                   key: splitProfileScreenKey,
                   inject: () {},
                   dispose: () {},
-                  child: const ProfileScreen(),
+                  child: BlocProvider<ProfileBloc>.value(
+                    value: GetIt.I<ProfileBloc>(),
+                    child: const ProfileScreen(),
+                  ),
                 ),
               );
             },

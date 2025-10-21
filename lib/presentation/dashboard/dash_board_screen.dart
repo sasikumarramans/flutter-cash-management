@@ -1,11 +1,16 @@
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/presentation/component/app_bottom_nav_bar.dart';
 import 'package:bearnshare/presentation/component/cache_manager/profile_cached_image_shimmer.dart';
+import 'package:bearnshare/presentation/create_profile/bloc/profile_bloc.dart';
+import 'package:bearnshare/presentation/create_profile/bloc/profile_event.dart'
+    show GetProfile;
 import 'package:bearnshare/presentation/dashboard/bloc/dashboard_bloc.dart';
 import 'package:bearnshare/presentation/dashboard/bloc/dashboard_event.dart';
 import 'package:bearnshare/presentation/dashboard/bloc/dashboard_state.dart';
 import 'package:bearnshare/presentation/dashboard/dash_board_router.dart';
+import 'package:bearnshare/presentation/split_dashboard/split_dash_board_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -28,6 +33,12 @@ class _DashboardScreenState extends State<DashboardScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    context.read<ProfileBloc>().add(const GetProfile());
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    context.go(SplitDashboardRouter.splitHomeRoute);
+    return true;
   }
 
   @override

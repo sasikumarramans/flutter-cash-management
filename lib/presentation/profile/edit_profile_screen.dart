@@ -1,3 +1,4 @@
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/data/local/hive_manager.dart';
 import 'package:bearnshare/generated/l10n.dart';
@@ -26,6 +27,12 @@ class _CreateProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
+    BackButtonInterceptor.add(myInterceptor);
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    context.pop();
+    return true;
   }
 
   @override
@@ -34,6 +41,7 @@ class _CreateProfileScreenState extends State<EditProfileScreen> {
     _emailController.dispose();
     _addressController.dispose();
     _companyNameController.dispose();
+    BackButtonInterceptor.remove(myInterceptor);
     super.dispose();
   }
 

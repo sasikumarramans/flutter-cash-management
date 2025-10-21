@@ -1,11 +1,18 @@
+import 'dart:async';
+
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
 import 'package:bearnshare/presentation/component/app_text_field.dart';
 import 'package:bearnshare/presentation/main_router.dart';
+import 'package:bearnshare/presentation/split_group/bloc/split_group_bloc.dart';
+import 'package:bearnshare/presentation/split_group/bloc/split_group_event.dart';
+import 'package:bearnshare/presentation/split_group/bloc/split_group_state.dart';
 import 'package:bearnshare/presentation/split_home/add_member_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 class SplitGroupScreen extends StatefulWidget {
@@ -16,61 +23,32 @@ class SplitGroupScreen extends StatefulWidget {
 }
 
 class _SplitGroupScreenState extends State<SplitGroupScreen> {
-  int selectedTab = 0;
   final TextEditingController _searchController = TextEditingController();
+  late final SplitGroupBloc _bloc;
+  late final ScrollController _scrollController;
 
-  // Sample group data
-  final List<Map<String, dynamic>> _groups = [
-    {
-      'icon': Icons.group,
-      'iconBg': const Color(0xFFE3F2FD),
-      'iconColor': const Color(0xFF2196F3),
-      'title': 'Weekend Trip',
-      'time': '2 Hours ago',
-      'amount': '+₹700',
-      'amountColor': const Color(0xFF4CAF50),
-      'label': 'You owe',
-    },
-    {
-      'icon': Icons.home,
-      'iconBg': const Color(0xFFF3E5F5),
-      'iconColor': const Color(0xFF9C27B0),
-      'title': 'Apartment',
-      'time': '1 day ago',
-      'amount': '₹2,500',
-      'amountColor': const Color(0xFF4CAF50),
-      'label': "You're owed",
-    },
-    {
-      'icon': Icons.attach_money,
-      'iconBg': const Color(0xFFE3F2FD),
-      'iconColor': const Color(0xFF2196F3),
-      'title': 'Split',
-      'time': '1 day ago',
-      'amount': '₹2,500',
-      'amountColor': const Color(0xFFFF5252),
-      'label': 'You owe',
-    },
-    {
-      'icon': Icons.apartment,
-      'iconBg': const Color(0xFFF3E5F5),
-      'iconColor': const Color(0xFF9C27B0),
-      'title': 'Rent',
-      'time': '1 day ago',
-      'amount': '₹1,750',
-      'amountColor': const Color(0xFF4CAF50),
-      'label': "You're owed",
-    },
-  ];
   @override
   void initState() {
     super.initState();
+    _bloc = GetIt.I.get<SplitGroupBloc>();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
     BackButtonInterceptor.add(myInterceptor);
+    _bloc.add(const LoadGroups());
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      _bloc.add(const LoadMoreGroups());
+    }
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
     BackButtonInterceptor.remove(myInterceptor);
     super.dispose();
   }
@@ -84,16 +62,21 @@ class _SplitGroupScreenState extends State<SplitGroupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(),
-            //   _buildCreateGroupCard(),
-            _buildSearchBar(),
-            _buildFilterTabs(),
-            Expanded(
-              child: _buildGroupsList(),
-            ),
-          ],
+        child: BlocConsumer<SplitGroupBloc, SplitGroupState>(
+          bloc: _bloc,
+          listener: (context, state) {},
+          builder: (context, state) {
+            return Column(
+              children: [
+                _buildHeader(),
+                _buildSearchBar(),
+                _buildFilterTabs(state),
+                Expanded(
+                  child: _buildGroupsList(state),
+                ),
+              ],
+            );
+          },
         ),
       ),
       floatingActionButton: Container(
@@ -139,58 +122,86 @@ class _SplitGroupScreenState extends State<SplitGroupScreen> {
             },
           ),
           const SizedBox(width: 16),
-          Assets.icons.group.svg(color: Colors.white),
+          GestureDetector(
+            child: Assets.icons.group.svg(color: Colors.white),
+            onTap: () {
+              context.pushNamed(MainRouter.splitCreateGroupRoute);
+            },
+          ),
         ],
       ),
     );
   }
 
   Widget _buildCreateGroupCard() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Container(
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(50),
-          border: Border.all(
-            color: AppTheme.splitGroupColor,
-            width: 2,
+    return Align(
+      alignment: Alignment.center,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: GestureDetector(
+          child: Container(
+            alignment: Alignment.center,
+            height: 200,
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(width: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Create a Group',
+                          style: AppTheme.ledgerTitleTextStyle,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Start splitting expenses with friends',
+                      style: AppTheme.promptTextStyle.copyWith(
+                          fontSize: 12, color: AppTheme.genderInfoTextColor),
+                    ),
+                    const SizedBox(height: 10),
+                    AppButton(
+                      textString: 'Create group',
+                      buttonType: ButtonType.filled,
+                      buttonState: ButtonState.completed,
+                      leadingIcon: Assets.icons.group.svg(),
+                      completedButtonFilledStyle: BoxDecoration(
+                        color: AppTheme.splitGroupColor,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      completedTextStyle: AppTheme.bottomBarText.copyWith(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 14),
+                      onPressed: (_) async {
+                        await context
+                            .pushNamed(MainRouter.splitCreateGroupRoute);
+                        _bloc.add(const LoadGroups());
+                      },
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: const BoxDecoration(
-                color: AppTheme.splitGroupColor,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Create a Group',
-                    style: AppTheme.ledgerTitleTextStyle,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Start splitting expenses with friends',
-                    style: AppTheme.promptTextStyle.copyWith(
-                        fontSize: 12, color: AppTheme.genderInfoTextColor),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          onTap: () async {
+            await context.pushNamed(MainRouter.splitCreateGroupRoute);
+            _bloc.add(const LoadGroups());
+          },
         ),
       ),
     );
@@ -220,7 +231,7 @@ class _SplitGroupScreenState extends State<SplitGroupScreen> {
               },
             ),
           ),
-          const SizedBox(width: 12),
+          /* const SizedBox(width: 12),
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
@@ -228,35 +239,35 @@ class _SplitGroupScreenState extends State<SplitGroupScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Assets.icons.filterIcon.svg(),
-          ),
+          ),*/
         ],
       ),
     );
   }
 
-  Widget _buildFilterTabs() {
+  Widget _buildFilterTabs(SplitGroupState state) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
           Expanded(
-            child: _buildTabButton('All Group', 0),
+            child: _buildTabButton('All Group', 0, state),
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: _buildTabButton('Active', 1),
+            child: _buildTabButton('Active', 1, state),
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: _buildTabButton('Settled', 2),
+            child: _buildTabButton('Settled', 2, state),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTabButton(String label, int index) {
-    final isSelected = selectedTab == index;
+  Widget _buildTabButton(String label, int index, SplitGroupState state) {
+    final isSelected = state.selectedFilterIndex == index;
     return AppButton(
       textString: label,
       buttonType: ButtonType.filled,
@@ -281,62 +292,114 @@ class _SplitGroupScreenState extends State<SplitGroupScreen> {
         color: Colors.white,
       ),
       onPressed: (_) {
-        setState(() {
-          selectedTab = index;
-        });
+        _bloc.add(FilterGroupsChanged(index));
       },
     );
   }
 
-  Widget _buildGroupsList() {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      itemCount: _groups.length + 1, // +1 for the header
-      itemBuilder: (context, index) {
-        if (index == 0) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: Text(
-              'Your Groups',
-              style: AppTheme.ledgerTitleTextStyle,
+  Widget _buildGroupsList(SplitGroupState state) {
+    if (state.groups.isEmpty) {
+      return _buildCreateGroupCard();
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
+            'Your Groups',
+            style: AppTheme.ledgerTitleTextStyle,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              _bloc.add(const LoadGroups(isRefresh: true));
+              // Wait for the state to update
+              await Future.delayed(const Duration(milliseconds: 500));
+            },
+            color: AppTheme.splitGroupColor,
+            child: ListView.builder(
+              controller: _scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              itemCount: state.groups.length + 1, // +1 for loading indicator
+              itemBuilder: (context, index) {
+                if (index == state.groups.length) {
+                  return state.isLoadingMore
+                      ? const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: AppTheme.splitGroupColor,
+                            ),
+                          ),
+                        )
+                      : const SizedBox(height: 100);
+                }
+
+                final group = state.groups[index];
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _buildGroupItem(group: group),
+                );
+              },
             ),
-          );
-        }
-
-        final groupIndex = index - 1;
-        final group = _groups[groupIndex];
-
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: groupIndex == _groups.length - 1 ? 100 : 12,
           ),
-          child: _buildGroupItem(
-            icon: group['icon'] as IconData,
-            iconBg: group['iconBg'] as Color,
-            iconColor: group['iconColor'] as Color,
-            title: group['title'] as String,
-            time: group['time'] as String,
-            amount: group['amount'] as String,
-            amountColor: group['amountColor'] as Color,
-            label: group['label'] as String,
-          ),
-        );
-      },
+        ),
+      ],
     );
   }
 
-  Widget _buildGroupItem({
-    required IconData icon,
-    required Color iconBg,
-    required Color iconColor,
-    required String title,
-    required String time,
-    required String amount,
-    required Color amountColor,
-    required String label,
-  }) {
+  Widget _buildGroupItem({required group}) {
+    // Determine icon based on group type
+    IconData icon = Icons.group;
+    Color iconBg = const Color(0xFFE3F2FD);
+    Color iconColor = const Color(0xFF2196F3);
+
+    switch (group.type.toLowerCase()) {
+      case 'home':
+        icon = Icons.home;
+        iconBg = const Color(0xFFF3E5F5);
+        iconColor = const Color(0xFF9C27B0);
+        break;
+      case 'trip':
+        icon = Icons.flight;
+        iconBg = const Color(0xFFE3F2FD);
+        iconColor = const Color(0xFF2196F3);
+        break;
+      case 'work':
+        icon = Icons.work;
+        iconBg = const Color(0xFFFFF3E0);
+        iconColor = const Color(0xFFFF9800);
+        break;
+      default:
+        icon = Icons.group;
+    }
+
+    // Format time
+    final createdAt = DateTime.tryParse(group.createdAt);
+    String timeAgo = 'Unknown';
+    if (createdAt != null) {
+      final difference = DateTime.now().difference(createdAt);
+      if (difference.inDays > 0) {
+        timeAgo =
+            '${difference.inDays} day${difference.inDays > 1 ? 's' : ''} ago';
+      } else if (difference.inHours > 0) {
+        timeAgo =
+            '${difference.inHours} hour${difference.inHours > 1 ? 's' : ''} ago';
+      } else if (difference.inMinutes > 0) {
+        timeAgo =
+            '${difference.inMinutes} minute${difference.inMinutes > 1 ? 's' : ''} ago';
+      } else {
+        timeAgo = 'Just now';
+      }
+    }
+
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: AppTheme.homePageCardBgColor,
         borderRadius: BorderRadius.circular(16),
@@ -352,7 +415,7 @@ class _SplitGroupScreenState extends State<SplitGroupScreen> {
             child: Icon(
               icon,
               color: iconColor,
-              size: 26,
+              size: 20,
             ),
           ),
           const SizedBox(width: 16),
@@ -361,32 +424,25 @@ class _SplitGroupScreenState extends State<SplitGroupScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  group.name,
                   style: AppTheme.ledgerTitleTextStyle,
                 ),
-                const SizedBox(height: 4),
                 Text(
-                  time,
+                  timeAgo,
                   style: AppTheme.ledgerSearchTextStyle,
+                ),
+                Text(
+                  '${group.memberCount} members',
+                  style: AppTheme.ledgerSearchTextStyle
+                      .copyWith(fontSize: 12, color: Colors.white54),
                 ),
               ],
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                label,
-                style: AppTheme.ledgerSearchTextStyle
-                    .copyWith(color: Colors.white),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                amount,
-                style: AppTheme.homePageContentAmntTextStyle
-                    .copyWith(fontSize: 16),
-              ),
-            ],
+          const Icon(
+            Icons.chevron_right,
+            color: Colors.white54,
+            size: 24,
           ),
         ],
       ),

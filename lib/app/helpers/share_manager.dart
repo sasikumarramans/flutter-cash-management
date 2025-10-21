@@ -46,6 +46,7 @@ class ShareManager {
             return 'video/quicktime';
           case 'mkv':
             return 'video/x-matroska';
+
           default:
             return null;
         }
@@ -70,6 +71,8 @@ class ShareManager {
           default:
             return null;
         }
+      case FileType.pdf:
+        return 'application/pdf';
     }
   }
 }
