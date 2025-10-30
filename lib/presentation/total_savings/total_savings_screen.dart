@@ -76,6 +76,15 @@ class _TotalSavingsScreenState extends State<TotalSavingsScreen> {
     );
   }
 
+  String _formatTime(String dateTimeStr) {
+    final createdAt = DateTime.tryParse(dateTimeStr);
+    String formattedDate = 'Unknown';
+    if (createdAt != null) {
+      formattedDate = DateFormat('MMM d, h:mm a').format(createdAt);
+    }
+    return formattedDate;
+  }
+
   Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -345,7 +354,7 @@ class _TotalSavingsScreenState extends State<TotalSavingsScreen> {
                         ? const Color(0xFFFF5252)
                         : const Color(0xFF4CAF50),
                     title: state.recentEntries[index].title,
-                    date: state.recentEntries[index].dateTime ?? "",
+                    date: _formatTime(state.recentEntries[index].dateTime!),
                     amount: (state.recentEntries[index].amount ?? 0).toString(),
                     amountColor: state.recentEntries[index].type == "EXPENSE"
                         ? AppTheme.addExpenseBtnClr

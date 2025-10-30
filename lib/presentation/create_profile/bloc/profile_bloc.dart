@@ -45,8 +45,41 @@ class ProfileBloc extends BaseBloc<ProfileEvent, ProfileState> {
     on<UserNameCompleted>(_onUserNameCompleted);
     on<AddProfilePhoto>(_addReferenceImages);
     on<EmailIdChanged>(_onEmailIdChanged);
+    on<CompanyNameChanged>(_onCompanyNameChanged);
+    on<FullNameChanged>(_onFullNameChanged);
+    on<AddressChanged>(_onAddressChanged);
     on<GetProfile>(_onGetProfile);
+    on<InitProfile>(_onInitProfile);
   }
+  FutureOr<void> _onCompanyNameChanged(
+      CompanyNameChanged event, Emitter<ProfileState> emit) {
+    emit(state.copyWith(
+      companyName: event.companyName,
+    ));
+  }
+
+  FutureOr<void> _onInitProfile(InitProfile event, Emitter<ProfileState> emit) {
+    emit(state.copyWith(
+      isEmailEnabled: true,
+      profileImageFile: "",
+      updateProfileStatus: UpdateProfileStatus.initial,
+    ));
+  }
+
+  FutureOr<void> _onFullNameChanged(
+      FullNameChanged event, Emitter<ProfileState> emit) {
+    emit(state.copyWith(
+      fullName: event.fullName,
+    ));
+  }
+
+  FutureOr<void> _onAddressChanged(
+      AddressChanged event, Emitter<ProfileState> emit) {
+    emit(state.copyWith(
+      address: event.address,
+    ));
+  }
+
   Future<void> _onUserNameCompleted(
     UserNameCompleted event,
     Emitter<ProfileState> emit,
@@ -141,8 +174,6 @@ class ProfileBloc extends BaseBloc<ProfileEvent, ProfileState> {
           croppedImages[0], targetPath,
           quality: 80, format: CompressFormat.jpeg);
       print(getFileSize(File(compressedFile!.path)));
-      print("compressedFile");
-
       emit(state.copyWith(
         profileImageFile: compressedFile.path,
       ));
@@ -285,22 +316,22 @@ class ProfileBloc extends BaseBloc<ProfileEvent, ProfileState> {
   ) async {
     final Map<String, dynamic> fields = {};
     try {
-      print(state.emailId);
-      print(state.userName);
-      print(state.profileImageFile);
       emit(state.copyWith(
         updateProfileStatus: UpdateProfileStatus.sendingRequest,
       ));
-      fields.addEntries([
-        MapEntry("username", state.userName),
-      ]);
+      if (state.userName.isNotEmpty) {
+        fields.addEntries([
+          MapEntry("username", state.userName),
+        ]);
+      }
+
       fields.addEntries([
         MapEntry(
           "email",
           state.isEmailEnabled ? state.emailId : "",
         )
       ]);
-      if (state.profileImageFile != null) {
+      if (!state.profileImageFile.isNullOrEmpty) {
         fields.addEntries([
           MapEntry(
             "profileImage",
@@ -309,7 +340,21 @@ class ProfileBloc extends BaseBloc<ProfileEvent, ProfileState> {
           ),
         ]);
       }
-
+      if (state.companyName.isNotEmpty) {
+        fields.addEntries([
+          MapEntry("companyName", state.companyName),
+        ]);
+      }
+      if (state.fullName.isNotEmpty) {
+        fields.addEntries([
+          MapEntry("firstName", state.fullName),
+        ]);
+      }
+      if (state.address.isNotEmpty) {
+        fields.addEntries([
+          MapEntry("address", state.address),
+        ]);
+      }
       final response = await safeExecute<UserResponseObject>(
         function: () async {
           return await _updateProfileUseCases.execute(
@@ -328,8 +373,13 @@ class ProfileBloc extends BaseBloc<ProfileEvent, ProfileState> {
       emit(state.copyWith(
         updateProfileStatus: UpdateProfileStatus.userProfileSuccess,
       ));
-      GetIt.I<HiveManager>().saveToHive(HiveManager.profileUpdatedKey, true);
-      _routerManager.goRouter.go(MainRouter.mainScreenRoute);
+
+      if (event.isUpdate!) {
+        add(const GetProfile());
+      } else {
+        GetIt.I<HiveManager>().saveToHive(HiveManager.profileUpdatedKey, true);
+        _routerManager.goRouter.go(MainRouter.mainScreenRoute);
+      }
     } catch (e) {
       emit(state.copyWith(
         updateProfileStatus: UpdateProfileStatus.userProfileFailed,

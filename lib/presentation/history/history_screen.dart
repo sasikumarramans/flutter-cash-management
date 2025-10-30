@@ -118,6 +118,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
           children: [
             _buildHeader(),
             _buildSearchBar(),
+            const SizedBox(
+              height: 10,
+            ),
             Expanded(
               child: BlocBuilder<LedgerHistoryBloc, LedgerHistoryState>(
                 builder: (context, state) {
@@ -202,55 +205,30 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget _buildHistoryList(LedgerHistoryState state) {
-    final groupedEntries = _groupEntriesByDate(state.entries);
-    final dates = groupedEntries.keys.toList();
     return RefreshIndicator(
       onRefresh: _onRefresh,
       child: state.entries.isNotEmpty
           ? ListView.builder(
+              shrinkWrap: true,
               controller: _scrollController,
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              itemCount: dates.length + (state.isLoadingMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index >= dates.length) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                }
-
-                final date = dates[index];
-                final entries = groupedEntries[date]!;
-
-                return Column(
-                  children: [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: entries.length,
-                      itemBuilder: (context, entryIndex) {
-                        final entry = entries[entryIndex];
-                        return _buildTransactionItem(
-                          icon: entry.type == 'INCOME'
-                              ? Icons.arrow_downward
-                              : Icons.arrow_upward,
-                          iconBg: entry.type == 'INCOME'
-                              ? const Color(0xFFE8F5E9)
-                              : const Color(0xFFFFEBEE),
-                          iconColor: entry.type == 'INCOME'
-                              ? const Color(0xFF4CAF50)
-                              : const Color(0xFFFF5252),
-                          title: entry.title,
-                          time: _formatTime(entry.dateTime),
-                          amount: entry.amount,
-                          isIncome: entry.type == 'INCOME',
-                        );
-                      },
-                    ),
-                    if (index < dates.length - 1) const SizedBox(height: 10),
-                  ],
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: state.entries.length,
+              itemBuilder: (context, entryIndex) {
+                final entry = state.entries[entryIndex];
+                return _buildTransactionItem(
+                  icon: entry.type == 'INCOME'
+                      ? Icons.arrow_downward
+                      : Icons.arrow_upward,
+                  iconBg: entry.type == 'INCOME'
+                      ? const Color(0xFFE8F5E9)
+                      : const Color(0xFFFFEBEE),
+                  iconColor: entry.type == 'INCOME'
+                      ? const Color(0xFF4CAF50)
+                      : const Color(0xFFFF5252),
+                  title: entry.title,
+                  time: _formatTime(state.entries[entryIndex].dateTime!),
+                  amount: entry.amount,
+                  isIncome: entry.type == 'INCOME',
                 );
               },
             )

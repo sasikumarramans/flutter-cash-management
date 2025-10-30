@@ -13,7 +13,7 @@ class DateTimeUtils {
   static const String dobFormat = "yyyy-MM-dd";
   static const String dobUIFormat = "MMM dd, yyyy";
   static const String mediaPlayerFormatKey = "mm:ss";
-  static const String creditDateTimeFormat = "yyyy-MM-ddTHH:mm:ss";
+  static const String creditDateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss";
   static const String creditDateTimeOutputFormat = "hh:mm a, MMM dd";
 
   // Cache DateFormat instances for better performance

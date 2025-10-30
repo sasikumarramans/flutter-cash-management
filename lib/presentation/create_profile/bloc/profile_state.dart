@@ -30,6 +30,9 @@ class ProfileState extends Equatable {
   final String userName;
   final String userNameTooltipMessage;
   final String emailId;
+  final String fullName;
+  final String companyName;
+  final String address;
   final UserNameUniqueApiStatus userNameUniqueApiStatus;
   final UniqueUserNameStatus uniqueUserNameStatus;
   final UpdateProfileStatus updateProfileStatus;
@@ -41,7 +44,10 @@ class ProfileState extends Equatable {
       this.isEmailEnabled = false,
       this.userName = '',
       this.emailId = '',
-      this.profileImageFile,
+      this.companyName = '',
+      this.address = '',
+      this.fullName = '',
+      this.profileImageFile = "",
       this.userNameTooltipMessage = '',
       this.userDataObject,
       this.uniqueUserNameStatus = UniqueUserNameStatus.initial,
@@ -52,6 +58,9 @@ class ProfileState extends Equatable {
       {bool? isUserNameEnabled,
       bool? isEmailEnabled,
       String? userName,
+      String? companyName,
+      String? fullName,
+      String? address,
       UserDataObject? userDataObject,
       String? userNameTooltipMessage,
       UserNameUniqueApiStatus? userNameUniqueApiStatus,
@@ -72,6 +81,9 @@ class ProfileState extends Equatable {
           userNameUniqueApiStatus ?? this.userNameUniqueApiStatus,
       profileImageFile: profileImageFile ?? this.profileImageFile,
       userDataObject: userDataObject ?? this.userDataObject,
+      companyName: companyName ?? this.companyName,
+      address: address ?? this.address,
+      fullName: fullName ?? this.fullName,
     );
   }
 
@@ -87,5 +99,8 @@ class ProfileState extends Equatable {
         updateProfileStatus,
         profileImageFile,
         userDataObject,
+        fullName,
+        address,
+        companyName,
       ];
 }

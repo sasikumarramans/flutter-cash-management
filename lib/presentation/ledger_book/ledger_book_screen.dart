@@ -141,10 +141,6 @@ class _LedgerBookScreenState extends State<LedgerBookScreen> {
             onPressed: () {
               GetIt.I<LedgerBookBloc>().add(LedgerDeleteEntry(entry.id));
               context.pop();
-              _bloc.add(LoadEntries(
-                  bookId:
-                      GetIt.I.get<LedgerBookBloc>().state.selectedBookItem!.id!,
-                  isRefresh: true));
             },
             child: Text(
               'Delete',

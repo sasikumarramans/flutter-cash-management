@@ -31,7 +31,9 @@ import 'package:bearnshare/presentation/profile/edit_profile_screen.dart';
 import 'package:bearnshare/presentation/reports/bloc/reports_bloc.dart';
 import 'package:bearnshare/presentation/reports/di/reports_module.dart';
 import 'package:bearnshare/presentation/reports/report_screen.dart';
-import 'package:bearnshare/presentation/split_add_expense/add_expense_split_screen.dart';
+import 'package:bearnshare/presentation/split_add/add_expense_split_screen.dart';
+import 'package:bearnshare/presentation/split_add/bloc/add_expense_split_bloc.dart';
+import 'package:bearnshare/presentation/split_add/di/add_split_module.dart';
 import 'package:bearnshare/presentation/split_create_group/bloc/create_group_bloc.dart';
 import 'package:bearnshare/presentation/split_create_group/di/create_group_module.dart';
 import 'package:bearnshare/presentation/split_create_group/split_create_group_screen.dart';
@@ -275,7 +277,10 @@ class MainRouter {
               key: editProfileKey,
               inject: () {},
               dispose: () {},
-              child: const EditProfileScreen(),
+              child: BlocProvider<ProfileBloc>.value(
+                value: GetIt.I<ProfileBloc>(),
+                child: const EditProfileScreen(),
+              ),
             ),
           );
         },
@@ -317,12 +322,23 @@ class MainRouter {
         path: addExpenseRoute,
         name: addExpenseRoute,
         pageBuilder: (context, state) {
+          final addSplitModule = AddSplitModule();
+          addSplitModule.injectBloc();
           return SlideTransitionScreen<void>(
             child: RouterScope(
               key: addExpenseKey,
-              inject: () {},
-              dispose: () {},
-              child: const AddExpenseSplitScreen(),
+              inject: () {
+                addSplitModule.inject();
+              },
+              dispose: () {
+                addSplitModule.dispose();
+              },
+              child: BlocProvider<AddExpenseSplitBloc>.value(
+                value: GetIt.I<AddExpenseSplitBloc>(),
+                child: const AddExpenseSplitScreen(
+                  groupId: 0,
+                ),
+              ),
             ),
           );
         },

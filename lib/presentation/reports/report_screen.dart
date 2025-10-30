@@ -224,7 +224,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     Text(
                       '₹${totalIncome.toStringAsFixed(2)}',
                       style: AppTheme.homePageContentAmntTextStyle.copyWith(
-                          fontSize: 18, color: AppTheme.amountPosTextColor),
+                          fontSize: 16, color: AppTheme.amountPosTextColor),
                     ),
                   ],
                 ),
@@ -268,7 +268,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     Text(
                       '₹${totalExpense.toStringAsFixed(2)}',
                       style: AppTheme.homePageContentAmntTextStyle.copyWith(
-                          fontSize: 18, color: AppTheme.addExpenseBtnClr),
+                          fontSize: 16, color: AppTheme.addExpenseBtnClr),
                     ),
                   ],
                 ),
@@ -375,8 +375,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
           if (index >= state.displayedCategories.length) {
             return const Center(
               child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(),
+                padding: EdgeInsets.all(10.0),
+                child: AppProgressIndicator(),
               ),
             );
           }

@@ -22,6 +22,11 @@ class PermissionsManager {
     return false;
   }
 
+  Future<PermissionStatus> requestMicrophonePermission() async {
+    PermissionStatus askNotification = await Permission.microphone.request();
+    return askNotification;
+  }
+
   Future<PermissionStatus> requestCameraPermission() async {
     PermissionStatus permissionStatus = await requestCameraPermissionStatus();
     if (permissionStatus.isGranted || permissionStatus.isLimited) {

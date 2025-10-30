@@ -113,7 +113,7 @@ dependencies:
 
   # In App Update
   in_app_update: 4.2.3
-  language_info_plus: ^1.1.0
+  speech_to_text: ^7.3.0
 
 dependency_overrides:
   webview_flutter_android: 4.0.0

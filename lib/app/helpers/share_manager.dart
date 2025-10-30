@@ -13,8 +13,10 @@ class ShareManager {
       {String? subject, String? text, required FileType fileType}) async {
     try {
       GetIt.I<AppSnackBarManager>().showLoading();
+      print(filePath);
       final shareablePath = await _prepareFileForSharing(filePath, fileType);
       final mimeType = _getMimeType(filePath, fileType);
+      print(shareablePath);
       final xFile = XFile(shareablePath, mimeType: mimeType);
       GetIt.I<AppSnackBarManager>().hideLoading();
       await Share.shareXFiles([xFile], subject: subject);
@@ -30,7 +32,7 @@ class ShareManager {
     if (!file.existsSync()) throw Exception("File not found: $filePath");
     final tempDir = await getTemporaryDirectory();
     final ext = path.extension(filePath); // includes the dot, e.g., ".mp4"
-    final newFileName = '${fileType.toString().split('.').last}$ext';
+    final newFileName = '${"report"}$ext';
     final newFilePath = path.join(tempDir.path, newFileName);
     return (await file.copy(newFilePath)).path;
   }

@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:bearnshare/app/helpers/date_time_utils.dart';
+import 'package:bearnshare/app/helpers/extensions/string_extensions.dart';
+import 'package:bearnshare/app/helpers/permissions_manager.dart';
 import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/domain/ledger/model/get_entries_response.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
@@ -12,6 +17,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:speech_to_text/speech_to_text.dart';
 
 class AddIncomeScreen extends StatefulWidget {
   final int bookId;
@@ -31,16 +39,33 @@ class AddIncomeScreen extends StatefulWidget {
   State<AddIncomeScreen> createState() => _AddIncomeScreenState();
 }
 
-class _AddIncomeScreenState extends State<AddIncomeScreen> {
+class _AddIncomeScreenState extends State<AddIncomeScreen>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final _bloc = GetIt.I<LedgerEntriesBloc>();
   late DateTime _selectedDateTime;
+  bool _isListening = false;
+  late stt.SpeechToText _speech;
+  String _speechHint = 'Tap the mic & say like "petrol 100"';
+  late AnimationController _micController;
+  late Animation<double> _pulseAnimation;
+  Timer? _listenTimer;
+  bool _speechEnabled = false;
 
   @override
   void initState() {
     super.initState();
+    _micController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    )..repeat(reverse: true);
+
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.3).animate(
+      CurvedAnimation(parent: _micController, curve: Curves.easeInOut),
+    );
+    _speech = stt.SpeechToText();
     _selectedDateTime = DateTime.now();
     _dateController.text = _formatDateTime(_selectedDateTime);
     if (widget.entryItem != null) {
@@ -61,6 +86,110 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
         entryType: widget.entryType,
       ));
     }
+    _initSpeech();
+  }
+
+  Future<void> _initPermission() async {
+    PermissionStatus permissionStatus =
+        await GetIt.I.get<PermissionsManager>().requestMicrophonePermission();
+    if (_handlePermission(permissionStatus)) {
+      _listen();
+    }
+  }
+
+  Future<void> _initSpeech() async {
+    _speechEnabled = await _speech.initialize(
+      onStatus: (status) {
+        debugPrint("Speech status: $status");
+        if (status == 'notListening') {
+          _stopListening();
+        }
+      },
+      onError: (error) => {
+        debugPrint("Speech error: $error"),
+        _stopListening(),
+      },
+    );
+  }
+
+  bool _handlePermission(PermissionStatus permissionStatus) {
+    if (permissionStatus.isGranted || permissionStatus.isLimited) {
+      return true;
+    } else if (permissionStatus.isDenied) {
+      return false;
+    } else if (permissionStatus.isPermanentlyDenied) {
+      GetIt.I<PermissionsManager>().openSettings();
+      return false;
+    } else {
+      return false;
+    }
+  }
+
+  void _listen() async {
+    if (!_isListening) {
+      if (_speechEnabled) {
+        _startTimer();
+        setState(() {
+          _isListening = true;
+          _speechHint = 'Listening... speak now 👂';
+        });
+        _micController.reset();
+        _micController.repeat(reverse: true);
+        _speech.listen(
+          onResult: (result) => {
+            getText(result.recognizedWords),
+          },
+          listenFor: const Duration(seconds: 10),
+          listenOptions: SpeechListenOptions(
+            partialResults: false,
+            autoPunctuation: true,
+            enableHapticFeedback: true,
+          ),
+        );
+      }
+    } else {
+      _stopListening();
+    }
+  }
+
+  void _startTimer() {
+    _listenTimer = Timer(const Duration(seconds: 10), () {
+      if (_isListening) {
+        _listenTimer?.cancel();
+        _stopListening();
+      }
+    });
+  }
+
+  void _stopListening() {
+    _listenTimer?.cancel();
+    setState(() {
+      _isListening = false;
+      _speechHint = 'Tap mic & say like "petrol 100"';
+    });
+    _speech.stop();
+    _micController.stop();
+    _micController.reset();
+  }
+
+  void getText(String _text) {
+    final regex = RegExp(r'(\D+)\s+(\d+)');
+    final match = regex.firstMatch(_text);
+    if (match != null) {
+      final name = match.group(1)?.trim();
+      final amount = match.group(2);
+      _amountController.text = amount ?? "";
+      _descriptionController.text = name ?? "";
+      debugPrint('Item: $name, Amount: $amount');
+      if (!amount.isNullOrEmpty) {
+        _bloc.add(AmountChanged(amount!));
+      }
+      if (!name.isNullOrEmpty) {
+        _bloc.add(EntriesNameChanged(name!));
+        _bloc.add(const EntriesNameCompleted(isValid: true));
+      }
+      _stopListening();
+    }
   }
 
   @override
@@ -68,6 +197,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
     _descriptionController.dispose();
     _dateController.dispose();
     _amountController.dispose();
+    _micController.dispose();
+    _listenTimer?.cancel();
     super.dispose();
   }
 
@@ -124,9 +255,14 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
           time.minute,
         );
         _dateController.text = _formatDateTime(_selectedDateTime);
-        _bloc.add(DateTimeChanged(_selectedDateTime.toIso8601String()));
+        _bloc.add(DateTimeChanged(DateTimeUtils.formatDate(
+            DateTimeUtils.creditDateTimeFormat, _selectedDateTime)));
       }
     }
+  }
+
+  String formatDateTime(DateTime dateTime) {
+    return DateFormat("").format(dateTime);
   }
 
   @override
@@ -192,7 +328,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
   Widget _buildAmountSection(LedgerEntriesState state, bool isIncome) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 30),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: const BoxDecoration(
         color: AppTheme.homePageCardBgColor,
         border: Border(
@@ -202,7 +338,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
       child: Column(
         children: [
           _buildTypeToggle(state, isIncome),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           const Text(
             'Amount',
             style: TextStyle(
@@ -210,7 +346,6 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               color: Colors.white70,
             ),
           ),
-          const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -259,6 +394,44 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               ),
             ],
           ),
+          Column(
+            children: [
+              InkWell(
+                onTap: _initPermission,
+                child: AnimatedBuilder(
+                  animation: _pulseAnimation,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _isListening ? _pulseAnimation.value : 1.0,
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: _isListening
+                              ? Colors.redAccent.withOpacity(0.2)
+                              : Colors.white10,
+                        ),
+                        child: Icon(
+                          _isListening ? Icons.mic : Icons.mic_none,
+                          color: _isListening ? Colors.redAccent : Colors.white,
+                          size: 32,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _speechHint,
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 13,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -271,9 +444,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!state.isEditMode) _buildBookSelectionField(state),
-          if (!state.isEditMode) const SizedBox(height: 24),
+          if (!state.isEditMode) const SizedBox(height: 10),
           _buildDescriptionField(state),
-          const SizedBox(height: 24),
+          const SizedBox(height: 10),
           _buildDateTimeField(),
         ],
       ),
@@ -428,7 +601,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               }
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
               decoration: BoxDecoration(
                 color:
                     isIncome ? AppTheme.amountPosTextColor : Colors.transparent,
@@ -447,7 +620,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               }
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
               decoration: BoxDecoration(
                 color:
                     !isIncome ? AppTheme.addExpenseBtnClr : Colors.transparent,
@@ -469,7 +642,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
     final isIncome = state.type == 'INCOME';
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Column(
         children: [
           AppButton(

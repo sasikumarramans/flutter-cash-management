@@ -29,7 +29,9 @@ class UserNameEvent extends ProfileEvent {
 }
 
 class ProfileUpdate extends ProfileEvent {
-  const ProfileUpdate();
+  final bool? isUpdate;
+
+  const ProfileUpdate({this.isUpdate = false});
 }
 
 class EmailIdChanged extends ProfileEvent {
@@ -44,4 +46,23 @@ class AddProfilePhoto extends ProfileEvent {
 
 class GetProfile extends ProfileEvent {
   const GetProfile();
+}
+
+class FullNameChanged extends ProfileEvent {
+  final String fullName;
+  const FullNameChanged(this.fullName);
+}
+
+class CompanyNameChanged extends ProfileEvent {
+  final String companyName;
+  const CompanyNameChanged(this.companyName);
+}
+
+class AddressChanged extends ProfileEvent {
+  final String address;
+  const AddressChanged(this.address);
+}
+
+class InitProfile extends ProfileEvent {
+  const InitProfile();
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bearnshare/app/bloc/base/base_bloc.dart';
+import 'package:bearnshare/app/helpers/date_time_utils.dart';
 import 'package:bearnshare/app/router/router_manager.dart';
 import 'package:bearnshare/domain/ledger/model/create_entry_request.dart';
 import 'package:bearnshare/domain/ledger/model/create_entry_response.dart';
@@ -15,7 +16,6 @@ import 'package:bearnshare/presentation/ledger_entries/bloc/ledger_entries_event
 import 'package:bearnshare/presentation/ledger_entries/bloc/ledger_entries_state.dart';
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
 
 class LedgerEntriesBloc
     extends BaseBloc<LedgerEntriesEvent, LedgerEntriesState> {
@@ -38,7 +38,8 @@ class LedgerEntriesBloc
   }
 
   String _formatDateTime(DateTime dateTime) {
-    return DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(dateTime);
+    return DateTimeUtils.formatDate(
+        DateTimeUtils.creditDateTimeFormat, dateTime);
   }
 
   FutureOr<void> _onEntryNameChanged(

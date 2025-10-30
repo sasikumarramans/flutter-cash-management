@@ -38,7 +38,7 @@ class DownloadManager {
 
       String fileName = _extractFileNameFromUrl(url);
       String uniqueFileName = _generateUniqueFileName(fileName);
-      String savePath = path.join(directory.path, uniqueFileName);
+      String savePath = path.join(directory.path, "$uniqueFileName.pdf");
       print("savePath: $savePath");
       print("savePath: $url");
 
