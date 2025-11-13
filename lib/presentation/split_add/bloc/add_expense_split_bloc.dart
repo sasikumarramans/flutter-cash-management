@@ -36,6 +36,7 @@ class AddExpenseSplitBloc
     on<AmountValidationCompleted>(_onAmountValidationCompleted);
     on<AddSplit>(_onAddSplit);
     on<ClearSearchResults>(_onClearSearchResults);
+    on<InitializeParticipants>(_onInitializeParticipants);
   }
 
   @override
@@ -385,8 +386,9 @@ class AddExpenseSplitBloc
         description: state.description,
         totalAmount: double.parse(state.amount),
         currency: "INR",
-        paidByUsername:
-            GetIt.I<ProfileBloc>().state.userDataObject?.username ?? "",
+        paidByUsername: state.paidBy?.username ??
+            GetIt.I<ProfileBloc>().state.userDataObject?.username ??
+            "",
         groupId: event.groupId == 0 ? null : event.groupId,
         splitType: state.splitType,
         participants: participants,
@@ -400,7 +402,7 @@ class AddExpenseSplitBloc
         showError: true,
       );
 
-      if (response == null || !response.success) {
+      if (response == null) {
         emit(state.copyWith(
           status: AddSplitStatus.failed,
           errorMessage: response?.message ?? 'Failed to add split',
@@ -426,5 +428,25 @@ class AddExpenseSplitBloc
       searchResults: [],
       searchStatus: SearchStatus.initial,
     ));
+  }
+
+  void _onInitializeParticipants(
+    InitializeParticipants event,
+    Emitter<AddExpenseSplitState> emit,
+  ) {
+    final participants = event.participants
+        .map((user) => ParticipantWithSplit(
+              user: user,
+              splitValue: 0,
+              isSelected: true,
+            ))
+        .toList();
+
+    emit(state.copyWith(participants: participants));
+
+    // Auto-calculate if split type is EQUAL
+    if (state.splitType == 'EQUAL') {
+      _recalculateEqualSplit(emit);
+    }
   }
 }

@@ -12,11 +12,11 @@ enum SplitBottomNavItem {
   home,
   group,
   friends,
+  activity,
   profile,
 }
 
 enum BottomNavIconStatus {
-
   enabled,
   selected,
   disabled,
@@ -47,6 +47,8 @@ extension SplitBottomNavItemExtension on SplitBottomNavItem {
         return 'Group';
       case SplitBottomNavItem.friends:
         return 'Friends';
+      case SplitBottomNavItem.activity:
+        return 'Activity';
       case SplitBottomNavItem.profile:
         return 'Profile';
     }
@@ -108,7 +110,9 @@ class AppBottomNavBar extends StatelessWidget {
                         style: AppTheme.bottomBarText.copyWith(
                             color: isSelected
                                 ? AppTheme.tertiaryColor
-                                : const Color(0xff9CA6BB),fontWeight:  isSelected?FontWeight.w700:FontWeight.w500),
+                                : const Color(0xff9CA6BB),
+                            fontWeight:
+                                isSelected ? FontWeight.w700 : FontWeight.w500),
                       )
                     ],
                   ),
@@ -186,7 +190,9 @@ class SplitBottomNavBar extends StatelessWidget {
                         style: AppTheme.bottomBarText.copyWith(
                             color: isSelected
                                 ? AppTheme.tertiaryColor
-                                : const Color(0xff9CA6BB),fontWeight:  isSelected?FontWeight.w700:FontWeight.w500),
+                                : const Color(0xff9CA6BB),
+                            fontWeight:
+                                isSelected ? FontWeight.w700 : FontWeight.w500),
                       )
                     ],
                   ),

@@ -1,11 +1,15 @@
 import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/domain/group/model/search_user_response.dart';
+import 'package:bearnshare/domain/split_add/model/search_response.dart';
 import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
 import 'package:bearnshare/presentation/component/app_text_field.dart';
 import 'package:bearnshare/presentation/component/profile_avatar.dart';
+import 'package:bearnshare/presentation/create_profile/bloc/profile_bloc.dart';
 import 'package:bearnshare/presentation/split_add/bloc/add_expense_split_bloc.dart';
 import 'package:bearnshare/presentation/split_add/bloc/add_expense_split_event.dart';
 import 'package:bearnshare/presentation/split_add/bloc/add_expense_split_state.dart';
+import 'package:bearnshare/presentation/split_add/paid_by_dialog.dart';
 import 'package:bearnshare/presentation/split_add/split_members_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,10 +18,12 @@ import 'package:go_router/go_router.dart';
 
 class AddExpenseSplitScreen extends StatefulWidget {
   final int groupId;
+  final List<dynamic>? members;
 
   const AddExpenseSplitScreen({
     super.key,
     required this.groupId,
+    this.members,
   });
 
   @override
@@ -34,6 +40,38 @@ class _AddExpenseSplitScreenState extends State<AddExpenseSplitScreen> {
   void initState() {
     super.initState();
     _bloc = GetIt.I.get<AddExpenseSplitBloc>();
+
+    // Initialize participants if members are provided
+    if (widget.members != null && widget.members!.isNotEmpty) {
+      final participants = widget.members!.map((member) {
+        if (member is FriendItem) {
+          return SearchUserData(
+            id: member.userId,
+            email: member.email,
+            firstName: '',
+            lastName: '',
+            phoneNumber: '',
+            username: member.username,
+            profileImageUrl: '',
+          );
+        } else if (member is GroupParticipant) {
+          return SearchUserData(
+            id: member.userId,
+            email: '',
+            firstName: '',
+            lastName: '',
+            phoneNumber: '',
+            username: member.username,
+            profileImageUrl: '',
+          );
+        }
+        return null;
+      }).whereType<SearchUserData>().toList();
+
+      if (participants.isNotEmpty) {
+        _bloc.add(InitializeParticipants(participants, widget.groupId));
+      }
+    }
   }
 
   @override
@@ -106,6 +144,15 @@ class _AddExpenseSplitScreenState extends State<AddExpenseSplitScreen> {
     );
   }
 
+  void _showPaidByDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const PaidByDialog(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,7 +164,6 @@ class _AddExpenseSplitScreenState extends State<AddExpenseSplitScreen> {
               children: [
                 _buildHeader(),
                 _buildAmountSection(state),
-                _buildDescriptionField(state),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
@@ -139,22 +185,71 @@ class _AddExpenseSplitScreenState extends State<AddExpenseSplitScreen> {
 
   Widget _buildDescriptionField(AddExpenseSplitState state) {
     return Container(
-      padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      alignment: Alignment.center,
+      width: 200,
+      color: Colors.grey.withValues(alpha: 0.2),
+      child: AppTextField(
+        controller: _descriptionController,
+        textFieldStyle: TextFieldStyle.filled,
+        textFieldState: TextFieldState.enabled,
+        textFieldType: TextFieldType.text,
+        textAlign: TextAlign.center,
+        hint: 'Add notes',
+        maxLines: 3,
+        filledEnabledStyle: InputDecoration(
+          border: InputBorder.none,
+          hintStyle: AppTheme.ledgerSearchTextStyle
+              .copyWith(fontSize: 16, color: Colors.grey),
+        ),
+        onChanged: (value) {
+          _bloc.add(DescriptionChanged(value));
+        },
+        padding: const EdgeInsets.all(10),
+      ),
+    );
+  }
+
+  Widget _paidByWidget(AddExpenseSplitState state) {
+    String payUserName = state.paidBy?.username ?? "you";
+    if (state.paidBy?.username ==
+        GetIt.I<ProfileBloc>().state.userDataObject?.username) {
+      payUserName = "you";
+    }
+    return Container(
+      alignment: Alignment.center,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AppTextField(
-            controller: _descriptionController,
-            textFieldStyle: TextFieldStyle.filled,
-            textFieldState: TextFieldState.enabled,
-            textFieldType: TextFieldType.text,
-            hint: 'Enter description',
-            maxLines: 3,
-            onChanged: (value) {
-              _bloc.add(DescriptionChanged(value));
-            },
-            padding: const EdgeInsets.all(16),
+          Text(
+            "Paid by",
+            style: AppTheme.historyAmntTextStyle,
           ),
+          const SizedBox(
+            width: 10,
+          ),
+          GestureDetector(
+            onTap: () => _showPaidByDialog(context),
+            child: Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Colors.grey.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    payUserName,
+                    style: AppTheme.historyAmntTextStyle,
+                  ),
+                  const Icon(
+                    Icons.keyboard_arrow_down_outlined,
+                    color: Colors.white,
+                  )
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -199,13 +294,6 @@ class _AddExpenseSplitScreenState extends State<AddExpenseSplitScreen> {
       ),
       child: Column(
         children: [
-          Text(
-            'Enter amount to split',
-            style: AppTheme.homePageTitleTextStyle.copyWith(
-              fontSize: 15,
-              color: AppTheme.homePageSubtitleColor,
-            ),
-          ),
           const SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -256,6 +344,11 @@ class _AddExpenseSplitScreenState extends State<AddExpenseSplitScreen> {
               ),
             ],
           ),
+          _buildDescriptionField(state),
+          const SizedBox(
+            height: 15,
+          ),
+          _paidByWidget(state),
         ],
       ),
     );
@@ -534,10 +627,11 @@ class _AddExpenseSplitScreenState extends State<AddExpenseSplitScreen> {
             textString: 'Save',
             buttonType: ButtonType.filled,
             expandButton: true,
-            buttonState:
-                state.amount.isNotEmpty && state.participants.isNotEmpty
-                    ? ButtonState.enabled
-                    : ButtonState.disabled,
+            buttonState: state.description.isNotEmpty &&
+                    state.amount.isNotEmpty &&
+                    state.participants.isNotEmpty
+                ? ButtonState.enabled
+                : ButtonState.disabled,
             onPressed: (_) {
               _bloc.add(AddSplit(widget.groupId));
             },

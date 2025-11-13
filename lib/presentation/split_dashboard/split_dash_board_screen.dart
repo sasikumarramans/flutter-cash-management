@@ -125,6 +125,26 @@ class _DashboardScreenState extends State<SplitDashBoardScreen>
                       }
                     },
                   ),
+                  SplitBottomNavBarItem(
+                    item: SplitBottomNavItem.activity,
+                    status: state.selectedItem == SplitBottomNavItem.activity
+                        ? BottomNavIconStatus.selected
+                        : BottomNavIconStatus.disabled,
+                    icon: Assets.icons.friends.svg(
+                        color: state.selectedItem == SplitBottomNavItem.activity
+                            ? AppTheme.tertiaryColor
+                            : AppTheme.bottomBarImgColor),
+                    onPressed: () {
+                      if (SplitBottomNavItem.activity == state.selectedItem) {
+                        context
+                            .read<SplitDashboardBloc>()
+                            .add(const SplitDashboardTabToggle());
+                      } else {
+                        _handleNavigation(
+                            context, SplitBottomNavItem.activity, state);
+                      }
+                    },
+                  ),
 
                   // profile
                   SplitBottomNavBarItem(
@@ -183,6 +203,12 @@ class _DashboardScreenState extends State<SplitDashBoardScreen>
             .read<SplitDashboardBloc>()
             .add(const SplitDashboardTabChanged(SplitBottomNavItem.friends));
         context.go(SplitDashboardRouter.friendsRoute);
+        break;
+      case SplitBottomNavItem.activity:
+        context
+            .read<SplitDashboardBloc>()
+            .add(const SplitDashboardTabChanged(SplitBottomNavItem.activity));
+        context.go(SplitDashboardRouter.splitActivityRoute);
         break;
       case SplitBottomNavItem.profile:
         context

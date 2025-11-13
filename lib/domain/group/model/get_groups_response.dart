@@ -35,6 +35,9 @@ class GroupItem {
   final int memberCount;
   final List<GroupMember> members;
   final String createdAt;
+  final double overallReceivingAmount;
+  final double overallPayingAmount;
+  final List<RecentGroupExpense> recentExpenses;
 
   GroupItem({
     required this.id,
@@ -47,6 +50,9 @@ class GroupItem {
     required this.memberCount,
     required this.members,
     required this.createdAt,
+    required this.overallPayingAmount,
+    required this.overallReceivingAmount,
+    required this.recentExpenses,
   });
 
   factory GroupItem.fromJson(Map<String, dynamic> json) {
@@ -65,6 +71,13 @@ class GroupItem {
               .toList() ??
           [],
       createdAt: json['createdAt'] ?? '',
+      overallPayingAmount: (json['overallPayingAmount'] ?? 0).toDouble(),
+      overallReceivingAmount: (json['overallReceivingAmount'] ?? 0).toDouble(),
+      recentExpenses: (json['recentExpenses'] as List?)
+              ?.map((item) =>
+                  RecentGroupExpense.fromJson(item as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 
@@ -114,4 +127,42 @@ class GroupMember {
         'joinedAt': joinedAt,
         'admin': admin,
       };
+}
+
+class RecentGroupExpense {
+  final int id;
+  final String description;
+  final double totalAmount;
+  final String currency;
+  final String paidByUsername;
+  final String paidByUserId;
+  final double yourAmount;
+  final String status;
+  final String createdAt;
+
+  RecentGroupExpense({
+    required this.id,
+    required this.description,
+    required this.totalAmount,
+    required this.currency,
+    required this.paidByUsername,
+    required this.paidByUserId,
+    required this.yourAmount,
+    required this.status,
+    required this.createdAt,
+  });
+
+  factory RecentGroupExpense.fromJson(Map<String, dynamic> json) {
+    return RecentGroupExpense(
+      id: json['id'] ?? 0,
+      description: json['description'] ?? '',
+      totalAmount: (json['totalAmount'] ?? 0).toDouble(),
+      currency: json['currency'] ?? '',
+      paidByUsername: json['paidByUsername'] ?? '',
+      paidByUserId: json['paidByUserId'] ?? 'USD',
+      yourAmount: (json['yourAmount'] ?? 0).toDouble(),
+      status: json['status'] ?? '',
+      createdAt: json['createdAt'] ?? '',
+    );
+  }
 }

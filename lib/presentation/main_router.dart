@@ -3,6 +3,7 @@ import 'package:bearnshare/app/router/animation/slide_transition_screen.dart';
 import 'package:bearnshare/app/router/animation/vertical_page_transition.dart';
 import 'package:bearnshare/app/router/router_scope.dart';
 import 'package:bearnshare/data/local/hive_manager.dart';
+import 'package:bearnshare/domain/group/model/get_groups_response.dart';
 import 'package:bearnshare/domain/ledger/model/get_books_response.dart';
 import 'package:bearnshare/domain/ledger/model/get_entries_response.dart';
 import 'package:bearnshare/presentation/auth/di/auth_module.dart';
@@ -41,12 +42,17 @@ import 'package:bearnshare/presentation/split_dashboard/bloc/split_dashboard_blo
 import 'package:bearnshare/presentation/split_dashboard/di/split_dashboard_module.dart';
 import 'package:bearnshare/presentation/split_dashboard/split_dash_board_router.dart';
 import 'package:bearnshare/presentation/split_dashboard/split_dash_board_screen.dart';
+import 'package:bearnshare/presentation/split_group/expense_details_screen.dart';
+import 'package:bearnshare/presentation/split_group/group_detail_screen.dart';
 import 'package:bearnshare/presentation/split_report/split_report_screen.dart';
 import 'package:bearnshare/presentation/total_savings/total_savings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+
+import 'split_group/bloc/split_group_bloc.dart';
+import 'split_group/di/split_group_module.dart';
 
 class MainRouter {
   static const String mainScreenRoute = '/';
@@ -61,6 +67,8 @@ class MainRouter {
   static const String splitReportSummaryRoute = '/splitReportSummary';
   static const String addBookRoute = '/addBook';
   static const String splitCreateGroupRoute = '/splitCreateGroup';
+  static const String expenseDetailRoute = '/expenseDetail';
+  static const String groupDetailRoute = '/groupDetail';
 
   static bool isDashboardInitialized = false;
 
@@ -76,6 +84,8 @@ class MainRouter {
     const Key editProfileKey = Key('editProfile');
     const Key addBookKey = Key('addBook');
     const Key splitCreateGroupKey = Key('splitCreateGroup');
+    const Key expenseDetailKey = Key('expenseDetail');
+    const Key groupDetailRKey = Key('groupDetailRoute');
 
     return [
       StatefulShellRoute.indexedStack(
@@ -122,15 +132,19 @@ class MainRouter {
           dashboardModule.injectBloc();
           final profileModule = ProfileModule();
           profileModule.injectBloc();
+          final splitGroupModule = SplitGroupModule();
+          splitGroupModule.injectBloc();
           return RouterScope(
             key: dashboardRouteScreenKey,
             inject: () {
               dashboardModule.inject();
               profileModule.inject();
+              splitGroupModule.inject();
             },
             dispose: () {
               dashboardModule.dispose();
               profileModule.dispose();
+              splitGroupModule.dispose();
             },
             child: MultiBlocProvider(
               providers: [
@@ -322,6 +336,15 @@ class MainRouter {
         path: addExpenseRoute,
         name: addExpenseRoute,
         pageBuilder: (context, state) {
+          int groupId = 0;
+          List<dynamic>? members;
+
+          if (state.extra != null) {
+            final data = state.extra as Map<String, dynamic>;
+            groupId = data["groupId"] ?? 0;
+            members = data["members"];
+          }
+
           final addSplitModule = AddSplitModule();
           addSplitModule.injectBloc();
           return SlideTransitionScreen<void>(
@@ -335,8 +358,9 @@ class MainRouter {
               },
               child: BlocProvider<AddExpenseSplitBloc>.value(
                 value: GetIt.I<AddExpenseSplitBloc>(),
-                child: const AddExpenseSplitScreen(
-                  groupId: 0,
+                child: AddExpenseSplitScreen(
+                  groupId: groupId,
+                  members: members,
                 ),
               ),
             ),
@@ -398,6 +422,43 @@ class MainRouter {
               child: BlocProvider<CreateGroupBloc>.value(
                 value: GetIt.I<CreateGroupBloc>(),
                 child: const SplitCreateGroupScreen(),
+              ),
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: expenseDetailRoute,
+        name: expenseDetailRoute,
+        pageBuilder: (context, state) {
+          return SlideTransitionScreen<void>(
+            child: RouterScope(
+              key: expenseDetailKey,
+              inject: () {},
+              dispose: () {},
+              child: BlocProvider<SplitGroupBloc>.value(
+                value: GetIt.I<SplitGroupBloc>(),
+                child: const ExpenseDetailsScreen(),
+              ),
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: groupDetailRoute,
+        name: groupDetailRoute,
+        pageBuilder: (context, state) {
+          final data = state.extra as Map<String, dynamic>;
+
+          GroupItem? groupItem = data["groupItem"];
+          return SlideTransitionScreen<void>(
+            child: RouterScope(
+              key: groupDetailRKey,
+              inject: () {},
+              dispose: () {},
+              child: BlocProvider<SplitGroupBloc>.value(
+                value: GetIt.I<SplitGroupBloc>(),
+                child: GroupDetailScreen(group: groupItem!),
               ),
             ),
           );

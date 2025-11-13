@@ -77,3 +77,9 @@ class AddSplit extends AddExpenseSplitEvent {
 class ClearSearchResults extends AddExpenseSplitEvent {
   const ClearSearchResults();
 }
+
+class InitializeParticipants extends AddExpenseSplitEvent {
+  final List<SearchUserData> participants;
+  final int groupId;
+  const InitializeParticipants(this.participants, this.groupId);
+}

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/domain/group/model/get_groups_response.dart';
 import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
 import 'package:bearnshare/presentation/component/app_text_field.dart';
@@ -69,8 +70,10 @@ class _SplitGroupScreenState extends State<SplitGroupScreen> {
             return Column(
               children: [
                 _buildHeader(),
-                _buildSearchBar(),
                 _buildFilterTabs(state),
+                const SizedBox(
+                  height: 10,
+                ),
                 Expanded(
                   child: _buildGroupsList(state),
                 ),
@@ -247,7 +250,7 @@ class _SplitGroupScreenState extends State<SplitGroupScreen> {
 
   Widget _buildFilterTabs(SplitGroupState state) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
           Expanded(
@@ -316,7 +319,6 @@ class _SplitGroupScreenState extends State<SplitGroupScreen> {
           child: RefreshIndicator(
             onRefresh: () async {
               _bloc.add(const LoadGroups(isRefresh: true));
-              // Wait for the state to update
               await Future.delayed(const Duration(milliseconds: 500));
             },
             color: AppTheme.splitGroupColor,
@@ -353,8 +355,29 @@ class _SplitGroupScreenState extends State<SplitGroupScreen> {
     );
   }
 
-  Widget _buildGroupItem({required group}) {
+  Widget _buildGroupItem({required GroupItem group}) {
     // Determine icon based on group type
+    String label;
+    double amount;
+    Color amountColor;
+
+    if (group.overallReceivingAmount > 0) {
+      label = "You Receive";
+      amount = group.overallReceivingAmount;
+      amountColor = const Color(0xFF4CAF50);
+    } else if (group.overallPayingAmount > 0) {
+      label = 'You Pay';
+      amount = group.overallPayingAmount;
+      amountColor = const Color(0xFFFF5252);
+    } else if (group.recentExpenses.isEmpty) {
+      label = 'No expenses';
+      amount = 0;
+      amountColor = Colors.white54;
+    } else {
+      label = 'Settled';
+      amount = 0;
+      amountColor = Colors.white54;
+    }
     IconData icon = Icons.group;
     Color iconBg = const Color(0xFFE3F2FD);
     Color iconColor = const Color(0xFF2196F3);
@@ -398,54 +421,97 @@ class _SplitGroupScreenState extends State<SplitGroupScreen> {
       }
     }
 
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppTheme.homePageCardBgColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: iconBg,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: AppTheme.homePageCardBgColor,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+            Row(
               children: [
-                Text(
-                  group.name,
-                  style: AppTheme.ledgerTitleTextStyle,
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: iconBg,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    icon,
+                    color: iconColor,
+                    size: 20,
+                  ),
                 ),
-                Text(
-                  timeAgo,
-                  style: AppTheme.ledgerSearchTextStyle,
-                ),
-                Text(
-                  '${group.memberCount} members',
-                  style: AppTheme.ledgerSearchTextStyle
-                      .copyWith(fontSize: 12, color: Colors.white54),
+                const SizedBox(width: 16),
+                Expanded(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      group.name,
+                      style: AppTheme.ledgerTitleTextStyle,
+                    ),
+                    Text(
+                      timeAgo,
+                      style: AppTheme.ledgerSearchTextStyle,
+                    ),
+                  ],
+                )),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: AppTheme.ledgerSearchTextStyle
+                          .copyWith(color: Colors.white),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      amount > 0 ? '₹${amount.toStringAsFixed(2)}' : '₹0',
+                      style: AppTheme.homePageContentAmntTextStyle.copyWith(
+                        fontSize: 16,
+                        color: amountColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ),
-          const Icon(
-            Icons.chevron_right,
-            color: Colors.white54,
-            size: 24,
-          ),
-        ],
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  group.id == 0
+                      ? '${group.memberCount} expenses'
+                      : '${group.memberCount} members',
+                  style: AppTheme.ledgerSearchTextStyle
+                      .copyWith(fontSize: 12, color: Colors.white54),
+                ),
+                if (group.recentExpenses.isNotEmpty)
+                  ...group.recentExpenses.take(3).map(
+                        (expense) => Padding(
+                          padding: const EdgeInsets.only(bottom: 2, left: 0),
+                          child: Text(
+                            "${expense.status} INR ${expense.yourAmount} in ${expense.description}",
+                            style: AppTheme.ledgerSearchTextStyle
+                                .copyWith(fontSize: 12),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      )
+              ],
+            ),
+          ],
+        ),
       ),
+      onTap: () {
+        context.pushNamed(MainRouter.groupDetailRoute,
+            extra: {"groupItem": group});
+      },
     );
   }
 }

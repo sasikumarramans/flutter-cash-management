@@ -1,10 +1,16 @@
 import 'package:bearnshare/app/theme/app_theme.dart';
+import 'package:bearnshare/domain/friends/model/get_friends_response.dart';
 import 'package:bearnshare/generated/assets.gen.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
 import 'package:bearnshare/presentation/component/app_text_field.dart';
 import 'package:bearnshare/presentation/main_router.dart';
+import 'package:bearnshare/presentation/split_friends/bloc/split_friends_bloc.dart';
+import 'package:bearnshare/presentation/split_friends/bloc/split_friends_event.dart';
+import 'package:bearnshare/presentation/split_friends/bloc/split_friends_state.dart';
 import 'package:bearnshare/presentation/split_home/add_member_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 class SplitFriendsScreen extends StatefulWidget {
@@ -15,56 +21,29 @@ class SplitFriendsScreen extends StatefulWidget {
 }
 
 class _SplitFriendsScreenState extends State<SplitFriendsScreen> {
-  int selectedTab = 0;
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  late final SplitFriendsBloc _bloc;
 
-  // Sample group data
-  final List<Map<String, dynamic>> _groups = [
-    {
-      'icon': Icons.group,
-      'iconBg': const Color(0xFFE3F2FD),
-      'iconColor': const Color(0xFF2196F3),
-      'title': 'Weekend Trip',
-      'time': '2 Hours ago',
-      'amount': '+₹700',
-      'amountColor': const Color(0xFF4CAF50),
-      'label': 'You owe',
-    },
-    {
-      'icon': Icons.home,
-      'iconBg': const Color(0xFFF3E5F5),
-      'iconColor': const Color(0xFF9C27B0),
-      'title': 'Apartment',
-      'time': '1 day ago',
-      'amount': '₹2,500',
-      'amountColor': const Color(0xFF4CAF50),
-      'label': "You're owed",
-    },
-    {
-      'icon': Icons.attach_money,
-      'iconBg': const Color(0xFFE3F2FD),
-      'iconColor': const Color(0xFF2196F3),
-      'title': 'Split',
-      'time': '1 day ago',
-      'amount': '₹2,500',
-      'amountColor': const Color(0xFFFF5252),
-      'label': 'You owe',
-    },
-    {
-      'icon': Icons.apartment,
-      'iconBg': const Color(0xFFF3E5F5),
-      'iconColor': const Color(0xFF9C27B0),
-      'title': 'Rent',
-      'time': '1 day ago',
-      'amount': '₹1,750',
-      'amountColor': const Color(0xFF4CAF50),
-      'label': "You're owed",
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _bloc = GetIt.I.get<SplitFriendsBloc>();
+    _bloc.add(const LoadFriends());
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      _bloc.add(const LoadMoreFriends());
+    }
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -75,10 +54,23 @@ class _SplitFriendsScreenState extends State<SplitFriendsScreen> {
         child: Column(
           children: [
             _buildHeader(),
-            _buildSearchBar(),
             _buildFilterTabs(),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 16.0, left: 15),
+                child: Text(
+                  'Your Friends',
+                  style: AppTheme.ledgerTitleTextStyle,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+            ),
             Expanded(
-              child: _buildGroupsList(),
+              child: _buildFriendsList(),
             ),
           ],
         ),
@@ -140,7 +132,7 @@ class _SplitFriendsScreenState extends State<SplitFriendsScreen> {
           Expanded(
             child: AppTextField(
               controller: _searchController,
-              hint: 'Search transactions',
+              hint: 'Search friends',
               textFieldStyle: TextFieldStyle.filled,
               textFieldState: TextFieldState.enabled,
               textFieldType: TextFieldType.text,
@@ -152,7 +144,7 @@ class _SplitFriendsScreenState extends State<SplitFriendsScreen> {
               hintStyle: AppTheme.ledgerSearchTextStyle,
               textStyle: AppTheme.simpleWhiteTextStyle,
               onChanged: (value) {
-                // Handle search
+                _bloc.add(SearchFriendsChanged(value));
               },
             ),
           ),
@@ -171,27 +163,31 @@ class _SplitFriendsScreenState extends State<SplitFriendsScreen> {
   }
 
   Widget _buildFilterTabs() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildTabButton('All Group', 0),
+    return BlocBuilder<SplitFriendsBloc, SplitFriendsState>(
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: _buildTabButton('All', 0, state.selectedFilterIndex),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildTabButton('Active', 1, state.selectedFilterIndex),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildTabButton('Settled', 2, state.selectedFilterIndex),
+              ),
+            ],
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _buildTabButton('Active', 1),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _buildTabButton('Settled', 2),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildTabButton(String label, int index) {
+  Widget _buildTabButton(String label, int index, int selectedTab) {
     final isSelected = selectedTab == index;
     return AppButton(
       textString: label,
@@ -217,60 +213,120 @@ class _SplitFriendsScreenState extends State<SplitFriendsScreen> {
         color: Colors.white,
       ),
       onPressed: (_) {
-        setState(() {
-          selectedTab = index;
-        });
+        _bloc.add(FilterFriendsChanged(index));
       },
     );
   }
 
-  Widget _buildGroupsList() {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      itemCount: _groups.length + 1, // +1 for the header
-      itemBuilder: (context, index) {
-        if (index == 0) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
+  Widget _buildFriendsList() {
+    return BlocBuilder<SplitFriendsBloc, SplitFriendsState>(
+      builder: (context, state) {
+        if (state.status == SplitFriendsStatus.loading) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: AppTheme.splitGroupColor,
+            ),
+          );
+        }
+
+        if (state.status == SplitFriendsStatus.failed) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Failed to load friends',
+                  style: AppTheme.ledgerTitleTextStyle,
+                ),
+                const SizedBox(height: 16),
+                AppButton(
+                  textString: 'Retry',
+                  buttonType: ButtonType.filled,
+                  buttonState: ButtonState.completed,
+                  completedButtonFilledStyle: BoxDecoration(
+                    color: AppTheme.splitGroupColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  onPressed: (_) {
+                    _bloc.add(const LoadFriends());
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+
+        if (state.filteredFriends.isEmpty) {
+          return Center(
             child: Text(
-              'Your Friends',
+              'No friends found',
               style: AppTheme.ledgerTitleTextStyle,
             ),
           );
         }
 
-        final groupIndex = index - 1;
-        final group = _groups[groupIndex];
+        return RefreshIndicator(
+          onRefresh: () async {
+            _bloc.add(const LoadFriends(isRefresh: true));
+            await Future.delayed(const Duration(milliseconds: 500));
+          },
+          color: AppTheme.splitGroupColor,
+          child: ListView.builder(
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            itemCount: state.filteredFriends.length,
+            itemBuilder: (context, index) {
+              if (index == state.filteredFriends.length + 1) {
+                return state.isLoadingMore
+                    ? const Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: AppTheme.splitGroupColor,
+                          ),
+                        ),
+                      )
+                    : const SizedBox(height: 100);
+              }
 
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: groupIndex == _groups.length - 1 ? 100 : 12,
-          ),
-          child: _buildGroupItem(
-            icon: group['icon'] as IconData,
-            iconBg: group['iconBg'] as Color,
-            iconColor: group['iconColor'] as Color,
-            title: group['title'] as String,
-            time: group['time'] as String,
-            amount: group['amount'] as String,
-            amountColor: group['amountColor'] as Color,
-            label: group['label'] as String,
+              final friendIndex = index;
+              final friend = state.filteredFriends[friendIndex];
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _buildFriendItem(friend),
+              );
+            },
           ),
         );
       },
     );
   }
 
-  Widget _buildGroupItem({
-    required IconData icon,
-    required Color iconBg,
-    required Color iconColor,
-    required String title,
-    required String time,
-    required String amount,
-    required Color amountColor,
-    required String label,
-  }) {
+  Widget _buildFriendItem(FriendItem friend) {
+    String label;
+    double amount;
+    Color amountColor;
+
+    if (friend.overallReceivingAmount > 0) {
+      label = "You Receive";
+      amount = friend.overallReceivingAmount;
+      amountColor = const Color(0xFF4CAF50);
+    } else if (friend.overallPayingAmount > 0) {
+      label = 'You Pay';
+      amount = friend.overallPayingAmount;
+      amountColor = const Color(0xFFFF5252);
+    } else if (friend.recentExpenses.isEmpty) {
+      label = 'No expenses';
+      amount = 0;
+      amountColor = Colors.white54;
+    } else {
+      label = 'Settled';
+      amount = 0;
+      amountColor = Colors.white54;
+    }
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -279,50 +335,86 @@ class _SplitFriendsScreenState extends State<SplitFriendsScreen> {
       ),
       child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: iconBg,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: 26,
-            ),
-          ),
-          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: AppTheme.ledgerTitleTextStyle,
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFE3F2FD),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text(
+                        friend.name.isNotEmpty
+                            ? friend.name[0].toUpperCase()
+                            : '?',
+                        style: AppTheme.ledgerTitleTextStyle.copyWith(
+                          fontSize: 24,
+                          color: const Color(0xFF2196F3),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          friend.name.isNotEmpty
+                              ? friend.name
+                              : friend.username,
+                          style: AppTheme.ledgerTitleTextStyle,
+                        ),
+                        Text(
+                          "1 hour ago",
+                          style: AppTheme.ledgerSearchTextStyle,
+                        ),
+                      ],
+                    )),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          label,
+                          style: AppTheme.ledgerSearchTextStyle
+                              .copyWith(color: Colors.white),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          amount > 0 ? '₹${amount.toStringAsFixed(2)}' : '₹0',
+                          style: AppTheme.homePageContentAmntTextStyle.copyWith(
+                            fontSize: 16,
+                            color: amountColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  time,
-                  style: AppTheme.ledgerSearchTextStyle,
-                ),
+                if (friend.recentExpenses.isNotEmpty)
+                  ...friend.recentExpenses.take(3).map(
+                        (expense) => Padding(
+                          padding: const EdgeInsets.only(bottom: 2, left: 60),
+                          child: Text(
+                            "${expense.status} INR ${expense.yourAmount} in ${expense.description}",
+                            style: AppTheme.ledgerSearchTextStyle
+                                .copyWith(fontSize: 12),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      )
+                else
+                  Text(
+                    'No recent expenses',
+                    style: AppTheme.ledgerSearchTextStyle,
+                  ),
               ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                label,
-                style: AppTheme.ledgerSearchTextStyle
-                    .copyWith(color: Colors.white),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                amount,
-                style: AppTheme.homePageContentAmntTextStyle
-                    .copyWith(fontSize: 16),
-              ),
-            ],
           ),
         ],
       ),

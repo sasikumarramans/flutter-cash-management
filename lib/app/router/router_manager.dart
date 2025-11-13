@@ -17,6 +17,7 @@ class RouterManager {
   static final splitHomeBranchNavigatorKey = GlobalKey<NavigatorState>();
   static final groupNavigatorKey = GlobalKey<NavigatorState>();
   static final friendsKey = GlobalKey<NavigatorState>();
+  static final activityKey = GlobalKey<NavigatorState>();
   RouterManager() {
     _initRouter();
   }

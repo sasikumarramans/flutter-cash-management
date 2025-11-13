@@ -2,8 +2,14 @@ import 'package:bearnshare/app/helpers/app_utils.dart';
 import 'package:bearnshare/app/theme/app_theme.dart';
 import 'package:bearnshare/presentation/component/app_button.dart';
 import 'package:bearnshare/presentation/component/app_text_field.dart';
+import 'package:bearnshare/presentation/component/profile_avatar.dart';
 import 'package:bearnshare/presentation/main_router.dart';
+import 'package:bearnshare/presentation/split_group/bloc/split_group_bloc.dart';
+import 'package:bearnshare/presentation/split_group/bloc/split_group_event.dart';
+import 'package:bearnshare/presentation/split_group/bloc/split_group_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 class AddExpenseMembersSheet extends StatefulWidget {
@@ -24,67 +30,51 @@ class AddExpenseMembersSheet extends StatefulWidget {
 
 class _AddExpenseMembersSheetState extends State<AddExpenseMembersSheet> {
   final TextEditingController _searchController = TextEditingController();
-  final Set<String> selectedFriends = {};
+  late final SplitGroupBloc _bloc;
 
-  final List<Map<String, String>> groups = [
-    {
-      'name': 'Creative Team',
-      'image':
-          'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=100&h=100&fit=crop'
-    },
-    {
-      'name': 'Trip Split',
-      'image':
-          'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=100&h=100&fit=crop'
-    },
-    {
-      'name': 'New Year 2025',
-      'image':
-          'https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=100&h=100&fit=crop'
-    },
-  ];
-
-  final List<Map<String, String>> friends = [
-    {'name': 'Cody Fisher', 'image': 'https://i.pravatar.cc/150?img=33'},
-    {'name': 'Jacob Jones', 'image': 'https://i.pravatar.cc/150?img=13'},
-    {'name': 'Jane Cooper', 'image': 'https://i.pravatar.cc/150?img=47'},
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _bloc = GetIt.I.get<SplitGroupBloc>();
+    _bloc.add(const SearchMembers(""));
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _bloc.add(const ClearMemberSearch());
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
-      decoration: const BoxDecoration(
-        color: AppTheme.homePageCardBgColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-      ),
-      child: Column(
-        children: [
-          _buildHeader(context),
-          _buildSearchBar(),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildGroupsSection(),
-                  _buildFriendsSection(),
-                ],
-              ),
+    return BlocBuilder<SplitGroupBloc, SplitGroupState>(
+      bloc: _bloc,
+      builder: (context, state) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.85,
+          decoration: const BoxDecoration(
+            color: AppTheme.homePageCardBgColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
             ),
           ),
-          _buildSubmitButton(context),
-        ],
-      ),
+          child: Column(
+            children: [
+              _buildHeader(context),
+              _buildSearchBar(),
+              if (state.selectedMembers.isNotEmpty)
+                _buildSelectedMembers(state),
+              SizedBox(height: state.selectedMembers.isEmpty ? 10 : 0),
+              Expanded(
+                child: _buildContent(state),
+              ),
+              _buildSubmitButton(context, state),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -118,7 +108,7 @@ class _AddExpenseMembersSheetState extends State<AddExpenseMembersSheet> {
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: AppTextField(
         controller: _searchController,
-        hint: 'Enter name or emailId',
+        hint: 'Enter group name or friend name',
         textFieldStyle: TextFieldStyle.filled,
         textFieldState: TextFieldState.enabled,
         textFieldType: TextFieldType.text,
@@ -129,14 +119,113 @@ class _AddExpenseMembersSheetState extends State<AddExpenseMembersSheet> {
         ),
         hintStyle: AppTheme.ledgerSearchTextStyle,
         textStyle: AppTheme.simpleWhiteTextStyle,
+        debounceDuration: const Duration(milliseconds: 500),
         onChanged: (value) {
-          // Handle search
+          _bloc.add(SearchMembers(_searchController.text));
         },
       ),
     );
   }
 
-  Widget _buildGroupsSection() {
+  Widget _buildSelectedMembers(SplitGroupState state) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: state.selectedMembers.map((member) {
+              return Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppTheme.splitGroupColor.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(
+                    color: AppTheme.splitGroupColor,
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: ProfileAvatar(
+                        profilePicture: '',
+                        name: member.username,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      member.username,
+                      style:
+                          AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 13),
+                    ),
+                    const SizedBox(width: 6),
+                    GestureDetector(
+                      onTap: () =>
+                          _bloc.add(RemoveMemberFromSelection(member.userId)),
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.white70,
+                        size: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent(SplitGroupState state) {
+    if (state.searchStatus == SearchStatus.loading) {
+      return const Center(
+        child: CircularProgressIndicator(color: AppTheme.splitGroupColor),
+      );
+    }
+    if (state.searchFriends.isEmpty && state.searchGroups.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_off,
+              size: 64,
+              color: Colors.white.withValues(alpha: 0.2),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'No results found',
+              style: AppTheme.ledgerTitleTextStyle.copyWith(
+                fontSize: 14,
+                color: Colors.white54,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (state.searchGroups.isNotEmpty) _buildGroupsSection(state),
+          if (state.searchFriends.isNotEmpty) _buildFriendsSection(state),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGroupsSection(SplitGroupState state) {
     return Padding(
       padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
       child: Column(
@@ -147,46 +236,78 @@ class _AddExpenseMembersSheetState extends State<AddExpenseMembersSheet> {
             style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 16),
           ),
           const SizedBox(height: 16),
-          ...groups.map((group) => _buildGroupItem(group)),
+          ...state.searchGroups.map((group) => _buildGroupItem(group)),
         ],
       ),
     );
   }
 
-  Widget _buildGroupItem(Map<String, String> group) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 16,
-                backgroundImage: NetworkImage(group['image']!),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  group['name']!,
-                  style: AppTheme.homePageContentHeaderTextStyle
-                      .copyWith(fontSize: 14),
+  Widget _buildGroupItem(group) {
+    return InkWell(
+      onTap: () {
+        AppUtils.hideKeyboard();
+        context.pushNamed(
+          MainRouter.addExpenseRoute,
+          extra: {
+            "groupId": group.groupId,
+            "members": group.participants,
+          },
+        );
+        Navigator.pop(context);
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: AppTheme.splitGroupColor.withValues(alpha: 0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.group,
+                    color: AppTheme.splitGroupColor,
+                    size: 16,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          const Divider(
-            color: AppTheme.splitBorderLineColor,
-            thickness: 0.2,
-          )
-        ],
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        group.groupName,
+                        style: AppTheme.homePageContentHeaderTextStyle
+                            .copyWith(fontSize: 14),
+                      ),
+                      Text(
+                        '${group.memberCount} members',
+                        style: AppTheme.ledgerTitleTextStyle.copyWith(
+                          fontSize: 12,
+                          color: Colors.white54,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            const Divider(
+              color: AppTheme.splitBorderLineColor,
+              thickness: 0.2,
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildFriendsSection() {
+  Widget _buildFriendsSection(SplitGroupState state) {
     return Padding(
       padding: const EdgeInsets.only(top: 0, left: 20, right: 20),
       child: Column(
@@ -197,24 +318,24 @@ class _AddExpenseMembersSheetState extends State<AddExpenseMembersSheet> {
             style: AppTheme.ledgerTitleTextStyle.copyWith(fontSize: 16),
           ),
           const SizedBox(height: 8),
-          ...friends.map((friend) => _buildFriendItem(friend)),
+          ...state.searchFriends
+              .map((friend) => _buildFriendItem(friend, state)),
         ],
       ),
     );
   }
 
-  Widget _buildFriendItem(Map<String, String> friend) {
-    final isSelected = selectedFriends.contains(friend['name']);
+  Widget _buildFriendItem(friend, SplitGroupState state) {
+    final isSelected =
+        state.selectedMembers.any((m) => m.userId == friend.userId);
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          if (isSelected) {
-            selectedFriends.remove(friend['name']);
-          } else {
-            selectedFriends.add(friend['name']!);
-          }
-        });
+        if (isSelected) {
+          _bloc.add(RemoveMemberFromSelection(friend.userId));
+        } else {
+          _bloc.add(AddMemberToSelection(friend));
+        }
       },
       child: Column(
         children: [
@@ -223,16 +344,29 @@ class _AddExpenseMembersSheetState extends State<AddExpenseMembersSheet> {
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 16,
-                  backgroundImage: NetworkImage(friend['image']!),
+                ProfileAvatar(
+                  profilePicture: '',
+                  name: friend.username,
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: Text(
-                    friend['name']!,
-                    style: AppTheme.homePageContentHeaderTextStyle
-                        .copyWith(fontSize: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        friend.username,
+                        style: AppTheme.homePageContentHeaderTextStyle
+                            .copyWith(fontSize: 16),
+                      ),
+                      if (friend.name.isNotEmpty)
+                        Text(
+                          friend.name,
+                          style: AppTheme.ledgerTitleTextStyle.copyWith(
+                            fontSize: 12,
+                            color: Colors.white54,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
                 Container(
@@ -261,9 +395,7 @@ class _AddExpenseMembersSheetState extends State<AddExpenseMembersSheet> {
               ],
             ),
           ),
-          const SizedBox(
-            height: 0,
-          ),
+          const SizedBox(height: 0),
           const Divider(
             color: AppTheme.splitBorderLineColor,
             thickness: 0.2,
@@ -273,7 +405,7 @@ class _AddExpenseMembersSheetState extends State<AddExpenseMembersSheet> {
     );
   }
 
-  Widget _buildSubmitButton(BuildContext context) {
+  Widget _buildSubmitButton(BuildContext context, SplitGroupState state) {
     final bottomPadding = MediaQuery.of(context).viewInsets.bottom +
         MediaQuery.of(context).padding.bottom;
 
@@ -285,14 +417,24 @@ class _AddExpenseMembersSheetState extends State<AddExpenseMembersSheet> {
         bottom: bottomPadding > 0 ? bottomPadding : 20,
       ),
       child: AppButton(
-        textString: 'Submit',
+        textString: state.selectedMembers.isNotEmpty
+            ? 'Submit (${state.selectedMembers.length})'
+            : 'Submit',
         buttonType: ButtonType.filled,
         expandButton: true,
-        buttonState: ButtonState.enabled,
+        buttonState: state.selectedMembers.isNotEmpty
+            ? ButtonState.enabled
+            : ButtonState.disabled,
         onPressed: (_) {
           AppUtils.hideKeyboard();
-          context.pop();
-          context.pushNamed(MainRouter.addExpenseRoute);
+          context.pushNamed(
+            MainRouter.addExpenseRoute,
+            extra: {
+              "groupId": 0,
+              "members": state.selectedMembers,
+            },
+          );
+          Navigator.pop(context);
         },
         enabledButtonFilledStyle: BoxDecoration(
           color: AppTheme.splitGroupColor,
